@@ -1,0 +1,42 @@
+plugins {
+    id 'java'
+    id 'neverlang' version '0.7'
+    id 'nlgcheck' version '0.1'
+}
+
+def baseUrl = "https://maven.adapt-lab.di.unimi.it"
+def neverlangVersion = "2.5.4"
+def lplVersion = "2.1.0-SNAPSHOT"
+def junitVersion = "5.9.0"
+
+repositories {
+    maven { url "https://maven.adapt-lab.di.unimi.it/neverlang/releases" }
+    maven { url "https://maven.adapt-lab.di.unimi.it/neverlang/snapshots" }
+    mavenCentral()
+}
+
+dependencies {
+    implementation "it.unimi.di.adaptlab:neverlang-core:${neverlangVersion}"
+    implementation "it.unimi.di.adaptlab:neverlang-dexter:${neverlangVersion}"
+    testImplementation "it.unimi.di.adaptlab:neverlang-junit-extension:${neverlangVersion}"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
+}
+
+test {
+    useJUnitPlatform()
+}
+
+neverlang {
+    version = neverlangVersion
+}
+
+nlgcheck {
+    nlgcheckVersion = '0.1.0-SNAPSHOT'
+    languages = ['sql.StructuredQueryLang' ]
+}
+
+task runSM(type: neverlang.execClass){
+    classpath = sourceSets.main.runtimeClasspath
+    languageMainClass = "sql.StructuredQueryLang"
+}
