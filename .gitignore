@@ -1,0 +1,10 @@
+.gradle
+build/
+bin/
+
+#IDE data
+.vscode/
+.idea/
+
+#OS data
+.DS_Store
