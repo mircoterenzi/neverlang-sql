@@ -1,26 +1,31 @@
 module sql.ElementType {
     reference syntax {
-        elemType:
-            Type <-- /(Int|Double|String|Bool)/;    //todo: atm is not working
+        intType:
+            Type <-- "int";
+        doubleType:
+            Type <-- "double";
+        stringType:
+            Type <-- "string";
+        boolType:
+            Type <-- "bool";
     }
 
     role(evaluation) {
-        elemType: .{
-            switch(#0.text) {
-                case "Int": 
-                    $elemType.value = Integer.class;
-                    break;
-                case "Double":
-                    $elemType.value = Double.class;
-                    break;
-                case "String":
-                    $elemType.value = String.class;
-                    break;
-                case "Bool":
-                    $elemType.value = Boolean.class;
-                    break;
-                default:
-            }
+        intType: .{
+            $intType.value = Integer.class;
+            System.out.println("new int");      //todo: remove debug prints
+        }.
+        doubleType: .{
+            $doubleType.value = Double.class;
+            System.out.println("new double");
+        }.
+        stringType: .{
+            $stringType.value = String.class;
+            System.out.println("new string");
+        }.
+        boolType: .{
+            $boolType.value = Boolean.class;
+            System.out.println("new bool");
         }.
     }
 }

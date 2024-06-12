@@ -1,6 +1,6 @@
 module sql.DataDeclaration {
     reference syntax {
         data:
-            Data <-- Id ":" Type;
+            Data <-- Id Type;
     }
 }
