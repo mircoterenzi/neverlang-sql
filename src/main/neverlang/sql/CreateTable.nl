@@ -11,9 +11,9 @@ module sql.CreateTable {
     role(evaluation) {
         declaration: .{
             List<String> vars = AttributeList.collectFrom($declaration[2], "id");
-            Table table = new Table($declaration[1].id, vars);
-            $$DatabaseMap.put($declaration[1].id, table);
-            $declaration.table = table;
+            $$DatabaseMap.put($declaration[1].id, vars);
+            $declaration.db = $$DatabaseMap;
+            $declaration.id = $declaration[1].id;
         }.
     }
 }

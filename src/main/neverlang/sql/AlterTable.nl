@@ -12,19 +12,17 @@ module sql.AlterTable {
 
     role(evaluation) {
         addCol: .{
-            Table table = $addCol[1].table;
-            List<String> vars = table.getVars();
-            vars.add($addCol[2].id);
-            $addCol.table = table;
+            $$DatabaseMap.get($addCol[1].id).add($addCol[2].id);
+            $addCol.db = $$DatabaseMap;
         }.
         dropCol: .{
-            Table table = $dropCol[1].table;
-            String id = $dropCol[2].id;
-            List<String> vars = table.getVars();
+            String id = $dropCol[1].id;
+            List<String> vars = $$DatabaseMap.get(id);
             List<String> modifiedVars = vars.stream()
-                    .filter(it -> !it.equals(id))
+                    .filter(it -> !it.equals($dropCol[2].id))
                     .collect(Collectors.toList());
-            $dropCol.table = new Table(table.getName(), modifiedVars);
+            $$DatabaseMap.put(id, modifiedVars);
+            $dropCol.db = $$DatabaseMap;
         }.
     }
 }
