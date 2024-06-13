@@ -28,13 +28,13 @@ public class AppTest {
 
     //todo: this text and the next one are done using the table obtained as output from the create table declaration (change to id)
     @Test
-    void testAddColumnToTable(@NeverlangUnitParam(source = "ALTER TABLE CREATE TABLE Panetteria(nomePane string, qtKg double) ADD prezzoKg double") ASTNode node) {
+    void testAddColumnToTable(@NeverlangUnitParam(files = "sql/alter-table-add-col.sql") ASTNode node) {
         Table table = (Table) node.getAttributes().get("table");
         assertEquals(List.of("nomePane", "qtKg", "prezzoKg"), table.getVars());
     }
 
     @Test
-    void testDropColumnToTable(@NeverlangUnitParam(source = "ALTER TABLE CREATE TABLE Panetteria(nomePane string, qtKg double) DROP qtKg") ASTNode node) {
+    void testDropColumnToTable(@NeverlangUnitParam(files = "sql/alter-table-drop-col.sql") ASTNode node) {
         Table table = (Table) node.getAttributes().get("table");
         assertEquals(List.of("nomePane"), table.getVars());
     }
