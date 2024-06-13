@@ -4,7 +4,6 @@ language sql.StructuredQueryLang {
         sql.DataDeclaration
         sql.DataList
         sql.ElementIdentifier
-        sql.ElementType
     roles syntax < evaluation
     rename {
         Table --> Program;
