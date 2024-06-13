@@ -17,14 +17,14 @@ module sql.AlterTable {
             vars.add($addCol[2].id);
             $addCol.table = table;
         }.
-        dropCol: .{     //todo: fix (it seems that .stream is throwing an exeption)
+        dropCol: .{
             Table table = $dropCol[1].table;
             String id = $dropCol[2].id;
             List<String> vars = table.getVars();
             List<String> modifiedVars = vars.stream()
-                    .filter(it -> it != id)
+                    .filter(it -> !it.equals(id))
                     .collect(Collectors.toList());
-            $dropCol.table = table;
+            $dropCol.table = new Table(table.getName(), modifiedVars);
         }.
     }
 }
