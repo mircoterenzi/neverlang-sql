@@ -43,4 +43,13 @@ public class AppTest {
         DatabaseMap db = (DatabaseMap) node.getAttributes().get("db");
         assertFalse(db.containsKey("Panetteria"));
     }
+
+    @Test
+    void testMultiple(@NeverlangUnitParam(files = "sql/multiple-operations.sql") ASTNode node) {
+        DatabaseMap db = (DatabaseMap) node.getAttributes().get("db");
+        assertTrue(db.containsKey("Panetteria"));
+        assertTrue(db.containsKey("Fioraio"));
+        assertEquals(List.of("qtKg", "prezzoKg"), db.get("Panetteria"));
+        assertEquals(List.of("nomeFiore"), db.get("Fioraio"));
+    }
 }
