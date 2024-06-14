@@ -5,9 +5,9 @@ module sql.AlterTable {
     }
     reference syntax {
         addCol:
-            Table <-- "ALTER" "TABLE" Table "ADD" Data;     //todo: remove Table and use Id
+            Operation <-- "ALTER" "TABLE" Operation "ADD" Data;
         dropCol:
-            Table <-- "ALTER" "TABLE" Table "DROP" Id;
+            Operation <-- "ALTER" "TABLE" Operation "DROP" Id;
     }
 
     role(evaluation) {

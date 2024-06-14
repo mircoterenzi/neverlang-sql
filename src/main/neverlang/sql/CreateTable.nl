@@ -5,7 +5,7 @@ module sql.CreateTable {
     }
     reference syntax {
         declaration:
-            Table <-- "CREATE" "TABLE" Id "(" DataList ")";
+            Operation <-- "CREATE" "TABLE" Id "(" DataList ")";
     }
 
     role(evaluation) {

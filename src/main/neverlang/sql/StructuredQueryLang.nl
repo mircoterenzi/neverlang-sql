@@ -5,10 +5,11 @@ language sql.StructuredQueryLang {
         sql.DataList
         sql.ElementIdentifier
         sql.AlterTable
+        sql.OperationList
     endemic slices
         sql.DatabaseCache
     roles syntax < evaluation
     rename {
-        Table --> Program;
+        OperationList --> Program;
     }
 }
