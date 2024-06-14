@@ -39,4 +39,9 @@ public class AppTest {
         assertEquals(List.of("nomePane"), db.get("Panetteria"));
     }
 
+    @Test
+    void testDropTable(@NeverlangUnitParam(files = "sql/drop-table.sql") ASTNode node) {
+        DatabaseMap db = (DatabaseMap) node.getAttributes().get("db");
+        assertFalse(db.containsKey("Panetteria"));
+    }
 }

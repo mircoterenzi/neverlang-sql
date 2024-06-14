@@ -6,6 +6,7 @@ language sql.StructuredQueryLang {
         sql.ElementIdentifier
         sql.AlterTable
         sql.OperationList
+        sql.DropTable
     endemic slices
         sql.DatabaseCache
     roles syntax < evaluation
