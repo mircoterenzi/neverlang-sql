@@ -10,8 +10,13 @@ module sql.CreateTable {
 
     role(evaluation) {
         declaration: .{
-            List<String> vars = AttributeList.collectFrom($declaration[2], "id");
-            $$DatabaseMap.put($declaration[1].id, vars);
+            List<String> ids = AttributeList.collectFrom($declaration[2], "id");
+            List<List<Object>> vars = AttributeList.collectFrom($declaration[2], "var");
+            var table = new Table();
+            for (int i=0; i<ids.size(); i++) {
+                table.add(ids.get(i), vars.get(i));
+            }
+            $$DatabaseMap.put($declaration[1].id, table);
         }.
     }
 }

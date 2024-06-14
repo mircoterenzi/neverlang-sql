@@ -28,9 +28,8 @@ module sql.DataDeclaration {
             $boolType.var = new ArrayList<Boolean>();
         }.
         data: .{
-            String id = $data[1].id;
             $data.var = $data[2].var;
-            $data.id = id;
+            $data.id = $data[1].id;
         }.
     }
 }
