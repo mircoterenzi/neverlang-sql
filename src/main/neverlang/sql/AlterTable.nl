@@ -5,9 +5,9 @@ module sql.AlterTable {
     }
     reference syntax {
         addCol:
-            Operation <-- "ALTER" "TABLE" Operation "ADD" Data;
+            Operation <-- "ALTER" "TABLE" Id "ADD" Data;
         dropCol:
-            Operation <-- "ALTER" "TABLE" Operation "DROP" Id;
+            Operation <-- "ALTER" "TABLE" Id "DROP" Id;
     }
 
     role(evaluation) {

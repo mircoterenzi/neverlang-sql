@@ -1,7 +1,5 @@
-
-ALTER TABLE 
-    CREATE TABLE Panetteria(
-        nomePane string,
-        qtKg double
-    )
-DROP qtKg
+CREATE TABLE Panetteria(
+    nomePane string,
+    qtKg double
+);
+ALTER TABLE Panetteria DROP qtKg

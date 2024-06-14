@@ -1,7 +1,5 @@
-
-ALTER TABLE 
-    CREATE TABLE Panetteria(
-        nomePane string,
-        qtKg double
-    )
-ADD prezzoKg double
+CREATE TABLE Panetteria(
+    nomePane string,
+    qtKg double
+);
+ALTER TABLE Panetteria ADD prezzoKg double
