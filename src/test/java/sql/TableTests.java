@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(NeverlangExt.class)
 @NeverlangUnit(language = StructuredQueryLang.class)
-public class AppTest {
+public class TableTests {
     @Test
     void testReturnsDB(@NeverlangUnitParam(source = "CREATE TABLE Panetteria(nomePane string, qtKg double)") ASTNode node) {
         var db = node.getAttributes().get("db");
