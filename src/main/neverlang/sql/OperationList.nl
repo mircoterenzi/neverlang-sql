@@ -8,10 +8,10 @@ module sql.OperationList {
 
     role(evaluation) {
         single: .{
-            $single.db = $single[1].db;
+            $single.db = $$DatabaseMap;
         }.
         list: .{
-            $list.db = $list[1].db;
+            $list.db = $$DatabaseMap;
         }.
     }
 }

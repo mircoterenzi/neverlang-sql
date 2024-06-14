@@ -12,17 +12,22 @@ module sql.AlterTable {
 
     role(evaluation) {
         addCol: .{
+            if (!$$DatabaseMap.containsKey($addCol[1].id)) {
+                throw new IllegalArgumentException("Unexpected value: \"" + $addCol[1].id + "\" is not an existing table");
+            }
             $$DatabaseMap.get($addCol[1].id).add($addCol[2].id);
-            $addCol.db = $$DatabaseMap;
         }.
         dropCol: .{
             String id = $dropCol[1].id;
+            if (!$$DatabaseMap.containsKey(id)) {
+                throw new IllegalArgumentException("Unexpected value: \"" + id + "\" is not an existing table");
+            }
+
             List<String> vars = $$DatabaseMap.get(id);
             List<String> modifiedVars = vars.stream()
                     .filter(it -> !it.equals($dropCol[2].id))
                     .collect(Collectors.toList());
             $$DatabaseMap.put(id, modifiedVars);
-            $dropCol.db = $$DatabaseMap;
         }.
     }
 }

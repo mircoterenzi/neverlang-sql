@@ -12,8 +12,6 @@ module sql.CreateTable {
         declaration: .{
             List<String> vars = AttributeList.collectFrom($declaration[2], "id");
             $$DatabaseMap.put($declaration[1].id, vars);
-            $declaration.db = $$DatabaseMap;
-            $declaration.id = $declaration[1].id;
         }.
     }
 }

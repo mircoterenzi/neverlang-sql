@@ -6,6 +6,9 @@ module sql.DropTable {
 
     role(evaluation) {
         drop: .{
+            if (!$$DatabaseMap.containsKey($drop[1].id)) {
+                throw new IllegalArgumentException("Unexpected value: \"" + $drop[1].id + "\" is not an existing table");
+            }
             $$DatabaseMap.remove($drop[1].id);
         }.
     }
