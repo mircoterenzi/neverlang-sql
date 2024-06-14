@@ -26,15 +26,14 @@ public class AppTest {
         assertEquals(List.of("nomePane", "qtKg"), db.get("Panetteria"));
     }
 
-    //todo: this text and the next one are done using the table obtained as output from the create table declaration (change to id)
     @Test
-    void testAddColumnToTable(@NeverlangUnitParam(files = "sql/alter-table-add-col.sql") ASTNode node) {
+    void testAddColumn(@NeverlangUnitParam(files = "sql/add-col.sql") ASTNode node) {
         DatabaseMap db = (DatabaseMap) node.getAttributes().get("db");
         assertEquals(List.of("nomePane", "qtKg", "prezzoKg"), db.get("Panetteria"));
     }
 
     @Test
-    void testDropColumnToTable(@NeverlangUnitParam(files = "sql/alter-table-drop-col.sql") ASTNode node) {
+    void testDropColumn(@NeverlangUnitParam(files = "sql/drop-col.sql") ASTNode node) {
         DatabaseMap db = (DatabaseMap) node.getAttributes().get("db");
         assertEquals(List.of("nomePane"), db.get("Panetteria"));
     }
