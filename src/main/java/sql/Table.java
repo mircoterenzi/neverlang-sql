@@ -5,14 +5,20 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 public class Table {
-    private final List<Pair<String, List<Object>>> columns;
+    private List<Pair<String, List<Object>>> columns;
 
     public Table() {
         columns = new ArrayList<>();
     }
 
     public void add(String name, List<Object> data) {
-        this.columns.add(new Pair<>(name, data));
+        columns.add(new Pair<>(name, data));
+    }
+
+    public void remove(String name) {
+        columns = columns.stream()
+                .filter(pair -> !pair.getKey().equals(name))
+                .collect(Collectors.toList());
     }
 
     public List<String> getKeys() {
