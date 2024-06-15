@@ -14,7 +14,7 @@ module sql.Insert {
             ValueList <-- Value "," ValueList;
             ValueList <-- Value;
         value:
-            Value <-- /[a-zA-Z0-9]+/;
+            Value <-- /[a-zA-Z0-9]+/;       //todo: Parse error at 5:48. Found <Rosetta, 5:48>, expected [a-zA-Z0-9]+
     }
 
     role(evaluation) {
