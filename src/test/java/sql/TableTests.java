@@ -1,7 +1,6 @@
 package sql;
 
 import java.util.List;
-import java.util.Set;
 import neverlang.junit.NeverlangExt;
 import neverlang.junit.NeverlangUnit;
 import neverlang.junit.NeverlangUnitParam;
@@ -24,7 +23,7 @@ public class TableTests {
     @Test
     void testReturnsCorrectVariables(@NeverlangUnitParam(source = "CREATE TABLE Panetteria(nomePane string, qtKg double)") ASTNode node) {
         DatabaseMap db = (DatabaseMap) node.getAttributes().get("db");
-        assertEquals(Set.of("nomePane", "qtKg"), db.get("Panetteria").getKeys());
+        assertEquals(List.of("nomePane", "qtKg"), db.get("Panetteria").getKeys());
     }
 
     @Test

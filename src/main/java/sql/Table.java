@@ -1,22 +1,24 @@
 package sql;
 
 import java.util.List;
-import java.util.Set;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class Table {
-    private final HashMap<String, List<Object>> columns;
+    private final List<Pair<String, List<Object>>> columns;
 
     public Table() {
-        columns = new HashMap<>();
+        columns = new ArrayList<>();
     }
 
     public void add(String name, List<Object> data) {
-        this.columns.put(name, data);
+        this.columns.add(new Pair<>(name, data));
     }
 
-    public Set<String> getKeys() {
-        return columns.keySet();
+    public List<String> getKeys() {
+        return columns.stream()
+                .map(pair -> pair.getKey())
+                .collect(Collectors.toList());
     }
 
 }
