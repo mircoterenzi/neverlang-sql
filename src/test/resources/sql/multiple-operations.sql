@@ -6,4 +6,4 @@ CREATE TABLE Panetteria(
 );
 ALTER TABLE Panetteria DROP nomePane;
 ALTER TABLE Panetteria ADD prezzoKg double;
-CREATE TABLE Fioraio(nomeFiore string)
+CREATE TABLE Fioraio(nomeFiore string);
