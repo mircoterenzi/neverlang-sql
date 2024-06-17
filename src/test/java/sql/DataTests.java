@@ -16,6 +16,7 @@ public class DataTests {
     void testAddValues(@NeverlangUnitParam(files = "sql/add-values.sql") ASTNode node) {
         var db = node.getAttributes().get("db");
         assertInstanceOf(DatabaseMap.class, db);
-        //todo
+        var table = ((DatabaseMap) db).get("Panetteria");
+        assertEquals("Rosetta 10 \n", table.toString());    //todo: temporary solution
     }
 }

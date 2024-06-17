@@ -13,13 +13,18 @@ module sql.Insert {
         values:
             ValueList <-- Value "," ValueList;
             ValueList <-- Value;
-        value:
-            Value <-- /[a-zA-Z0-9]+/;       //todo: Parse error at 5:48. Found <Rosetta, 5:48>, expected [a-zA-Z0-9]+
+        string: //todo: splitted value into string and number because the last regex was not working
+            Value <-- /[a-zA-Z]+/;
+        number:
+            Value <-- /[0-9]+/;
     }
 
     role(evaluation) {
-        value: .{
-            $value.id = #0.text;
+        string: .{
+            $string.id = #0.text;
+        }.
+        number: .{
+            $number.id = #0.text;
         }.
         insert: .{
             if (!$$DatabaseMap.containsKey($insert[1].id)) {

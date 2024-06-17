@@ -53,4 +53,20 @@ public class Table {
                 .collect(Collectors.toList());
     }
 
+    public String toString() {      //todo: atm i'm using toString, should implement a SELECT * FROM table query
+        var sb = new StringBuilder();
+        for (int i=0; i<columns.get(0).getValue().size(); i++) {
+            for (var key : getKeys()) {
+                var item = columns.stream()
+                        .filter(pair -> pair.getKey().equals(key))
+                        .findAny();
+                if (item.isPresent()) {
+                    sb.append(item.get().getValue().get(i));
+                    sb.append(" ");
+                }
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
+    }
 }
