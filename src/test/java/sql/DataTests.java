@@ -17,14 +17,10 @@ public class DataTests {
     void testInsertInto(@NeverlangUnitParam(files = "sql/add-values.sql") ASTNode node) {
         var db = node.getAttributes().get("db");
         assertInstanceOf(DatabaseMap.class, db);
-        System.out.println(
-            "Database \"Panetteria\":\n" + 
-            ((DatabaseMap) db).get("Panetteria").toString()
-        );
     }
 
     @Test
-    void testSelectAll(@NeverlangUnitParam(files = "sql/add-values.sql") ASTNode node) {
+    void testSelectAll(@NeverlangUnitParam(files = "sql/select-all.sql") ASTNode node) {
         DatabaseMap db = (DatabaseMap) node.getAttributes().get("db");
         assertEquals(
             List.of(List.of("Rosetta", "Ciabatta", "Arabo"),List.of("10", "2", "13")),
@@ -33,7 +29,7 @@ public class DataTests {
     }
 
     @Test
-    void testSelectColumn(@NeverlangUnitParam(files = "sql/add-values.sql") ASTNode node) {
+    void testSelectColumn(@NeverlangUnitParam(files = "sql/select-column.sql") ASTNode node) {
         DatabaseMap db = (DatabaseMap) node.getAttributes().get("db");
         assertEquals(
             List.of(List.of("Rosetta", "Ciabatta", "Arabo")),

@@ -9,6 +9,7 @@ language sql.StructuredQueryLang {
         sql.OperationList
         sql.DropTable
         sql.Insert
+        sql.Select
     endemic slices
         sql.DatabaseCache
     roles syntax < evaluation
