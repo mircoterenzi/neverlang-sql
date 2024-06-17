@@ -6,14 +6,12 @@ module sql.Insert {
 
     reference syntax {
         insert:
-            Operation <-- "INSERT" "INTO" Id "(" IdList ")" "VALUES" "(" ValueList ")" ;
-        ids:
-            IdList <-- Id "," IdList;
-            IdList <-- Id;
-        values:
+            Operation <-- "INSERT" "INTO" Id "(" IdList ")" "VALUES" "(" ValueList ")";
             ValueList <-- Value "," ValueList;
             ValueList <-- Value;
-        string: //todo: splitted value into string and number because the last regex was not working
+
+        //todo: splitted value into string and number because the last regex was not working
+        string:
             Value <-- /[a-zA-Z]+/;
         number:
             Value <-- /[0-9]+/;

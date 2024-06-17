@@ -53,7 +53,18 @@ public class Table {
                 .collect(Collectors.toList());
     }
 
-    public String toString() {      //todo: atm i'm using toString, should implement a SELECT * FROM table query
+    public List<List<Object>> getValues(List<String> keys) {
+        return columns.stream()
+                .filter(pair -> keys.contains(pair.getKey()))
+                .map(pair -> pair.getValue())
+                .collect(Collectors.toList());
+    }
+
+    public List<List<Object>> getValues() {
+        return getValues(getKeys());
+    }
+
+    public String toString() {
         var sb = new StringBuilder();
         for (int i=0; i<columns.get(0).getValue().size(); i++) {
             for (var key : getKeys()) {

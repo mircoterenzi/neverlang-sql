@@ -4,6 +4,7 @@ language sql.StructuredQueryLang {
         sql.DataDeclaration
         sql.DataList
         sql.ElementIdentifier
+        sql.IdList
         sql.AlterTable
         sql.OperationList
         sql.DropTable
