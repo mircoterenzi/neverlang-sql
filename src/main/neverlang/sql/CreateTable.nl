@@ -15,11 +15,11 @@ module sql.CreateTable {
             eval $declaration[2];
 
             List<String> ids = AttributeList.collectFrom($declaration[2], "id");
-            List<List<Object>> vars = AttributeList.collectFrom($declaration[2], "var");
+            List<Types> types = AttributeList.collectFrom($declaration[2], "var");
             var table = new Table();
 
             for (int i=0; i<ids.size(); i++) {
-                table.add(ids.get(i), vars.get(i));
+                table.addColumn(ids.get(i), types.get(i));
             }
 
             $$DatabaseMap.put($declaration[1].id, table);

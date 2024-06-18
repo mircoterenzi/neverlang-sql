@@ -1,33 +1,29 @@
 module sql.DataDeclaration {
-    imports {
-        java.util.ArrayList;
-    }
-
     reference syntax {
         data:
             Data <-- Id Type;
         intType:
-            Type <-- "int";
-        doubleType:
-            Type <-- "double";
+            Type <-- "INT";
+        floatType:
+            Type <-- "FLOAT";
         stringType:
-            Type <-- "string";
+            Type <-- "VARCHAR" "(" /[0-9]+/ ")";    //TODO: the number of char is fake atm
         boolType:
-            Type <-- "bool";
+            Type <-- "BOOLEAN";
     }
     
-    role(evaluation) {
+    role(evaluation) {  //TODO: fix variable usage
         intType: .{
-            $intType.var = new ArrayList<Integer>();
+            $intType.var = Types.INT;
         }.
-        doubleType: .{
-            $doubleType.var = new ArrayList<Double>();
+        floatType: .{
+            $floatType.var = Types.FLOAT;
         }.
         stringType: .{
-            $stringType.var = new ArrayList<String>();
+            $stringType.var = Types.VARCHAR;
         }.
         boolType: .{
-            $boolType.var = new ArrayList<Boolean>();
+            $boolType.var = Types.BOOLEAN;
         }.
         data: .{
             $data.var = $data[2].var;

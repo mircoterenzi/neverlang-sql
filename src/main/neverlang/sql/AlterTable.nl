@@ -17,7 +17,7 @@ module sql.AlterTable {
                 );
             }
 
-            $$DatabaseMap.get($add[1].id).add($add[2].id, $add[2].var);
+            $$DatabaseMap.get($add[1].id).addColumn($add[2].id, $add[2].var);
         }.
         drop: .{
             eval $drop[1];
@@ -29,7 +29,7 @@ module sql.AlterTable {
                 );
             }
 
-            $$DatabaseMap.get($drop[1].id).remove($drop[2].id);
+            $$DatabaseMap.get($drop[1].id).removeColumn($drop[2].id);
         }.
     }
 }

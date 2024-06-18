@@ -1,5 +1,5 @@
 CREATE TABLE Panetteria(
-    nomePane string,
-    qtKg double
+    nomePane VARCHAR(26),
+    qtKg FLOAT
 );
-ALTER TABLE Panetteria ADD prezzoKg double
+ALTER TABLE Panetteria ADD prezzoKg FLOAT
