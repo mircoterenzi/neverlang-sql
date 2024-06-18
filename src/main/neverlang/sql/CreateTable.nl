@@ -19,7 +19,7 @@ module sql.CreateTable {
             var table = new Table();
 
             for (int i=0; i<ids.size(); i++) {
-                table.add(ids.get(i), types.get(i));
+                table.addColumn(ids.get(i), types.get(i));
             }
 
             $$DatabaseMap.put($declaration[1].id, table);

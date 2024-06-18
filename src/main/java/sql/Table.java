@@ -2,21 +2,22 @@ package sql;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.stream.Collectors;
 
 /**
  * Class used to store a table of data.
  */
 public class Table {
-    private List<Pair<String, List<Object>>> columns;
-    private List<Types> types;  //TODO: fix management
+    private LinkedHashMap<String, List<Object>> columns;
+    private LinkedHashMap<String, Types> types;
 
     /**
      * Constructor for the Table class.
      */
     public Table() {
-        columns = new ArrayList<>();
-        types = new ArrayList<>();
+        columns = new LinkedHashMap<>();
+        types = new LinkedHashMap<>();
     }
 
     /**
@@ -24,19 +25,18 @@ public class Table {
      * @param name the name of the column.
      * @param type the type of vaules contained in the column.
      */
-    public void add(String name, Types type) {
-        columns.add(new Pair<>(name, new ArrayList<>()));
-        types.add(type);
+    public void addColumn(String name, Types type) {
+        columns.put(name, new ArrayList<>());
+        types.put(name, type);
     }
 
     /**
      * Function used to remove a column from the table.
      * @param name the name of the column.
      */
-    public void remove(String name) {
-        columns = columns.stream()
-                .filter(pair -> !pair.getKey().equals(name))
-                .collect(Collectors.toList());
+    public void removeColumn(String name) {
+        columns.remove(name);
+        types.remove(name);
     }
 
     /**
@@ -53,17 +53,12 @@ public class Table {
         // For each column, add the data to the list of data.
         for (int i=0; i<values.size(); i++) {
             var heading = headings.get(i);
-            var type = types.get(i);
-            var item = columns.stream()
-                    .filter(pair -> pair.getKey().equals(heading))
-                    .findAny();
 
-            if (item.isPresent()) {
-                var column = columns.get(columns.indexOf(item.get()));
-                List<Object> list = column.getValue();
-                list.add(type.convert((String) values.get(i)));
-                column.setValue(list);
-                columns.set(columns.indexOf(column), column);
+            if (columns.containsKey(heading) && types.containsKey(heading)) {
+                var columnValues = columns.get(heading);
+
+                columnValues.add(types.get(heading).convert((String) values.get(i)));
+                columns.put(heading, columnValues);
             } else {
                 throw new IllegalArgumentException(
                     "Column \"" + heading + "\" does not exist"
@@ -71,8 +66,8 @@ public class Table {
             }
         }
         // If there are columns that are not in the list, add null values.
-        for (var column : columns) {
-            if (!headings.contains(column.getKey())) {
+        for (var columnName : columns.keySet()) {
+            if (!headings.contains(columnName)) {
                 headings.add(null);
             }
         }
@@ -83,17 +78,15 @@ public class Table {
      * @param values list of data to be added to the table.
      */
     public void addValues(List<Object> values) {
-        addValues(getKeys(), values);
+        addValues(getKeyLists(), values);
     }
 
     /**
      * Function used to get the column names.
      * @return the list of column names.
      */
-    public List<String> getKeys() {
-        return columns.stream()
-                .map(pair -> pair.getKey())
-                .collect(Collectors.toList());
+    public List<String> getKeyLists() {
+        return columns.keySet().stream().collect(Collectors.toList());
     }
 
     /**
@@ -102,9 +95,8 @@ public class Table {
      * @return the list of data of the columns.
      */
     public List<List<Object>> getValues(List<String> keys) {
-        return columns.stream()
-                .filter(pair -> keys.contains(pair.getKey()))
-                .map(pair -> pair.getValue())
+        return keys.stream()
+                .map(key -> columns.get(key))
                 .collect(Collectors.toList());
     }
 
@@ -113,26 +105,13 @@ public class Table {
      * @return the list of data of the table.
      */
     public List<List<Object>> getValues() {
-        return getValues(getKeys());
+        return getValues(getKeyLists());
     }
 
     /**
      * Return a string representation of the object.
      */
     public String toString() {
-        var sb = new StringBuilder();
-        for (int i=0; i<columns.get(0).getValue().size(); i++) {
-            for (var key : getKeys()) {
-                var item = columns.stream()
-                        .filter(pair -> pair.getKey().equals(key))
-                        .findAny();
-                if (item.isPresent()) {
-                    sb.append(item.get().getValue().get(i));
-                    sb.append(" ");
-                }
-            }
-            sb.append("\n");
-        }
-        return sb.toString();
+        return columns.toString();
     }
 }

@@ -23,19 +23,19 @@ public class TableTests {
     @Test
     void testReturnsCorrectVariables(@NeverlangUnitParam(source = "CREATE TABLE Panetteria(nomePane VARCHAR(26), qtKg FLOAT)") ASTNode node) {
         DatabaseMap db = (DatabaseMap) node.getAttributes().get("db");
-        assertEquals(List.of("nomePane", "qtKg"), db.get("Panetteria").getKeys());
+        assertEquals(List.of("nomePane", "qtKg"), db.get("Panetteria").getKeyLists());
     }
 
     @Test
     void testAddColumn(@NeverlangUnitParam(files = "sql/add-col.sql") ASTNode node) {
         DatabaseMap db = (DatabaseMap) node.getAttributes().get("db");
-        assertEquals(List.of("nomePane", "qtKg", "prezzoKg"), db.get("Panetteria").getKeys());
+        assertEquals(List.of("nomePane", "qtKg", "prezzoKg"), db.get("Panetteria").getKeyLists());
     }
 
     @Test
     void testDropColumn(@NeverlangUnitParam(files = "sql/drop-col.sql") ASTNode node) {
         DatabaseMap db = (DatabaseMap) node.getAttributes().get("db");
-        assertEquals(List.of("nomePane"), db.get("Panetteria").getKeys());
+        assertEquals(List.of("nomePane"), db.get("Panetteria").getKeyLists());
     }
 
     @Test
@@ -49,7 +49,7 @@ public class TableTests {
         DatabaseMap db = (DatabaseMap) node.getAttributes().get("db");
         assertTrue(db.containsKey("Panetteria"));
         assertTrue(db.containsKey("Fioraio"));
-        assertEquals(List.of("qtKg", "prezzoKg"), db.get("Panetteria").getKeys());
-        assertEquals(List.of("nomeFiore"), db.get("Fioraio").getKeys());
+        assertEquals(List.of("qtKg", "prezzoKg"), db.get("Panetteria").getKeyLists());
+        assertEquals(List.of("nomeFiore"), db.get("Fioraio").getKeyLists());
     }
 }
