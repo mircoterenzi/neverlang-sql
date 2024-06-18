@@ -2,6 +2,7 @@ module sql.DataDeclaration {
     imports {
         java.util.ArrayList;
     }
+
     reference syntax {
         data:
             Data <-- Id Type;
@@ -14,6 +15,7 @@ module sql.DataDeclaration {
         boolType:
             Type <-- "bool";
     }
+    
     role(evaluation) {
         intType: .{
             $intType.var = new ArrayList<Integer>();

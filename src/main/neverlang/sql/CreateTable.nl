@@ -3,6 +3,7 @@ module sql.CreateTable {
         neverlang.utils.AttributeList;
         java.util.List;
     }
+    
     reference syntax {
         declaration:
             Operation <-- "CREATE" "TABLE" Id "(" DataList ")";
@@ -10,12 +11,17 @@ module sql.CreateTable {
 
     role(evaluation) {
         declaration: .{
+            eval $declaration[1];
+            eval $declaration[2];
+
             List<String> ids = AttributeList.collectFrom($declaration[2], "id");
             List<List<Object>> vars = AttributeList.collectFrom($declaration[2], "var");
             var table = new Table();
+
             for (int i=0; i<ids.size(); i++) {
                 table.add(ids.get(i), vars.get(i));
             }
+
             $$DatabaseMap.put($declaration[1].id, table);
         }.
     }
