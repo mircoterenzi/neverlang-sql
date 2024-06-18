@@ -23,7 +23,10 @@ public class DataTests {
     void testSelectAll(@NeverlangUnitParam(files = "sql/select-all.sql") ASTNode node) {
         DatabaseMap db = (DatabaseMap) node.getAttributes().get("db");
         assertEquals(
-            List.of(List.of("Rosetta", "Ciabatta", "Arabo"),List.of("10", "2", "13")),
+            List.of(
+                List.of("Rosetta", "Ciabatta", "Arabo"),
+                List.of(Float.parseFloat("10.0"), Float.parseFloat("2.0"), Float.parseFloat("13.0"))
+            ),
             db.get("Panetteria").getValues()
         );
     }

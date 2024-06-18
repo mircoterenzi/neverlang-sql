@@ -9,21 +9,24 @@ import java.util.stream.Collectors;
  */
 public class Table {
     private List<Pair<String, List<Object>>> columns;
+    private List<Types> types;  //TODO: fix management
 
     /**
      * Constructor for the Table class.
      */
     public Table() {
         columns = new ArrayList<>();
+        types = new ArrayList<>();
     }
 
     /**
      * Function used to add a column to the table.
      * @param name the name of the column.
-     * @param data the data of the column.
+     * @param type the type of vaules contained in the column.
      */
-    public void add(String name, List<Object> data) {
-        columns.add(new Pair<>(name, data));
+    public void add(String name, Types type) {
+        columns.add(new Pair<>(name, new ArrayList<>()));
+        types.add(type);
     }
 
     /**
@@ -50,14 +53,15 @@ public class Table {
         // For each column, add the data to the list of data.
         for (int i=0; i<values.size(); i++) {
             var heading = headings.get(i);
+            var type = types.get(i);
             var item = columns.stream()
                     .filter(pair -> pair.getKey().equals(heading))
                     .findAny();
+
             if (item.isPresent()) {
                 var column = columns.get(columns.indexOf(item.get()));
                 List<Object> list = column.getValue();
-                System.out.println(values.get(i) + ": " + values.get(i).getClass());    //TODO: check for variable type
-                list.add(values.get(i));
+                list.add(type.convert((String) values.get(i)));
                 column.setValue(list);
                 columns.set(columns.indexOf(column), column);
             } else {

@@ -1,8 +1,4 @@
 module sql.DataDeclaration {
-    imports {
-        java.util.ArrayList;
-    }
-
     reference syntax {
         data:
             Data <-- Id Type;
@@ -18,16 +14,16 @@ module sql.DataDeclaration {
     
     role(evaluation) {  //TODO: fix variable usage
         intType: .{
-            $intType.var = new ArrayList<Integer>();
+            $intType.var = Types.INT;
         }.
         floatType: .{
-            $floatType.var = new ArrayList<Float>();
+            $floatType.var = Types.FLOAT;
         }.
         stringType: .{
-            $stringType.var = new ArrayList<String>();
+            $stringType.var = Types.VARCHAR;
         }.
         boolType: .{
-            $boolType.var = new ArrayList<Boolean>();
+            $boolType.var = Types.BOOLEAN;
         }.
         data: .{
             $data.var = $data[2].var;
