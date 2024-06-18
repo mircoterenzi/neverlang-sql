@@ -14,14 +14,14 @@ import static org.junit.jupiter.api.Assertions.*;
 @NeverlangUnit(language = StructuredQueryLang.class)
 public class TableTests {
     @Test
-    void testReturnsDB(@NeverlangUnitParam(source = "CREATE TABLE Panetteria(nomePane string, qtKg double)") ASTNode node) {
+    void testReturnsDB(@NeverlangUnitParam(source = "CREATE TABLE Panetteria(nomePane VARCHAR(26), qtKg FLOAT)") ASTNode node) {
         var db = node.getAttributes().get("db");
         assertInstanceOf(DatabaseMap.class, db);
         assertTrue(((DatabaseMap) db).containsKey("Panetteria"));
     }
 
     @Test
-    void testReturnsCorrectVariables(@NeverlangUnitParam(source = "CREATE TABLE Panetteria(nomePane string, qtKg double)") ASTNode node) {
+    void testReturnsCorrectVariables(@NeverlangUnitParam(source = "CREATE TABLE Panetteria(nomePane VARCHAR(26), qtKg FLOAT)") ASTNode node) {
         DatabaseMap db = (DatabaseMap) node.getAttributes().get("db");
         assertEquals(List.of("nomePane", "qtKg"), db.get("Panetteria").getKeys());
     }

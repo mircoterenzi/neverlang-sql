@@ -43,7 +43,9 @@ public class Table {
      */
     public void addValues(List<String> headings, List<Object> values) {
         if (headings.size() != values.size()) { // The list of data has to be the same lenght of the list of column names.
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(
+                "The number of variables and the number of values to be assigned to them are different"
+            );
         }
         // For each column, add the data to the list of data.
         for (int i=0; i<values.size(); i++) {
@@ -54,11 +56,14 @@ public class Table {
             if (item.isPresent()) {
                 var column = columns.get(columns.indexOf(item.get()));
                 List<Object> list = column.getValue();
+                System.out.println(values.get(i) + ": " + values.get(i).getClass());    //TODO: check for variable type
                 list.add(values.get(i));
                 column.setValue(list);
                 columns.set(columns.indexOf(column), column);
             } else {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException(
+                    "Column \"" + heading + "\" does not exist"
+                );
             }
         }
         // If there are columns that are not in the list, add null values.

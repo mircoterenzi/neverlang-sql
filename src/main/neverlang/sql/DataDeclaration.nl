@@ -7,21 +7,21 @@ module sql.DataDeclaration {
         data:
             Data <-- Id Type;
         intType:
-            Type <-- "int";
-        doubleType:
-            Type <-- "double";
+            Type <-- "INT";
+        floatType:
+            Type <-- "FLOAT";
         stringType:
-            Type <-- "string";
+            Type <-- "VARCHAR" "(" /[0-9]+/ ")";    //TODO: the number of char is fake atm
         boolType:
-            Type <-- "bool";
+            Type <-- "BOOLEAN";
     }
     
-    role(evaluation) {
+    role(evaluation) {  //TODO: fix variable usage
         intType: .{
             $intType.var = new ArrayList<Integer>();
         }.
-        doubleType: .{
-            $doubleType.var = new ArrayList<Double>();
+        floatType: .{
+            $floatType.var = new ArrayList<Float>();
         }.
         stringType: .{
             $stringType.var = new ArrayList<String>();
