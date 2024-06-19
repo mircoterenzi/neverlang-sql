@@ -25,7 +25,9 @@ public class DataTests {
         assertEquals(
             List.of(
                 List.of("Rosetta", "Ciabatta", "Arabo"),
-                List.of(Float.parseFloat("10.0"), Float.parseFloat("2.0"), Float.parseFloat("13.0"))
+                List.of(Float.parseFloat("10.0"), Float.parseFloat("2.0"), Float.parseFloat("13.0")),
+                List.of(20, 3, 50),
+                List.of(Boolean.TRUE, Boolean.TRUE, Boolean.FALSE)
             ),
             db.get("Panetteria").getValues()
         );
