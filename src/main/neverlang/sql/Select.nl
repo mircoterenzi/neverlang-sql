@@ -1,6 +1,7 @@
 module sql.Select {
     imports {
         neverlang.utils.AttributeList;
+        java.util.List;
     }
 
     reference syntax {
@@ -21,11 +22,16 @@ module sql.Select {
                 );
             }
 
-            System.out.println(
-                $$DatabaseMap.get($select[2].id)
-                        .getValues(AttributeList.collectFrom($select[1], "id"))
-                        .toString()
-            );
+            var lists = $$DatabaseMap.get($select[2].id).getValues(AttributeList.collectFrom($select[1], "id"));
+            var sb = new StringBuilder();
+
+            for (int i=0; i<lists.get(0).size(); i++) {
+                for (List<Object> list : lists) {
+                    sb.append(list.get(i) + " ");
+                }
+                sb.append("\n");
+            }
+            System.out.println(sb.toString());
         }.
         selectAll: .{
             eval $selectAll[1];
@@ -36,7 +42,7 @@ module sql.Select {
                 );
             }
 
-            System.out.println($$DatabaseMap.get($selectAll[1].id).getValues().toString());
+            System.out.println($$DatabaseMap.get($selectAll[1].id).toString());
         }.
     }
 }

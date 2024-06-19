@@ -112,6 +112,15 @@ public class Table {
      * Return a string representation of the object.
      */
     public String toString() {
-        return columns.toString();
+        var sb = new StringBuilder();
+        var keys = getKeyLists();
+
+        for (int i=0; i<columns.get(keys.get(0)).size(); i++) {
+            for (var key : keys) {
+                sb.append(columns.get(key).get(i) + " ");
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
     }
 }
