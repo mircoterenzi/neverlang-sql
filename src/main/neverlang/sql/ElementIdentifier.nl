@@ -1,7 +1,7 @@
 module sql.ElementIdentifier {
     reference syntax {
         id:
-            Id <-- /[a-zA-Z]+/;
+            Id <-- /\w+/;
     }
 
     role(evaluation) {

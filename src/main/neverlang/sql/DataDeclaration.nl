@@ -12,7 +12,7 @@ module sql.DataDeclaration {
             Type <-- "BOOLEAN";
     }
     
-    role(evaluation) {  //TODO: fix variable usage
+    role(evaluation) {
         intType: .{
             $intType.var = Types.INT;
         }.

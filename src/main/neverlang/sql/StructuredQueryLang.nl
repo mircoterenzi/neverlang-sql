@@ -11,6 +11,8 @@ language sql.StructuredQueryLang {
         sql.Insert
         sql.Select
         sql.Program
+        sql.Value
+        sql.ValueList
     endemic slices
         sql.DatabaseCache
     roles syntax < evaluation
