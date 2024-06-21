@@ -7,7 +7,7 @@ module sql.DataDeclaration {
         floatType:
             Type <-- "FLOAT";
         stringType:
-            Type <-- "VARCHAR" "(" /[0-9]+/ ")";    //TODO: the number of char is fake atm
+            Type <-- "VARCHAR" "(" Integer ")";    //TODO: the number of char is fake atm
         boolType:
             Type <-- "BOOLEAN";
     }

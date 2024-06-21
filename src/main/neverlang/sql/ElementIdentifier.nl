@@ -1,12 +1,12 @@
 module sql.ElementIdentifier {
     reference syntax {
         id:
-            Id <-- /\w+/;
+            Id <-- String;
     }
 
     role(evaluation) {
         id: .{
-            $id.id = #0.text;
+            $id.id = $id[1].id;
         }.
     }
 }
