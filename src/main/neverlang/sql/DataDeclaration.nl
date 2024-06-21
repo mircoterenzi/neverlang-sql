@@ -26,8 +26,8 @@ module sql.DataDeclaration {
             $boolType.var = Types.BOOLEAN;
         }.
         data: .{
-            $data.var = $data[2].var;
-            $data.id = $data[1].id;
+            $data.var = $data[2]:var;
+            $data.id = $data[1]:id;
         }.
     }
 }

@@ -2,16 +2,17 @@ module sql.Value {
     reference syntax {
         string:
             String <-- /[a-zA-Z]+/;
-            Value <-- String;
         integer:
             Integer <-- /\d+/;
-            Value <-- Integer;
         float:
             Float <-- /\d*\.\d+/;
+        value:
+            Value <-- String;
+            Value <-- Integer;
             Value <-- Float;
     }
 
-    role (evaluation) {
+    role (ids) {
         string: .{
             $string.id = #0.text;
         }.

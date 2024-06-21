@@ -6,15 +6,15 @@ language sql.StructuredQueryLang {
         sql.ElementIdentifier
         sql.IdList
         sql.AlterTable
-        sql.OperationList
         sql.DropTable
         sql.Insert
         sql.Select
         sql.Value
         sql.ValueList
+        sql.OperationList
     endemic slices
         sql.DatabaseCache
-    roles syntax < evaluation <+ register
+    roles syntax < ids < evaluation <+ register
     rename {
         OperationList --> Program;
     }

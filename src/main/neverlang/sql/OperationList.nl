@@ -4,14 +4,15 @@ module sql.OperationList {
             OperationList <-- Operation;
         list:
             OperationList <-- OperationList ";" Operation;
+        empty:
             Operation <-- "";
     }
 
     role(register) {
-        single: .{
+        single: @{
             $single.db = $$DatabaseMap;
         }.
-        list: .{
+        list: @{
             $list.db = $$DatabaseMap;
         }.
     }
