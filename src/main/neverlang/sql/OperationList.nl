@@ -6,4 +6,13 @@ module sql.OperationList {
             OperationList <-- OperationList ";" Operation;
             Operation <-- "";
     }
+
+    role(register) {
+        single: .{
+            $single.db = $$DatabaseMap;
+        }.
+        list: .{
+            $list.db = $$DatabaseMap;
+        }.
+    }
 }
