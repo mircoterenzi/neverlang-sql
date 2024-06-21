@@ -14,7 +14,7 @@ language sql.StructuredQueryLang {
         sql.ValueList
     endemic slices
         sql.DatabaseCache
-    roles syntax < evaluation
+    roles syntax < evaluation <+ register
     rename {
         OperationList --> Program;
     }
