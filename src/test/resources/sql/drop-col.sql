@@ -1,5 +1,9 @@
-CREATE TABLE Panetteria(
-    nomePane VARCHAR(26),
-    qtKg FLOAT
+CREATE TABLE Employee (
+    EmployeeID INT,
+    FirstName VARCHAR(50),
+    LastName VARCHAR(50),
+    Salary FLOAT
 );
-ALTER TABLE Panetteria DROP qtKg
+
+ALTER TABLE Employee
+DROP Salary;

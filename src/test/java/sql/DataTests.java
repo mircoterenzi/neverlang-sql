@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @NeverlangUnit(language = StructuredQueryLang.class)
 public class DataTests {
     @Test
-    void testInsertInto(@NeverlangUnitParam(files = "sql/add-values.sql") ASTNode node) {
+    void testInsertInto(@NeverlangUnitParam(files = "sql/insert-values.sql") ASTNode node) {
         var db = node.getAttributes().get("db");
         assertInstanceOf(DatabaseMap.class, db);
     }
@@ -24,12 +24,14 @@ public class DataTests {
         DatabaseMap db = (DatabaseMap) node.getAttributes().get("db");
         assertEquals(
             List.of(
-                List.of("Rosetta", "Ciabatta", "Arabo"),
-                List.of(Float.parseFloat("10.0"), Float.parseFloat("2.0"), Float.parseFloat("13.0")),
-                List.of(20, 3, 50),
-                List.of(Boolean.TRUE, Boolean.TRUE, Boolean.FALSE)
+                List.of(1, 2, 3, 4, 5),
+                List.of("IlNomedellaRosa","CentoAnnidiSolitudine","IlSignoredegliAnelli","1984","IlGrandeGatsby"),
+                List.of("UmbertoEco","GabrielGarciaMarquez","JRRTolkien","GeorgeOrwell","FScottFitzgerald"),
+                List.of(1980, 1967, 1954, 1949, 1925),
+                List.of(19.99f, 12.50f, 25.00f, 14.99f, 10.99f),
+                List.of(Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Boolean.TRUE, Boolean.FALSE)
             ),
-            db.get("Panetteria").getValues()
+            db.get("Book").getValues()
         );
     }
 
@@ -37,8 +39,11 @@ public class DataTests {
     void testSelectColumn(@NeverlangUnitParam(files = "sql/select-column.sql") ASTNode node) {
         DatabaseMap db = (DatabaseMap) node.getAttributes().get("db");
         assertEquals(
-            List.of(List.of("Rosetta", "Ciabatta", "Arabo")),
-            db.get("Panetteria").getValues(List.of("nomePane"))
+            List.of(
+                List.of("SummerPicnic","TechConference","CharityGala","HolidayParty"),
+                List.of(100,300,200,150)
+            ),
+            db.get("EventDetails").getValues(List.of("EventName","MaxAttendees"))
         );
     }
 }

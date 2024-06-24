@@ -1,5 +1,8 @@
-CREATE TABLE Panetteria(
-    nomePane VARCHAR(26),
-    qtKg FLOAT
+CREATE TABLE Product (
+    ProductID INT,
+    ProductName VARCHAR(100),
+    Price FLOAT,
+    InStock BOOLEAN
 );
-DROP TABLE Panetteria
+
+DROP TABLE Product;

@@ -7,9 +7,9 @@ public enum Types {
     FLOAT(str -> Float.parseFloat(str)),
     VARCHAR(str -> str),
     BOOLEAN(str -> {
-        if (str.equals("True")) {
+        if (str.equals("TRUE")) {
             return Boolean.TRUE;
-        } else if (str.equals("False")) {
+        } else if (str.equals("FALSE")) {
             return Boolean.FALSE;
         } else {
             throw new IllegalArgumentException("Error during the boolean evaluation");

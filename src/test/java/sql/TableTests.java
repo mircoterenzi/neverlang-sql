@@ -14,45 +14,57 @@ import static org.junit.jupiter.api.Assertions.*;
 @NeverlangUnit(language = StructuredQueryLang.class)
 public class TableTests {
     @Test
-    void testReturnsDB(@NeverlangUnitParam(source = "CREATE TABLE Panetteria(nomePane VARCHAR(26), prezzoKg FLOAT, qt INT, fattoInCasa BOOLEAN)") ASTNode node) {
+    void testReturnsDB(@NeverlangUnitParam(source = "CREATE TABLE Product (" +
+                "ProductID INT," +
+                "ProductName VARCHAR(100)," +
+                "Price FLOAT," +
+                "InStock BOOLEAN" +
+                ");") ASTNode node) {
         var db = node.getAttributes().get("db");
         assertInstanceOf(DatabaseMap.class, db);
-        assertTrue(((DatabaseMap) db).containsKey("Panetteria"));
+        assertTrue(((DatabaseMap) db).containsKey("Product"));
     }
 
     @Test
-    void testReturnsCorrectVariables(@NeverlangUnitParam(source = "CREATE TABLE Panetteria(nomePane VARCHAR(26), prezzoKg FLOAT, qt INT, fattoInCasa BOOLEAN)") ASTNode node) {
+    void testReturnsCorrectVariables(@NeverlangUnitParam(source = "CREATE TABLE Product (" +
+                "ProductID INT," +
+                "ProductName VARCHAR(100)," +
+                "Price FLOAT," +
+                "InStock BOOLEAN" +
+                ");") ASTNode node) {
         DatabaseMap db = (DatabaseMap) node.getAttributes().get("db");
         assertEquals(
-            List.of("nomePane", "prezzoKg", "qt", "fattoInCasa"), 
-            db.get("Panetteria").getKeyLists()
+            List.of("ProductID","ProductName","Price","InStock"), 
+            db.get("Product").getKeyLists()
         );
     }
 
     @Test
     void testAddColumn(@NeverlangUnitParam(files = "sql/add-col.sql") ASTNode node) {
         DatabaseMap db = (DatabaseMap) node.getAttributes().get("db");
-        assertEquals(List.of("nomePane", "qtKg", "prezzoKg"), db.get("Panetteria").getKeyLists());
+        assertEquals(
+            List.of("DepartmentID","DepartmentName","ManagerName","Budget"), 
+            db.get("Department").getKeyLists()
+        );
     }
 
     @Test
     void testDropColumn(@NeverlangUnitParam(files = "sql/drop-col.sql") ASTNode node) {
         DatabaseMap db = (DatabaseMap) node.getAttributes().get("db");
-        assertEquals(List.of("nomePane"), db.get("Panetteria").getKeyLists());
+        assertEquals(List.of("EmployeeID","FirstName","LastName"), db.get("Employee").getKeyLists());
     }
 
     @Test
     void testDropTable(@NeverlangUnitParam(files = "sql/drop-table.sql") ASTNode node) {
         DatabaseMap db = (DatabaseMap) node.getAttributes().get("db");
-        assertFalse(db.containsKey("Panetteria"));
+        assertFalse(db.containsKey("Product"));
     }
 
     @Test
     void testMultiple(@NeverlangUnitParam(files = "sql/multiple-operations.sql") ASTNode node) {
         DatabaseMap db = (DatabaseMap) node.getAttributes().get("db");
-        assertTrue(db.containsKey("Panetteria"));
-        assertTrue(db.containsKey("Fioraio"));
-        assertEquals(List.of("qtKg", "prezzoKg"), db.get("Panetteria").getKeyLists());
-        assertEquals(List.of("nomeFiore"), db.get("Fioraio").getKeyLists());
+        assertFalse(db.containsKey("Customer"));
+        assertTrue(db.containsKey("Orders"));
+        assertEquals(List.of("OrderID","CustomerID","ShippingAddress","OrderStatus"), db.get("Orders").getKeyLists());
     }
 }
