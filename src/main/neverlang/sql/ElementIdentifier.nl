@@ -6,7 +6,7 @@ module sql.ElementIdentifier {
 
     role(evaluation) {
         id: .{
-            $id.id = $id[1].id;
+            $id.id = $id[1].val;
         }.
     }
 }

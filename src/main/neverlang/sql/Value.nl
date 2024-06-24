@@ -12,15 +12,15 @@ module sql.Value {
             Value <-- Float;
     }
 
-    role (ids) {
+    role (values) {
         string: .{
-            $string.id = #0.text;
+            $string.val = #0.text;
         }.
         integer: .{
-            $integer.id = #0.text;
+            $integer.val = #0.text;
         }.
         float: .{
-            $float.id = #0.text;
+            $float.val = #0.text;
         }.
     }
 }
