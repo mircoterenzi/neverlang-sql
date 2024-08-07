@@ -32,7 +32,7 @@ module sql.ElementIdentifier {
 
     role(evaluation) {
         id: .{
-            $id.id = #0.text;
+            $id.value = #0.text;
         }.
     }
 }

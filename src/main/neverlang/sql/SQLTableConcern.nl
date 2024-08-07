@@ -19,13 +19,13 @@ module sql.CreateTable {
         declaration: .{
             eval $declaration[1];
             eval $declaration[2];
-            List<String> ids = AttributeList.collectFrom($declaration[2], "id");
-            List<Types> types = AttributeList.collectFrom($declaration[2], "var");
+            List<String> ids = AttributeList.collectFrom($declaration[2], "value");
+            List<Types> types = AttributeList.collectFrom($declaration[2], "type");
             var table = new Table();
             for (int i=0; i<ids.size(); i++) {
                 table.addColumn(ids.get(i), types.get(i));
             }
-            $$DatabaseMap.put($declaration[1].id, table);
+            $$DatabaseMap.put($declaration[1].value, table);
         }.
     }
 }
@@ -38,7 +38,7 @@ module sql.DropTable {
 
     role(evaluation) {
         drop: .{
-            String id = $drop[1]:id;
+            String id = $drop[1]:value;
             if (!$$DatabaseMap.containsKey(id)) {
                 throw new IllegalArgumentException(
                     "Unexpected value: \"" + id + "\" is not an existing table"
@@ -61,22 +61,22 @@ module sql.AlterTable {
 
     role(evaluation) {
         alter: .{
-            String id = $alter[1]:id;
+            String id = $alter[1]:value;
             if (!$$DatabaseMap.containsKey(id)) {
                 throw new IllegalArgumentException(
                     "Unexpected value: \"" + id + "\" is not an existing table"
                 );
             }
-            $alter.id = id;
+            $alter.value = id;
         }.
     }
 
     role(register) {
         add: @{
-            $$DatabaseMap.get($add[1].id).addColumn($add[2].id, $add[2].var);
+            $$DatabaseMap.get($add[1].value).addColumn($add[2].value, $add[2].type);
         }.
         drop: @{
-            $$DatabaseMap.get($drop[1].id).removeColumn($drop[2].id);
+            $$DatabaseMap.get($drop[1].value).removeColumn($drop[2].value);
         }.
     }
 }

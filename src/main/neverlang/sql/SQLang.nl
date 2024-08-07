@@ -1,4 +1,5 @@
 language sql.SQLang {
+
     slices
         bundle (sql.SQLVariablesConcern)
         bundle (sql.SQLDeclarationConcern)
@@ -6,10 +7,14 @@ language sql.SQLang {
         bundle (sql.SQLTableConcern)
         sql.Insert
         sql.Select
+
     endemic slices
         sql.DatabaseCache
+
     roles syntax < evaluation <+ register
+
     rename {
         OperationList --> Program;
     }
+    
 }

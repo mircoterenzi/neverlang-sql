@@ -19,20 +19,20 @@ module sql.DataDeclaration {
     
     role(evaluation) {
         intType: .{
-            $intType.var = Types.INT;
+            $intType.type = Types.INT;
         }.
         floatType: .{
-            $floatType.var = Types.FLOAT;
+            $floatType.type = Types.FLOAT;
         }.
         stringType: .{
-            $stringType.var = Types.VARCHAR;
+            $stringType.type = Types.VARCHAR;
         }.
         boolType: .{
-            $boolType.var = Types.BOOLEAN;
+            $boolType.type = Types.BOOLEAN;
         }.
         data: .{
-            $data.var = $data[2]:var;
-            $data.id = $data[1]:id;
+            $data.type = $data[2]:type;
+            $data.value = $data[1]:value;
         }.
     }
 }
