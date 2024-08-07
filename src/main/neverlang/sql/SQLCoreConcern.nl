@@ -27,12 +27,12 @@ module sql.OperationList {
 module sql.ElementIdentifier {
     reference syntax {
         id:
-            Id <-- String;
+            Id <-- /\b[a-zA-Z_][a-zA-Z0-9_]*\b/;
     }
 
     role(evaluation) {
         id: .{
-            $id.id = $id[1].val;
+            $id.id = #0.text;
         }.
     }
 }
