@@ -1,20 +1,14 @@
 language sql.SQLang {
     slices
-        sql.CreateTable
-        sql.DataDeclaration
-        sql.DataList
-        sql.ElementIdentifier
-        sql.IdList
-        sql.AlterTable
-        sql.DropTable
+        bundle (sql.SQLVariablesConcern)
+        bundle (sql.SQLDeclarationConcern)
+        bundle (sql.SQLCoreConcern)
+        bundle (sql.SQLTableConcern)
         sql.Insert
         sql.Select
-        sql.Value
-        sql.ValueList
-        sql.OperationList
     endemic slices
         sql.DatabaseCache
-    roles syntax < values < evaluation <+ register
+    roles syntax < evaluation <+ register
     rename {
         OperationList --> Program;
     }
