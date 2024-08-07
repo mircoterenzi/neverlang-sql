@@ -1,4 +1,4 @@
-language sql.StructuredQueryLang {
+language sql.SQLang {
     slices
         sql.CreateTable
         sql.DataDeclaration

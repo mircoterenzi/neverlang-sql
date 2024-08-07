@@ -11,7 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(NeverlangExt.class)
-@NeverlangUnit(language = StructuredQueryLang.class)
+@NeverlangUnit(language = SQLang.class)
 public class TableTests {
     @Test
     void testReturnsDB(@NeverlangUnitParam(source = "CREATE TABLE Product (" +

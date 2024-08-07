@@ -33,10 +33,10 @@ neverlang {
 
 nlgcheck {
     nlgcheckVersion = '0.1.0-SNAPSHOT'
-    languages = ['sql.StructuredQueryLang' ]
+    languages = ['sql.SQLang' ]
 }
 
 task runSM(type: neverlang.execClass){
     classpath = sourceSets.main.runtimeClasspath
-    languageMainClass = "sql.StructuredQueryLang"
+    languageMainClass = "sql.SQLang"
 }
