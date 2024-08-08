@@ -80,7 +80,7 @@ public class Table {
             if (columns.containsKey(heading)) {
                 var column = columns.get(heading);
 
-                if (column.getType().checkType(values.get(i))) {
+                if (column.getType().checkType(values.get(i)) || values.get(i) == null) {
                     column.add(values.get(i));
                     columns.put(heading, column);
                 } else {
