@@ -5,7 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.stream.Collectors;
 
 /**
- * Class used to store a table of data.
+ * Represents a table in a SQL database.
  */
 public class Table {
 
@@ -19,6 +19,13 @@ public class Table {
      */
     public Table() {
         columns = new LinkedHashMap<>();
+    }
+
+    /**
+     * @return the list of column names.
+     */
+    public List<String> getHeadings() {
+        return columns.keySet().stream().collect(Collectors.toList());
     }
 
     /**
@@ -48,17 +55,17 @@ public class Table {
     }
 
     /**
-     * Function used to remove a column from the table.
-     * @param name the name of the column.
+     * Removes a column from the table.
+     * @param name the name of the column
      */
     public void remove(String name) {
         columns.remove(name);
     }
 
     /**
-     * Function used to add data to a list of columns.
-     * @param headings list of column names.
-     * @param values list of data to be added to each column.
+     * Adds data to a specific list of columns.
+     * @param headings list of column names
+     * @param values list of data to be added to each column
      */
     public void put(List<String> headings, List<Object> values) {
         if (headings.size() != values.size()) { // The list of data has to be the same lenght of the list of column names.
@@ -96,25 +103,17 @@ public class Table {
     }
 
     /**
-     * Function used to add data to the table.
-     * @param values list of data to be added to the table.
+     * Adds data to the table.
+     * @param values list of data to be added to the table
      */
-    public void putAll(List<Object> values) {
+    public void put(List<Object> values) {
         put(getHeadings(), values);
     }
 
     /**
-     * Function used to get the column names.
-     * @return the list of column names.
-     */
-    public List<String> getHeadings() {
-        return columns.keySet().stream().collect(Collectors.toList());
-    }
-
-    /**
-     * Function used to get data from a list of columns.
+     * Gets data from a specific list of columns.
      * @param keys the list of column names.
-     * @return the list of data of the columns.
+     * @return the list of data of the columns
      */
     public List<List<Object>> get(List<String> keys) {
         return keys.stream()
@@ -123,21 +122,21 @@ public class Table {
     }
 
     /**
-     * Function used to get data from the table.
+     * Gets datas from the table.
      * @return the list of data of the table.
      */
-    public List<List<Object>> getAll() {
+    public List<List<Object>> get() {
         return get(getHeadings());
     }
 
     /**
-     * Return a string representation of the Object.
+     * Return a string representation of the Table.
      */
     public String toString() {
         var sb = new StringBuilder();
         var keys = getHeadings();
 
-        for (int i=0; i<columns.get(keys.get(0)).size(); i++) {
+        for (int i=0; i<columns.get(keys.get(0)).getSize(); i++) {
             for (var key : keys) {
                 sb.append(columns.get(key).get(i) + " ");
             }

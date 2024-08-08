@@ -31,7 +31,7 @@ public class DataTests {
                 List.of(19.99f, 12.50f, 25.00f, 14.99f, 10.99f),
                 List.of(Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Boolean.TRUE, Boolean.FALSE)
             ),
-            db.get("Book").getAll()
+            db.get("Book").get()
         );
     }
 

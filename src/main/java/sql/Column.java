@@ -29,10 +29,10 @@ public class Column {
     private List<Object> values = new ArrayList<>();
 
     /**
-     * Constructs a new Column object with the specified data type, nullability, and uniqueness.
-     * @param type      the data type of the column
+     * Constructs a new column object with the specified data type, nullability, and uniqueness.
+     * @param type the data type of the column
      * @param isNotNull indicates whether the column allows null values
-     * @param isUnique  indicates whether the column values must be unique
+     * @param isUnique indicates whether the column values must be unique
      */
     public Column(Types type, boolean isNotNull, boolean isUnique) {
         this.type = type;
@@ -41,7 +41,6 @@ public class Column {
     }
 
     /**
-     * Returns the data type of the column.
      * @return the data type of the column
      */
     public Types getType() {
@@ -49,7 +48,13 @@ public class Column {
     }
 
     /**
-     * Checks whether the column allows null values.
+     * @return the number of values in the column
+     */
+    public int getSize() {
+        return values.size();
+    }
+
+    /**
      * @return true if the column allows null values, false otherwise
      */
     public boolean isNotNull() {
@@ -57,7 +62,6 @@ public class Column {
     }
 
     /**
-     * Checks whether the column values must be unique.
      * @return true if the column values must be unique, false otherwise
      */
     public boolean isUnique() {
@@ -69,11 +73,11 @@ public class Column {
      * @param elements the value to be added
      */
     public void add(Object element) {
-        values.add(element);
+        values.add(element);    //TODO: add a check on whether the value is unique and/or not-null (if necessary)
     }
 
     /**
-     * Adds the specified list of values to the column.
+     * Adds a list of values to the column.
      * @param elements the list of values to be added
      */
     public void addAll(List<Object> elements) {
@@ -81,28 +85,19 @@ public class Column {
     }
 
     /**
-     * Returns the list of values associated with the column.
-     * @return the list of values associated with the column
-     */
-    public List<Object> getAll() {
-        return values;
-    }
-
-    /**
-     * Retrieves the Object at the specified index.
-     * @param index the index of the Object to retrieve
-     * @return the Object at the specified index
+     * Retrieves the object at the specified index.
+     * @param index the index of the object to retrieve
+     * @return the object at the specified index
      */
     public Object get(int index) {
         return values.get(index);
     }
 
     /**
-     * Returns the size of the column.
-     * @return The number of values in the column.
+     * @return the list of values associated with the column
      */
-    public int size() {
-        return values.size();
+    public List<Object> getAll() {
+        return values;
     }
 
 }
