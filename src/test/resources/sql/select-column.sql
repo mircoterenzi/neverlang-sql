@@ -8,16 +8,16 @@ CREATE TABLE EventDetails (
 );
 
 INSERT INTO EventDetails (EventID, EventName, Location, Organizer, MaxAttendees, IsCancelled)
-VALUES (1, "SummerPicnic", "CentralPark", "CompanyEventsTeam", 100, FALSE);
+VALUES (1, "Summer Picnic", "Central Park", "Company Events Team", 100, FALSE);
 
 INSERT INTO EventDetails (EventID, EventName, Location, Organizer, MaxAttendees, IsCancelled)
-VALUES (2, "TechConference", "ConventionCenter", "TechConGroup", 300, FALSE);
+VALUES (2, "Tech Conference", "Convention Center", "Tech Group", 300, FALSE);
 
 INSERT INTO EventDetails (EventID, EventName, Location, Organizer, MaxAttendees, IsCancelled)
-VALUES (3, "CharityGala", "GrandHotelBallroom", "LocalCharityFoundation", 200, TRUE);
+VALUES (3, "Charity Gala", "Grand Hotel Ball room", "Local Charity Foundation", 200, TRUE);
 
 INSERT INTO EventDetails (EventID, EventName, Location, Organizer, MaxAttendees, IsCancelled)
-VALUES (4, "HolidayParty", "OfficeHeadquarters", "HRDepartment", 150, FALSE);
+VALUES (4, "Holiday Party", "Office Headquarters", "HR Department", 150, FALSE);
 
 SELECT EventName, MaxAttendees
 FROM EventDetails;

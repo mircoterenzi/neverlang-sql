@@ -25,8 +25,8 @@ public class DataTests {
         assertEquals(
             List.of(
                 List.of(1, 2, 3, 4, 5),
-                List.of("IlNomedellaRosa","CentoAnnidiSolitudine","IlSignoredegliAnelli","1984","IlGrandeGatsby"),
-                List.of("UmbertoEco","GabrielGarciaMarquez","JRRTolkien","GeorgeOrwell","FScottFitzgerald"),
+                List.of("Il Nome della Rosa", "Cento Anni di Solitudine", "Il Signore degli Anelli", "1984", "Il Grande Gatsby"),
+                List.of("Umberto Eco", "Gabriel Garcia Marquez", "JRR Tolkien", "George Orwell", "F Scott Fitzgerald"),
                 List.of(1980, 1967, 1954, 1949, 1925),
                 List.of(19.99f, 12.50f, 25.00f, 14.99f, 10.99f),
                 List.of(Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Boolean.TRUE, Boolean.FALSE)
@@ -40,7 +40,7 @@ public class DataTests {
         DatabaseMap db = (DatabaseMap) node.getAttributes().get("db");
         assertEquals(
             List.of(
-                List.of("SummerPicnic","TechConference","CharityGala","HolidayParty"),
+                List.of("Summer Picnic","Tech Conference","Charity Gala","Holiday Party"),
                 List.of(100,300,200,150)
             ),
             db.get("EventDetails").getValues(List.of("EventName","MaxAttendees"))
