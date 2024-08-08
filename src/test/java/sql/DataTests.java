@@ -31,7 +31,7 @@ public class DataTests {
                 List.of(19.99f, 12.50f, 25.00f, 14.99f, 10.99f),
                 List.of(Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Boolean.TRUE, Boolean.FALSE)
             ),
-            db.get("Book").getValues()
+            db.get("Book").getAll()
         );
     }
 
@@ -43,7 +43,7 @@ public class DataTests {
                 List.of("Summer Picnic","Tech Conference","Charity Gala","Holiday Party"),
                 List.of(100,300,200,150)
             ),
-            db.get("EventDetails").getValues(List.of("EventName","MaxAttendees"))
+            db.get("EventDetails").get(List.of("EventName","MaxAttendees"))
         );
     }
 }

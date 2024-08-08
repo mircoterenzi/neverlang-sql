@@ -20,7 +20,7 @@ module sql.Select {
                 );
             }
             eval $select[1];
-            var lists = $$DatabaseMap.get($select[2].value).getValues(AttributeList.collectFrom($select[1], "value"));
+            var lists = $$DatabaseMap.get($select[2].value).get(AttributeList.collectFrom($select[1], "value"));
             var sb = new StringBuilder();
             for (int i=0; i<lists.get(0).size(); i++) {
                 for (List<Object> list : lists) {

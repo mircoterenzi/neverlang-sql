@@ -23,7 +23,7 @@ module sql.CreateTable {
             List<Types> types = AttributeList.collectFrom($declaration[2], "type");
             var table = new Table();
             for (int i=0; i<ids.size(); i++) {
-                table.addColumn(ids.get(i), types.get(i));
+                table.add(ids.get(i), types.get(i));
             }
             $$DatabaseMap.put($declaration[1].value, table);
         }.
@@ -73,10 +73,10 @@ module sql.AlterTable {
 
     role(register) {
         add: @{
-            $$DatabaseMap.get($add[1].value).addColumn($add[2].value, $add[2].type);
+            $$DatabaseMap.get($add[1].value).add($add[2].value, $add[2].type);
         }.
         drop: @{
-            $$DatabaseMap.get($drop[1].value).removeColumn($drop[2].value);
+            $$DatabaseMap.get($drop[1].value).remove($drop[2].value);
         }.
     }
 }

@@ -1,7 +1,6 @@
 package sql;
 
 import java.util.List;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.stream.Collectors;
 
@@ -9,42 +8,59 @@ import java.util.stream.Collectors;
  * Class used to store a table of data.
  */
 public class Table {
-    private LinkedHashMap<String, List<Object>> columns;
-    private LinkedHashMap<String, Types> types;
+
+    /**
+     * The list of columns that compose the table.
+     */
+    private LinkedHashMap<String, Column> columns;
 
     /**
      * Constructor for the Table class.
      */
     public Table() {
         columns = new LinkedHashMap<>();
-        types = new LinkedHashMap<>();
     }
 
     /**
-     * Function used to add a column to the table.
-     * @param name the name of the column.
-     * @param type the type of vaules contained in the column.
+     * Adds a new column to the table.
+     * @param name the name of the column
+     * @param type the data type of the column
+     * @param isNotNull specifies if the column allows null values or not
+     * @param isUnique specifies if the column values must be unique or not
+     * @throws IllegalArgumentException if the given name is already used for another column
      */
-    public void addColumn(String name, Types type) {
-        columns.put(name, new ArrayList<>());
-        types.put(name, type);
+    public void add(String name, Types type, Boolean isNotNull, Boolean isUnique) {
+        if (columns.containsKey(name)) {
+            throw new IllegalArgumentException("This name it's used to identify another column");
+        } else {
+            columns.put(name, new Column(type, isNotNull, isUnique));
+        }
+    }
+
+    /**
+     * Adds a new column to the table.
+     * @param name the name of the column
+     * @param type the data type of the column
+     * @throws IllegalArgumentException if the given name is already used for another column
+     */
+    public void add(String name, Types type) {
+        add(name, type, false, false);
     }
 
     /**
      * Function used to remove a column from the table.
      * @param name the name of the column.
      */
-    public void removeColumn(String name) {
+    public void remove(String name) {
         columns.remove(name);
-        types.remove(name);
     }
 
     /**
-     * Function used to add data to a list of column.
+     * Function used to add data to a list of columns.
      * @param headings list of column names.
      * @param values list of data to be added to each column.
      */
-    public void addValues(List<String> headings, List<Object> values) {
+    public void put(List<String> headings, List<Object> values) {
         if (headings.size() != values.size()) { // The list of data has to be the same lenght of the list of column names.
             throw new IllegalArgumentException(
                 "The number of variables and the number of values to be assigned to them are different"
@@ -54,11 +70,11 @@ public class Table {
         for (int i=0; i<values.size(); i++) {
             var heading = headings.get(i);
 
-            if (columns.containsKey(heading) && types.containsKey(heading)) {
-                var columnValues = columns.get(heading);
+            if (columns.containsKey(heading)) {
+                var column = columns.get(heading);
 
-                columnValues.add(types.get(heading).convert((String) values.get(i)));
-                columns.put(heading, columnValues);
+                column.add(column.getType().convert((String) values.get(i)));
+                columns.put(heading, column);
             } else {
                 throw new IllegalArgumentException(
                     "Column \"" + heading + "\" does not exist"
@@ -77,15 +93,15 @@ public class Table {
      * Function used to add data to the table.
      * @param values list of data to be added to the table.
      */
-    public void addValues(List<Object> values) {
-        addValues(getKeyLists(), values);
+    public void putAll(List<Object> values) {
+        put(getHeadings(), values);
     }
 
     /**
      * Function used to get the column names.
      * @return the list of column names.
      */
-    public List<String> getKeyLists() {
+    public List<String> getHeadings() {
         return columns.keySet().stream().collect(Collectors.toList());
     }
 
@@ -94,9 +110,9 @@ public class Table {
      * @param keys the list of column names.
      * @return the list of data of the columns.
      */
-    public List<List<Object>> getValues(List<String> keys) {
+    public List<List<Object>> get(List<String> keys) {
         return keys.stream()
-                .map(key -> columns.get(key))
+                .map(key -> columns.get(key).getAll())
                 .collect(Collectors.toList());
     }
 
@@ -104,16 +120,16 @@ public class Table {
      * Function used to get data from the table.
      * @return the list of data of the table.
      */
-    public List<List<Object>> getValues() {
-        return getValues(getKeyLists());
+    public List<List<Object>> getAll() {
+        return get(getHeadings());
     }
 
     /**
-     * Return a string representation of the object.
+     * Return a string representation of the Object.
      */
     public String toString() {
         var sb = new StringBuilder();
-        var keys = getKeyLists();
+        var keys = getHeadings();
 
         for (int i=0; i<columns.get(keys.get(0)).size(); i++) {
             for (var key : keys) {
