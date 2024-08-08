@@ -20,16 +20,16 @@ module sql.Value {
 
     role (evaluation) {
         [STRING] .{
-            $STRING[0].val = #0.matches.group(2);
+            $STRING[0].value = #0.matches.group(2);
         }.
         [INT] .{
-            $INT[0].val = #0.text;
+            $INT[0].value = #0.text;
         }.
         [FLOAT] .{
-            $FLOAT[0].val = #0.text;
+            $FLOAT[0].value = #0.text;
         }.
         [BOOL] .{
-            $BOOL[0].val = #0.text;
+            $BOOL[0].value = #0.text;
         }.
     }
 }

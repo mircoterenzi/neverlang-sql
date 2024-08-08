@@ -13,7 +13,7 @@ module sql.Insert {
     role(evaluation) {
         insert: @{
             List<String> cols = AttributeList.collectFrom($insert[2], "value");
-            List<Object> values = AttributeList.collectFrom($insert[3], "val");
+            List<Object> values = AttributeList.collectFrom($insert[3], "value");
             $$DatabaseMap.get($insert[1].value).addValues(cols, values);
         }.
     }
