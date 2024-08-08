@@ -73,7 +73,7 @@ public class Table {
             if (columns.containsKey(heading)) {
                 var column = columns.get(heading);
 
-                if (column.getType().isIstanceOf(values.get(i))) {
+                if (column.getType().checkType(values.get(i))) {
                     column.add(values.get(i));
                     columns.put(heading, column);
                 } else {
