@@ -16,6 +16,9 @@ module sql.Value {
         
         [BOOL]      Bool <-- /\b(?:TRUE|FALSE)\b/[boolean];
                     Value <-- Bool;
+
+        [NULL]      Null <-- "NULL";
+                    Value <-- Null;
     }
 
     role (evaluation) {
@@ -30,6 +33,9 @@ module sql.Value {
         }.
         [BOOL] .{
             $BOOL[0].value = Boolean.parseBoolean(#0.text);
+        }.
+        [NULL] .{
+            $NULL[0].value = null;
         }.
     }
 }
