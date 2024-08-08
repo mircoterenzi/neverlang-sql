@@ -73,7 +73,13 @@ public class Column {
      * @param elements the value to be added
      */
     public void add(Object element) {
-        values.add(element);    //TODO: add a check on whether the value is unique and/or not-null (if necessary)
+        if (isUnique && values.contains(element)) {
+            throw new IllegalArgumentException("[DATA] Duplicate value in unique column");
+        } else if (isNotNull && element == null) {
+            throw new IllegalArgumentException("[DATA] Null value in non-null column");
+        } else {
+            values.add(element);
+        }
     }
 
     /**
