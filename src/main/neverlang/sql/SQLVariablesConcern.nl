@@ -23,13 +23,13 @@ module sql.Value {
             $STRING[0].value = #0.matches.group(2);
         }.
         [INT] .{
-            $INT[0].value = #0.text;
+            $INT[0].value = Integer.parseInt(#0.text);
         }.
         [FLOAT] .{
-            $FLOAT[0].value = #0.text;
+            $FLOAT[0].value = Float.parseFloat(#0.text);
         }.
         [BOOL] .{
-            $BOOL[0].value = #0.text;
+            $BOOL[0].value = Boolean.parseBoolean(#0.text);
         }.
     }
 }

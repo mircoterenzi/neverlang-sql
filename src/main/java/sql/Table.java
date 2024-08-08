@@ -73,8 +73,14 @@ public class Table {
             if (columns.containsKey(heading)) {
                 var column = columns.get(heading);
 
-                column.add(column.getType().convert((String) values.get(i)));
-                columns.put(heading, column);
+                if (column.getType().isIstanceOf(values.get(i))) {
+                    column.add(values.get(i));
+                    columns.put(heading, column);
+                } else {
+                    throw new IllegalArgumentException(
+                        "The value " + values.get(i) + " is not of the type " + column.getType()
+                    );
+                }
             } else {
                 throw new IllegalArgumentException(
                     "Column \"" + heading + "\" does not exist"

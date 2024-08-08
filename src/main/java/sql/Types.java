@@ -3,26 +3,18 @@ package sql;
 import java.util.function.Function;
 
 public enum Types {
-    INT(str -> Integer.parseInt(str)),
-    FLOAT(str -> Float.parseFloat(str)),
-    VARCHAR(str -> str),
-    BOOLEAN(str -> {
-        if (str.equals("TRUE")) {
-            return Boolean.TRUE;
-        } else if (str.equals("FALSE")) {
-            return Boolean.FALSE;
-        } else {
-            throw new IllegalArgumentException("Error during the boolean evaluation");
-        }
-    });
+    INT(obj -> obj instanceof Integer),
+    FLOAT(obj -> obj instanceof Float),
+    VARCHAR(obj -> obj instanceof String),
+    BOOLEAN(obj -> obj instanceof Boolean);
 
-    private Function<String,Object> convertFun;
+    private Function<Object, Boolean> isIstanceOf;
 
-    private Types(Function<String,Object> convertFun) {
-        this.convertFun = convertFun;
+    private Types(Function<Object, Boolean> isIstanceOf) {
+        this.isIstanceOf = isIstanceOf;
     }
 
-    public Object convert(String id) {
-        return convertFun.apply(id);
+    public Boolean isIstanceOf(Object elem) {
+        return isIstanceOf.apply(elem);
     }
 }
