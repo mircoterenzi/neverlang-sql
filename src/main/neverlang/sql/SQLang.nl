@@ -5,8 +5,8 @@ language sql.SQLang {
         bundle (sql.SQLDeclarationConcern)
         bundle (sql.SQLCoreConcern)
         bundle (sql.SQLTableConcern)
+        bundle (sql.SQLOutputConcern)
         sql.Insert
-        sql.Select
 
     endemic slices
         sql.DatabaseCache
