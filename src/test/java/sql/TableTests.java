@@ -35,7 +35,7 @@ public class TableTests {
         DatabaseMap db = (DatabaseMap) node.getAttributes().get("db");
         assertEquals(
             List.of("ProductID","ProductName","Price","InStock"), 
-            db.get("Product").getHeadings()
+            db.get("Product").getColumnNames()
         );
     }
 
@@ -44,14 +44,14 @@ public class TableTests {
         DatabaseMap db = (DatabaseMap) node.getAttributes().get("db");
         assertEquals(
             List.of("DepartmentID","DepartmentName","ManagerName","Budget"), 
-            db.get("Department").getHeadings()
+            db.get("Department").getColumnNames()
         );
     }
 
     @Test
     void testDropColumn(@NeverlangUnitParam(files = "sql/drop-col.sql") ASTNode node) {
         DatabaseMap db = (DatabaseMap) node.getAttributes().get("db");
-        assertEquals(List.of("EmployeeID","FirstName","LastName"), db.get("Employee").getHeadings());
+        assertEquals(List.of("EmployeeID","FirstName","LastName"), db.get("Employee").getColumnNames());
     }
 
     @Test
@@ -65,6 +65,6 @@ public class TableTests {
         DatabaseMap db = (DatabaseMap) node.getAttributes().get("db");
         assertFalse(db.containsKey("Customer"));
         assertTrue(db.containsKey("Orders"));
-        assertEquals(List.of("OrderID","CustomerID","ShippingAddress","OrderStatus"), db.get("Orders").getHeadings());
+        assertEquals(List.of("OrderID","CustomerID","ShippingAddress","OrderStatus"), db.get("Orders").getColumnNames());
     }
 }
