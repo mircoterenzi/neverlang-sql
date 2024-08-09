@@ -23,7 +23,7 @@ module sql.CreateTable {
             List<Types> types = AttributeList.collectFrom($declaration[2], "type");
             List<Boolean> not_nullity = AttributeList.collectFrom($declaration[2], "isNotNull");
             List<Boolean> uniqueness = AttributeList.collectFrom($declaration[2], "isUnique");
-            var table = new Table();
+            Table table = new Table();
             for (int i=0; i<ids.size(); i++) {
                 table.add(ids.get(i), types.get(i), not_nullity.get(i), uniqueness.get(i));
             }

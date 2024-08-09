@@ -75,28 +75,29 @@ public class Table {
         }
         // For each column, add the data to the list of data.
         for (int i=0; i<values.size(); i++) {
-            var heading = headings.get(i);
+            String curr_heading = headings.get(i);
 
-            if (columns.containsKey(heading)) {
-                var column = columns.get(heading);
+            if (columns.containsKey(curr_heading)) {
+                Column curr_column = columns.get(curr_heading);
+                Object curr_value = values.get(i);
 
-                if (column.getType().checkType(values.get(i)) || values.get(i) == null) {
-                    column.add(values.get(i));
-                    columns.put(heading, column);
+                if (curr_column.getType().checkType(curr_value) || curr_value == null) {
+                    curr_column.add(curr_value);
+                    columns.put(curr_heading, curr_column);
                 } else {
                     throw new IllegalArgumentException(
-                        "The value " + values.get(i) + " is not of the type " + column.getType()
+                        "The value " + curr_value + " is not of the type " + curr_column.getType()
                     );
                 }
             } else {
                 throw new IllegalArgumentException(
-                    "Column \"" + heading + "\" does not exist"
+                    "Column \"" + curr_heading + "\" does not exist"
                 );
             }
         }
         // If there are columns that are not in the list, add null values.
-        for (var columnName : columns.keySet()) {
-            if (!headings.contains(columnName)) {
+        for (String curr_heading : columns.keySet()) {
+            if (!headings.contains(curr_heading)) {
                 headings.add(null);
             }
         }
@@ -133,11 +134,11 @@ public class Table {
      * Return a string representation of the Table.
      */
     public String toString() {
-        var sb = new StringBuilder();
-        var keys = getHeadings();
+        StringBuilder sb = new StringBuilder();
+        List<String> keys = getHeadings();
 
         for (int i=0; i<columns.get(keys.get(0)).getSize(); i++) {
-            for (var key : keys) {
+            for (String key : keys) {
                 sb.append(columns.get(key).get(i) + " ");
             }
             sb.append("\n");
