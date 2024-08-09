@@ -14,7 +14,11 @@ module sql.Insert {
         insert: @{
             List<String> headings = AttributeList.collectFrom($insert[2], "value");
             List<Object> values = AttributeList.collectFrom($insert[3], "value");
-            $$DatabaseMap.get($insert[1].value).put(headings, values);
+            Tuple tuple = new Tuple();
+            for (int i=0; i<headings.size(); i++) {
+                tuple.put(headings.get(i), values.get(i));
+            }
+            $$DatabaseMap.get($insert[1].value).insertTuple(tuple);
         }.
     }
 }

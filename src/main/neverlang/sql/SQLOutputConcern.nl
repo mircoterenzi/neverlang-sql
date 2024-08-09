@@ -18,15 +18,18 @@ module sql.PrintData {
 
     role(evaluation) {
         [PRINT] .{
-            List<List<Object>> lists = $PRINT[1].data;
-            var sb = new StringBuilder();
-            for (int i=0; i<lists.get(0).size(); i++) {
-                for (List<Object> list : lists) {
-                    sb.append(list.get(i) + " ");
-                }
-                sb.append("\n");
+            List<Tuple> lists = $PRINT[1].data;
+            List<String> headings = $PRINT[1].headings;
+            for (String heading : headings) {
+                System.out.print(heading + "\t");
             }
-            System.out.println(sb.toString());
+            System.out.println();
+            for (Tuple list : lists) {
+                for (String heading : headings) {
+                    System.out.print(list.get(heading) + "\t");
+                }
+                System.out.println();
+            }
         }.
     }
 }
@@ -64,12 +67,12 @@ module sql.ColumnSelector {
 
     role(evaluation) {
         [TABLE] .{
-            $TABLE[0].headings = $$DatabaseMap.get($TABLE[1].value).getHeadings();
-            $TABLE[0].data = $$DatabaseMap.get($TABLE[1].value).get();
+            $TABLE[0].headings = $$DatabaseMap.get($TABLE[1].value).getColumnNames();
+            $TABLE[0].data = $$DatabaseMap.get($TABLE[1].value).selectAll();
         }.
         [COLUMN_LIST] @{
             $COLUMN_LIST[0].headings = AttributeList.collectFrom($COLUMN_LIST[1], "value");
-            $COLUMN_LIST[0].data = $$DatabaseMap.get($COLUMN_LIST[2].value).get();
+            $COLUMN_LIST[0].data = $$DatabaseMap.get($COLUMN_LIST[2].value).selectAll();
         }.
     }
 }
