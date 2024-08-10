@@ -19,6 +19,7 @@ module sql.PrintData {
     role(evaluation) {
         [PRINT] .{
             System.out.println($PRINT[1].table.toString());
+            $$DatabaseMap.put("OUTPUT", $PRINT[1].table);
         }.
     }
 }

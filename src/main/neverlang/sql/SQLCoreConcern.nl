@@ -17,9 +17,11 @@ module sql.OperationList {
     role(register) {
         single: @{
             $single.db = $$DatabaseMap;
+            $single.output = $$DatabaseMap.containsKey("OUTPUT") ? $$DatabaseMap.get("OUTPUT").toString() : "";
         }.
         list: @{
             $list.db = $$DatabaseMap;
+            $single.output = $$DatabaseMap.containsKey("OUTPUT") ? $$DatabaseMap.get("OUTPUT").toString() : "";
         }.
     }
 }
