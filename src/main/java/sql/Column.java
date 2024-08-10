@@ -1,7 +1,6 @@
 package sql;
 
-import java.util.List;
-import java.util.ArrayList;
+import java.util.Optional;
 
 /**
  * Represents a column in a SQL table.
@@ -24,9 +23,9 @@ public class Column {
     private boolean isUnique;
 
     /**
-     * The list of values associated with the column.
+     * The aggregate function to be applied to the column.
      */
-    private List<Object> values = new ArrayList<>();
+    private Optional<Aggregates> aggregate;
 
     /**
      * Constructs a new column object with the specified data type, nullability, and uniqueness.
@@ -34,7 +33,7 @@ public class Column {
      * @param isNotNull indicates whether the column allows null values
      * @param isUnique indicates whether the column values must be unique
      */
-    public Column(Types type, boolean isNotNull, boolean isUnique) {
+    public Column(Types type, boolean isNotNull, boolean isUnique, Optional<Aggregates> aggregate) {
         this.type = type;
         this.isNotNull = isNotNull;
         this.isUnique = isUnique;
@@ -45,13 +44,6 @@ public class Column {
      */
     public Types getType() {
         return type;
-    }
-
-    /**
-     * @return the number of values in the column
-     */
-    public int getSize() {
-        return values.size();
     }
 
     /**
@@ -69,41 +61,10 @@ public class Column {
     }
 
     /**
-     * Adds the value to the column.
-     * @param elements the value to be added
+     * @return the aggregate function to be applied to the column
      */
-    public void add(Object element) {
-        if (isUnique && values.contains(element)) {
-            throw new IllegalArgumentException("[DATA] Duplicate value in unique column");
-        } else if (isNotNull && element == null) {
-            throw new IllegalArgumentException("[DATA] Null value in non-null column");
-        } else {
-            values.add(element);
-        }
-    }
-
-    /**
-     * Adds a list of values to the column.
-     * @param elements the list of values to be added
-     */
-    public void addAll(List<Object> elements) {
-        values.addAll(elements);
-    }
-
-    /**
-     * Retrieves the object at the specified index.
-     * @param index the index of the object to retrieve
-     * @return the object at the specified index
-     */
-    public Object get(int index) {
-        return values.get(index);
-    }
-
-    /**
-     * @return the list of values associated with the column
-     */
-    public List<Object> getAll() {
-        return values;
+    public Optional<Aggregates> getAggregate() {
+        return aggregate;
     }
 
 }

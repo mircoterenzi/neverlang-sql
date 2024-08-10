@@ -8,6 +8,7 @@ module sql.CreateTable {
     imports {
         neverlang.utils.AttributeList;
         java.util.List;
+        java.util.Optional;
     }
     
     reference syntax {
@@ -25,7 +26,8 @@ module sql.CreateTable {
             List<Boolean> uniqueness = AttributeList.collectFrom($declaration[2], "isUnique");
             Table table = new Table();
             for (int i=0; i<ids.size(); i++) {
-                table.add(ids.get(i), types.get(i), not_nullity.get(i), uniqueness.get(i));
+                Column column = new Column(types.get(i), not_nullity.get(i), uniqueness.get(i), Optional.empty());
+                table.addColumn(ids.get(i), column);
             }
             $$DatabaseMap.put($declaration[1].value, table);
         }.
@@ -41,17 +43,16 @@ module sql.DropTable {
     role(evaluation) {
         drop: .{
             String id = $drop[1]:value;
-            if (!$$DatabaseMap.containsKey(id)) {
-                throw new IllegalArgumentException(
-                    "Unexpected value: \"" + id + "\" is not an existing table"
-                );
-            }
             $$DatabaseMap.remove(id);
         }.
     }
 }
 
 module sql.AlterTable {
+    imports {
+        java.util.Optional;
+    }
+    
     reference syntax {
         alter:
             AlterTable <-- "ALTER" "TABLE" Id;
@@ -64,21 +65,17 @@ module sql.AlterTable {
     role(evaluation) {
         alter: .{
             String id = $alter[1]:value;
-            if (!$$DatabaseMap.containsKey(id)) {
-                throw new IllegalArgumentException(
-                    "Unexpected value: \"" + id + "\" is not an existing table"
-                );
-            }
             $alter.value = id;
         }.
     }
 
     role(register) {
         add: @{
-            $$DatabaseMap.get($add[1].value).add($add[2].value, $add[2].type);
+            Column column = new Column($add[2].type, false, false, Optional.empty());
+            $$DatabaseMap.get($add[1].value).addColumn($add[2].value, column);
         }.
         drop: @{
-            $$DatabaseMap.get($drop[1].value).remove($drop[2].value);
+            $$DatabaseMap.get($drop[1].value).removeColumn($drop[2].value);
         }.
     }
 }
