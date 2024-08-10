@@ -23,6 +23,7 @@ public class Table {
             throw new IllegalArgumentException("[TABLE] Column already exists");
         }
         columns.put(name, column);
+        
     }
 
     public void removeColumn(String name) {
@@ -30,6 +31,9 @@ public class Table {
             throw new IllegalArgumentException("[TABLE] Column does not exist");
         }
         columns.remove(name);
+        for (Tuple tuple : tuples) {
+            tuple.remove(name);
+        }
     }
 
     public void insertTuple(Tuple tuple) {
@@ -70,30 +74,39 @@ public class Table {
         tuples.remove(tuple);
     }
 
-    public List<Tuple> select(Predicate<Tuple> condition) {
-        return tuples.stream()
-                .filter(elem -> condition.test(elem))
-                .collect(Collectors.toList());
-    }
-
-    public List<Tuple> selectAll() {
-        return tuples;
+    public Table select(Predicate<Tuple> condition) {
+        Table result = new Table();
+        for (String key : columns.keySet()) {
+            result.addColumn(key, columns.get(key));
+        }
+        for (Tuple tuple : tuples) {
+            if (condition.test(tuple)) {
+                result.insertTuple(tuple.copy());
+            }
+        }
+        return result;
     }
 
     public List<String> getColumnNames() {
         return columns.keySet().stream().collect(Collectors.toList());
     }
 
-    public void print() {
+    public Table copy() {
+        Table copy = new Table();
         for (String key : columns.keySet()) {
-            System.out.print(key + "\t");
+            copy.addColumn(key, columns.get(key));
         }
-        System.out.println();
         for (Tuple tuple : tuples) {
-            for (String key : columns.keySet()) {
-                System.out.print(tuple.get(key) + "\t");
-            }
-            System.out.println();
+            copy.insertTuple(tuple.copy());
         }
+        return copy;
+    }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (Tuple tuple : tuples) {
+            sb.append(tuple + "\n");
+        }
+        return sb.toString();
     }
 }

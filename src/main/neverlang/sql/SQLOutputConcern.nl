@@ -18,18 +18,7 @@ module sql.PrintData {
 
     role(evaluation) {
         [PRINT] .{
-            List<Tuple> lists = $PRINT[1].data;
-            List<String> headings = $PRINT[1].headings;
-            for (String heading : headings) {
-                System.out.print(heading + "\t");
-            }
-            System.out.println();
-            for (Tuple list : lists) {
-                for (String heading : headings) {
-                    System.out.print(list.get(heading) + "\t");
-                }
-                System.out.println();
-            }
+            System.out.println($PRINT[1].table.toString());
         }.
     }
 }
@@ -56,6 +45,7 @@ module sql.TableSelector {
 module sql.ColumnSelector {
     imports {
         neverlang.utils.AttributeList;
+        java.util.List;
     }
 
     reference syntax {
@@ -67,12 +57,15 @@ module sql.ColumnSelector {
 
     role(evaluation) {
         [TABLE] .{
-            $TABLE[0].headings = $$DatabaseMap.get($TABLE[1].value).getColumnNames();
-            $TABLE[0].data = $$DatabaseMap.get($TABLE[1].value).selectAll();
+            $TABLE[0].table = $$DatabaseMap.get($TABLE[1].value);
         }.
         [COLUMN_LIST] @{
-            $COLUMN_LIST[0].headings = AttributeList.collectFrom($COLUMN_LIST[1], "value");
-            $COLUMN_LIST[0].data = $$DatabaseMap.get($COLUMN_LIST[2].value).selectAll();
+            Table table = $$DatabaseMap.get($COLUMN_LIST[2].value).copy();
+            List<String> columns = AttributeList.collectFrom($COLUMN_LIST[1],"value");
+            table.getColumnNames().stream()
+                    .filter(column -> !columns.contains(column))
+                    .forEach(table::removeColumn);
+            $COLUMN_LIST[0].table = table;
         }.
     }
 }
