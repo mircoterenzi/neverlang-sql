@@ -1,6 +1,6 @@
 package sql;
 
-import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * The Types enum represents the different data types that can be used in SQL.
@@ -15,13 +15,13 @@ public enum Types {
     /**
      * Function used to check if an object belongs to the type.
      */
-    private Function<Object, Boolean> checkType;
+    private Predicate<Object> checkType;
 
     /**
      * Constructor for the Types enum.
      * @param checkType the function used to check if an object belongs to the type.
      */
-    private Types(Function<Object, Boolean> checkType) {
+    private Types(Predicate<Object> checkType) {
         this.checkType = checkType;
     }
 
@@ -31,6 +31,6 @@ public enum Types {
      * @return true if the object belongs to the type, false otherwise.
      */
     public Boolean checkType(Object elem) {
-        return checkType.apply(elem);
+        return checkType.test(elem);
     }
 }
