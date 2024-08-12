@@ -2,11 +2,11 @@ language sql.SQLang {
 
     slices
         bundle (sql.SQLVariablesConcern)
-        bundle (sql.SQLDeclarationConcern)
+        bundle (sql.SQLColumnConcern)
         bundle (sql.SQLCoreConcern)
         bundle (sql.SQLTableConcern)
-        bundle (sql.SQLOutputConcern)
-        sql.Insert
+        bundle (sql.SQLDataManipulationConcern)
+        bundle (sql.SQLDataIOConcern)
 
     endemic slices
         sql.DatabaseCache

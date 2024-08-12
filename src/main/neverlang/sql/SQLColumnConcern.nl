@@ -1,15 +1,37 @@
-bundle sql.SQLDeclarationConcern {
-    slices  sql.DataDeclaration
-            sql.DataList
-            sql.TypeDeclaration
-            sql.Constraints
-            
+bundle sql.SQLColumnConcern {
+    slices  sql.ColumnDeclaration
+            sql.ColumnType
+            sql.ColumnConstraints
+            sql.ColumnList
 }
 
-module sql.DataDeclaration {
+module sql.ColumnList {
     reference syntax {
-        [NORMAL] Data <-- Id Type;
-        [WITH_CONTRAINT] Data <-- Id Type Constraint;
+        provides {
+            ColumnList;
+        }
+        requires {
+            Column;
+        }
+
+        ColumnList <-- Column "," ColumnList;
+        ColumnList <-- Column;
+    }
+}
+
+module sql.ColumnDeclaration {
+    reference syntax {
+        provides {
+            Column;
+        }
+        requires {
+            Id;
+            ColumnType;
+            Constraint;
+        }
+
+        [NORMAL]            Column <-- Id ColumnType;
+        [WITH_CONSTRAINT]   Column <-- Id ColumnType Constraint;
     }
 
     role(evaluation) {
@@ -19,25 +41,35 @@ module sql.DataDeclaration {
             $NORMAL[0].isNotNull = false;
             $NORMAL[0].isUnique = false;
         }.
-        [WITH_CONTRAINT] @{
-            $WITH_CONTRAINT[0].value = $WITH_CONTRAINT[1].value;
-            $WITH_CONTRAINT[0].type = $WITH_CONTRAINT[2].type;
-            $WITH_CONTRAINT[0].isNotNull = $WITH_CONTRAINT[3].isNotNull;
-            $WITH_CONTRAINT[0].isUnique = $WITH_CONTRAINT[3].isUnique;
+        [WITH_CONSTRAINT] @{
+            $WITH_CONSTRAINT[0].value = $WITH_CONSTRAINT[1].value;
+            $WITH_CONSTRAINT[0].type = $WITH_CONSTRAINT[2].type;
+            $WITH_CONSTRAINT[0].isNotNull = $WITH_CONSTRAINT[3].isNotNull;
+            $WITH_CONSTRAINT[0].isUnique = $WITH_CONSTRAINT[3].isUnique;
         }.
     }
 }
 
-module sql.TypeDeclaration {
+module sql.ColumnType {
     reference syntax {
+        provides {
+            ColumnType;
+        }
+        requires {
+            Integer;
+        }
+
         [INT_TYPE]
-            Type <-- "INT";
+            ColumnType <-- "INT";
         [FLOAT_TYPE]
-            Type <-- "FLOAT";
+            ColumnType <-- "FLOAT";
         [VARCHAR_TYPE]
-            Type <-- "VARCHAR" "(" Integer ")";    //TODO: the number of char is fake atm
+            ColumnType <-- "VARCHAR" "(" Integer ")";    //TODO: the number of char is fake atm
         [BOOLEAN_TYPE]
-            Type <-- "BOOLEAN";
+            ColumnType <-- "BOOLEAN";
+
+        categories:
+            ColumnType = {"INT", "FLOAT", "VARCHAR", "BOOLEAN"};
     }
     
     role(evaluation) {
@@ -56,8 +88,12 @@ module sql.TypeDeclaration {
     }
 }
 
-module sql.Constraints {
+module sql.ColumnConstraints {
     reference syntax {
+        provides {
+            Constraint;
+        }
+
         [NOT_NULL]  Constraint <-- "NOT" "NULL";
         [KEY]       Constraint <-- "PRIMARY" "KEY";
         [UNIQUE]    Constraint <-- "UNIQUE";
@@ -79,9 +115,3 @@ module sql.Constraints {
     }
 }
 
-module sql.DataList {
-    reference syntax {
-        DataList <-- Data "," DataList;
-        DataList <-- Data;
-    }
-}

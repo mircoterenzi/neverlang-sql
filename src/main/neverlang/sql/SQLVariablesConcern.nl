@@ -1,10 +1,34 @@
 bundle sql.SQLVariablesConcern {
-    slices  sql.Value
-            sql.ValueList
+    slices  sql.ValueList
+            sql.Value
+}
+
+module sql.ValueList {
+    reference syntax {
+        provides {
+            ValueList;
+        }
+        
+        requires {
+            Value;
+        }
+
+        ValueList <-- Value "," ValueList;
+        ValueList <-- Value;
+    }
 }
 
 module sql.Value {
     reference syntax {
+        provides {
+            Value;
+            String;
+            Integer;
+            Float;
+            Bool;
+            Null;
+        }
+        
         [STRING]    String <-- /([\"'])((?:\\\1|.)*?)\1/[string];
                     Value <-- String;
 
@@ -37,12 +61,5 @@ module sql.Value {
         [NULL] .{
             $NULL[0].value = null;
         }.
-    }
-}
-
-module sql.ValueList {
-    reference syntax {
-        ValueList <-- Value "," ValueList;
-        ValueList <-- Value;
     }
 }

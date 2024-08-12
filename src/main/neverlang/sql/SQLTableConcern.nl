@@ -12,8 +12,16 @@ module sql.CreateTable {
     }
     
     reference syntax {
+        provides {
+            Operation;
+        }
+        requires {
+            Id;
+            ColumnList;
+        }
+
         declaration:
-            Operation <-- "CREATE" "TABLE" Id "(" DataList ")";
+            Operation <-- "CREATE" "TABLE" Id "(" ColumnList ")";
     }
 
     role(evaluation) {
@@ -36,14 +44,20 @@ module sql.CreateTable {
 
 module sql.DropTable {
     reference syntax {
+        provides {
+            Operation;
+        }
+        requires {
+            Id;
+        }
+        
         drop:
             Operation <-- "DROP" "TABLE" Id;
     }
 
     role(evaluation) {
         drop: .{
-            String id = $drop[1]:value;
-            $$DatabaseMap.remove(id);
+            $$DatabaseMap.remove($drop[1]:value);
         }.
     }
 }
@@ -54,18 +68,26 @@ module sql.AlterTable {
     }
     
     reference syntax {
+        provides {
+            SelectedTable;
+            Operation;
+        }
+        requires {
+            Id;
+            ColumnList;
+        }
+
         alter:
-            AlterTable <-- "ALTER" "TABLE" Id;
+            SelectedTable <-- "ALTER" "TABLE" Id;
         add:
-            Operation <-- AlterTable "ADD" Data;
+            Operation <-- SelectedTable "ADD" ColumnList;
         drop:
-            Operation <-- AlterTable "DROP" Id;
+            Operation <-- SelectedTable "DROP" Id;
     }
 
     role(evaluation) {
         alter: .{
-            String id = $alter[1]:value;
-            $alter.value = id;
+            $alter.value = $alter[1]:value;
         }.
     }
 
@@ -79,3 +101,4 @@ module sql.AlterTable {
         }.
     }
 }
+
