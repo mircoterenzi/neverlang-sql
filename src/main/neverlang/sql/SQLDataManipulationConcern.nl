@@ -1,8 +1,10 @@
-bundle sql.SQLOutputConcern {
+bundle sql.SQLDataManipulationConcern {
     slices  sql.PrintData
-            sql.ColumnSelector
             sql.TableSelector
+            sql.ColumnSelector
+            sql.Where
             sql.OrderBy
+            sql.GroupBy
 }
 
 module sql.PrintData {
@@ -54,6 +56,7 @@ module sql.ColumnSelector {
             SelectedData <-- "SELECT" "*" SelectedTable;
         [COLUMN_LIST]
             SelectedData <-- "SELECT" IdList SelectedTable;
+        //TODO: add blank SelectedData <-- SelectedTable to act like a select *.
     }
 
     role(evaluation) {
@@ -67,6 +70,26 @@ module sql.ColumnSelector {
                     .filter(column -> !columns.contains(column))
                     .forEach(table::removeColumn);
             $COLUMN_LIST[0].table = table;
+        }.
+    }
+}
+
+module sql.Where {
+    reference syntax {
+        provides {
+            SelectedData;
+        }
+        requires {
+            SelectedData;
+            BoolExpr;
+        }
+
+        [WHERE] SelectedData <-- SelectedData "WHERE" BoolExpr;
+    }
+
+    role (evaluation) {
+        [WHERE] .{
+            //TODO: Implement the evaluation of the WHERE clause.
         }.
     }
 }
@@ -85,6 +108,27 @@ module sql.OrderBy {
     role(evaluation) {
         [WHERE] .{
             //TODO: order data from $WHERE[1].data
+        }.
+    }
+}
+
+module sql.GroupBy {
+    reference syntax {
+        provides {
+            SelectedData;
+        }
+
+        requires {
+            SelectedData;
+            Id;
+        }
+
+        [GROUP] SelectedData <-- SelectedData "GROUP" "BY" Id;
+    }
+
+    role (evaluation) {
+        [GROUP] .{
+            //TODO: Implement the evaluation of the GROUP BY clause.
         }.
     }
 }
