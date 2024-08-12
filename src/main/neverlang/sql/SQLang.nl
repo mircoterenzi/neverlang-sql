@@ -7,6 +7,8 @@ language sql.SQLang {
         bundle (sql.SQLTableConcern)
         bundle (sql.SQLDataManipulationConcern)
         bundle (sql.SQLDataIOConcern)
+        bundle (sql.SQLRelExprConcern)
+        bundle (sql.SQLBoolExprConcern)
 
     endemic slices
         sql.DatabaseCache

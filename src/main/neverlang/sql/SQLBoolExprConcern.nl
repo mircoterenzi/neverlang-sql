@@ -6,15 +6,19 @@ bundle sql.SQLBoolExprConcern {
 }
 
 module sql.AndExpression {
+    imports {
+        java.util.function.Predicate;
+    }
+
     reference syntax {
         provides {
-            BoolExpr;
+            RelExpr;
         }
         requires {
             RelExpr;
         }
 
-        [AND] BoolExpr <-- RelExpr "AND" RelExpr;
+        [AND] RelExpr <-- RelExpr "AND" RelExpr;
 
         categories:
             BoolOperator = {"AND"};
@@ -22,21 +26,26 @@ module sql.AndExpression {
 
     role(evaluation) {
         [AND] .{
-            //$AND[0].relation = obj -> $AND[0].relation && $AND[1].relation;
+            Predicate<Object> filter = obj -> ((Predicate<Object>) $AND[1].relation).test(obj) && ((Predicate<Object>) $AND[2].relation).test(obj);
+            $AND[0].relation = (Predicate<Object>) filter;
         }.
     }
 }
 
 module sql.OrExpression {
+    imports {
+        java.util.function.Predicate;
+    }
+
     reference syntax {
         provides {
-            BoolExpr;
+            RelExpr;
         }
         requires {
             RelExpr;
         }
 
-        [OR] BoolExpr <-- RelExpr "OR" RelExpr;
+        [OR] RelExpr <-- RelExpr "OR" RelExpr;
 
         categories:
             BoolOperator = {"OR"};
@@ -44,21 +53,26 @@ module sql.OrExpression {
 
     role(evaluation) {
         [OR] .{
-            //$OR[0].relation = obj -> $OR[0].relation || $OR[1].relation;
+            Predicate<Object> filter = obj -> ((Predicate<Object>) $OR[1].relation).test(obj) || ((Predicate<Object>) $OR[2].relation).test(obj);
+            $OR[0].relation = filter;
         }.
     }
 }
 
 module sql.NotExpression {
+    imports {
+        java.util.function.Predicate;
+    }
+    
     reference syntax {
         provides {
-            BoolExpr;
+            RelExpr;
         }
         requires {
             RelExpr;
         }
 
-        [NOT] BoolExpr <-- "NOT" RelExpr;
+        [NOT] RelExpr <-- "NOT" RelExpr;
 
         categories:
             BoolOperator = {"NOT"};
@@ -66,7 +80,8 @@ module sql.NotExpression {
 
     role(evaluation) {
         [NOT] .{
-            //$NOT[0].relation = obj -> !$NOT[0].relation;
+            Predicate<Object> filter = obj -> !((Predicate<Object>) $NOT[1].relation).test(obj);
+            $NOT[0].relation = filter;
         }.
     }
 }

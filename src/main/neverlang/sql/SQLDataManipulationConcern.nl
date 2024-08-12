@@ -75,21 +75,26 @@ module sql.ColumnSelector {
 }
 
 module sql.Where {
+    imports {
+        java.util.function.Predicate;
+        sql.Tuple;
+    }
+
     reference syntax {
         provides {
             SelectedData;
         }
         requires {
             SelectedData;
-            BoolExpr;
+            RelExpr;
         }
 
-        [WHERE] SelectedData <-- SelectedData "WHERE" BoolExpr;
+        [WHERE] SelectedData <-- SelectedData "WHERE" RelExpr;
     }
 
     role (evaluation) {
         [WHERE] .{
-            //TODO: Implement the evaluation of the WHERE clause.
+            $WHERE[0].table = ((Table) $WHERE[1].table).copy().select((Predicate<Tuple>) $WHERE[2].relation);
         }.
     }
 }
