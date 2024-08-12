@@ -45,7 +45,7 @@ public class Table {
             if (!columns.containsKey(key)) {
                 throw new IllegalArgumentException("[DATA] Column " + key + " does not exist");
             }
-            /*
+            /* TODO: Uncomment this block
             if (columns.get(key).getType().checkType(tuple.get(key))) {
                 throw new IllegalArgumentException("[DATA] Data type mismatch: found " +
                         tuple.get(key).getClass().getSimpleName() + ", expected " +
@@ -89,6 +89,10 @@ public class Table {
 
     public List<String> getColumnNames() {
         return columns.keySet().stream().collect(Collectors.toList());
+    }
+
+    public List<Tuple> getTuples() {
+        return tuples;
     }
 
     public Table copy() {

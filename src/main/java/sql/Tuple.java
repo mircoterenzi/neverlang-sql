@@ -7,6 +7,9 @@ import java.util.LinkedHashMap;
  */
 public class Tuple extends LinkedHashMap<String,Object> {
 
+    /**
+     * @return a copy of the tuple
+     */
     public Tuple copy() {
         Tuple copy = new Tuple();
         for (String key : keySet()) {

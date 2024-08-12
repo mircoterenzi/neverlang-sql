@@ -48,7 +48,7 @@ module sql.RelationalExpression {
         }.
         [LT] .{
             $LT[0].scope = $LT[1].value;
-            Predicate<Tuple> relation = tuple -> ((Comparable) tuple.get($LT[1].value)).compareTo($LT[2].value) < 0;
+            Predicate<Tuple> relation = tuple -> ((Comparable) tuple.get($LT[1].value)).compareTo($LT[2].value) < 0;    //TODO: improve this part (cast)
             $LT[0].relation = relation;
         }.
         [LTE] .{
