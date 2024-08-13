@@ -1,7 +1,7 @@
 bundle sql.SQLDataManipulationConcern {
     slices  sql.PrintData
             sql.TableSelector
-            sql.ColumnSelector
+            sql.Select
             sql.Where
             sql.OrderBy
             sql.GroupBy
@@ -29,7 +29,7 @@ module sql.PrintData {
 module sql.TableSelector {
     reference syntax {
         [TABLE]
-            SelectedTable <-- "FROM" Id;
+            SelectedData <-- "FROM" Id;
     }
 
     role(evaluation) {
@@ -40,12 +40,12 @@ module sql.TableSelector {
                     "Unexpected value: \"" + $TABLE[1].value + "\" is not an existing table"
                 );
             }
-            $TABLE[0].value = $TABLE[1].value;
+            $TABLE[0].table = $$DatabaseMap.get($TABLE[1].value).copy();
         }.
     }
 }
 
-module sql.ColumnSelector {
+module sql.Select {
     imports {
         neverlang.utils.AttributeList;
         java.util.List;
@@ -53,18 +53,17 @@ module sql.ColumnSelector {
 
     reference syntax {
         [TABLE]
-            SelectedData <-- "SELECT" "*" SelectedTable;
+            SelectedData <-- "SELECT" "*" SelectedData;
         [COLUMN_LIST]
-            SelectedData <-- "SELECT" IdList SelectedTable;
-        //TODO: add blank SelectedData <-- SelectedTable to act like a select *.
+            SelectedData <-- "SELECT" IdList SelectedData;
     }
 
     role(evaluation) {
-        [TABLE] .{
-            $TABLE[0].table = $$DatabaseMap.get($TABLE[1].value);
+        [TABLE] @{
+            $TABLE[0].table = $TABLE[1].table;
         }.
         [COLUMN_LIST] @{
-            Table table = $$DatabaseMap.get($COLUMN_LIST[2].value).copy();
+            Table table = $COLUMN_LIST[2].table;
             List<String> columns = AttributeList.collectFrom($COLUMN_LIST[1],"value");
             table.getColumnNames().stream()
                     .filter(column -> !columns.contains(column))
@@ -102,17 +101,18 @@ module sql.Where {
 module sql.OrderBy {
     imports {
         java.util.List;
-        java.util.ArrayList;
+        neverlang.utils.AttributeList;
     }
 
     reference syntax {
         [WHERE]
-            SelectedData <-- SelectedData "ORDER" "BY" Id;
+            SelectedData <-- SelectedData "ORDER" "BY" IdList;      //TODO: implement the possibility to specify ASC or DESC
     }
 
     role(evaluation) {
         [WHERE] .{
-            //TODO: order data from $WHERE[1].data
+            List<String> columns = AttributeList.collectFrom($WHERE[2], "value");
+            $WHERE[0].table = $$Algorithms.sortTable($WHERE[1].table, columns);
         }.
     }
 }
