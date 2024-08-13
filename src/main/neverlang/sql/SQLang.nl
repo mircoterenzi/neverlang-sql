@@ -11,7 +11,7 @@ language sql.SQLang {
         bundle (sql.SQLBoolExprConcern)
 
     endemic slices
-        sql.DatabaseCache
+        sql.SQLDatabaseCache
 
     roles syntax < evaluation <+ register
 

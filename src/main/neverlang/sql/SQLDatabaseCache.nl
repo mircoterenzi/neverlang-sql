@@ -1,4 +1,4 @@
-endemic slice sql.DatabaseCache {
+endemic slice sql.SQLDatabaseCache {
     declare {
         DatabaseMap: sql.DatabaseMap;
     }
