@@ -9,6 +9,7 @@ language sql.SQLang {
         bundle (sql.SQLDataIOConcern)
         bundle (sql.SQLRelExprConcern)
         bundle (sql.SQLBoolExprConcern)
+        bundle (sql.SQLAggregateFunConcern)
 
     endemic slices
         sql.SQLDatabaseMapEndemic

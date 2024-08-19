@@ -20,7 +20,7 @@ public class Table {
 
     public void addColumn(String name, Column column) {
         if (columns.containsKey(name)) {
-            throw new IllegalArgumentException("[TABLE] Column already exists");
+            throw new IllegalArgumentException("[TABLE] Column " + name + " already exists");
         }
         columns.put(name, column);
         
@@ -31,9 +31,6 @@ public class Table {
             throw new IllegalArgumentException("[TABLE] Column does not exist");
         }
         columns.remove(name);
-        for (Tuple tuple : tuples) {
-            tuple.remove(name);
-        }
     }
 
     public void insertTuple(Tuple tuple) {

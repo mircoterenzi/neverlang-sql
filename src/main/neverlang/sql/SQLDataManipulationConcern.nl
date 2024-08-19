@@ -1,10 +1,9 @@
 bundle sql.SQLDataManipulationConcern {
     slices  sql.PrintData
             sql.TableSelector
-            sql.Select
+            //sql.Select
             sql.Where
             sql.OrderBy
-            sql.GroupBy
 }
 
 module sql.PrintData {
@@ -44,7 +43,7 @@ module sql.TableSelector {
         }.
     }
 }
-
+/* TODO: fix this module (blend it with the select + group-by module)
 module sql.Select {
     imports {
         neverlang.utils.AttributeList;
@@ -72,7 +71,7 @@ module sql.Select {
         }.
     }
 }
-
+*/
 module sql.Where {
     imports {
         java.util.function.Predicate;
@@ -113,27 +112,6 @@ module sql.OrderBy {
         [WHERE] .{
             List<String> columns = AttributeList.collectFrom($WHERE[2], "value");
             $WHERE[0].table = $$Algorithms.sortTable($WHERE[1].table, columns);
-        }.
-    }
-}
-
-module sql.GroupBy {
-    reference syntax {
-        provides {
-            SelectedData;
-        }
-
-        requires {
-            SelectedData;
-            Id;
-        }
-
-        [GROUP] SelectedData <-- SelectedData "GROUP" "BY" Id;
-    }
-
-    role (evaluation) {
-        [GROUP] .{
-            //TODO: Implement the evaluation of the GROUP BY clause.
         }.
     }
 }
