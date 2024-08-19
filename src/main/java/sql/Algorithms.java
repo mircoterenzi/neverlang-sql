@@ -14,10 +14,10 @@ public class Algorithms {
             Tuple min = tuple.get(0);
 
             for (Tuple current : tuple) {
-                if (((Comparable<Object>) current.get(column)).compareTo(min.get(column)) == 0) { //TODO: unckecked cast, should be fixed
+                if (current.get(column).compareTo(min.get(column)) == 0) {
                     temp.insertTuple(current);
                 }
-                if (((Comparable<Object>) current.get(column)).compareTo(min.get(column)) < 0) {
+                if (current.get(column).compareTo(min.get(column)) < 0) {
                     temp = temp.select(t -> false);
                     min = current;
                     temp.insertTuple(current);

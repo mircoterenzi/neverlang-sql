@@ -75,6 +75,7 @@ module sql.ComplexExpression {
         java.util.List;
         neverlang.utils.AttributeList;
         sql.Tuple;
+        sql.types.SQLType;
     }
 
     reference syntax {
@@ -106,9 +107,9 @@ module sql.ComplexExpression {
         }.
         [IN] .{
             $IN[0].scope = $IN[1].value;
-            List<Object> values = AttributeList.collectFrom($IN[2], "value");
+            List<SQLType> values = AttributeList.collectFrom($IN[2], "value");
             Predicate<Tuple> relation = tuple -> {
-                Object value = tuple.get($IN[1].value);
+                SQLType value = tuple.get($IN[1].value);
                 return values.contains(value);
             };
             $IN[0].relation = relation;

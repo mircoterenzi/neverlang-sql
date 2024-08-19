@@ -19,6 +19,13 @@ module sql.ValueList {
 }
 
 module sql.Value {
+    imports {
+        sql.types.SQLString;
+        sql.types.SQLInteger;
+        sql.types.SQLFloat;
+        sql.types.SQLBoolean;
+    }
+    
     reference syntax {
         provides {
             Value;
@@ -47,16 +54,16 @@ module sql.Value {
 
     role (evaluation) {
         [STRING] .{
-            $STRING[0].value = #0.matches.group(2);
+            $STRING[0].value = new SQLString(#0.matches.group(2));
         }.
         [INT] .{
-            $INT[0].value = Integer.parseInt(#0.text);
+            $INT[0].value = new SQLInteger(Integer.parseInt(#0.text));
         }.
         [FLOAT] .{
-            $FLOAT[0].value = Float.parseFloat(#0.text);
+            $FLOAT[0].value = new SQLFloat(Float.parseFloat(#0.text));
         }.
         [BOOL] .{
-            $BOOL[0].value = Boolean.parseBoolean(#0.text);
+            $BOOL[0].value = new SQLBoolean(Boolean.parseBoolean(#0.text));
         }.
         [NULL] .{
             $NULL[0].value = null;
