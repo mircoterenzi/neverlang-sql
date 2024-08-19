@@ -25,4 +25,9 @@ public abstract class SQLType {
     public Integer compareTo(SQLType other) {
         return this.toDouble().compareTo(other.toDouble());
     }
+
+    @Override
+    public boolean equals(Object other) {
+        return this.toString().equals(other.toString());
+    }
 }

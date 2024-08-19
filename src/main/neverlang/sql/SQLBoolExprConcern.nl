@@ -8,7 +8,6 @@ bundle sql.SQLBoolExprConcern {
 module sql.AndExpression {
     imports {
         java.util.function.Predicate;
-        sql.types.SQLType;
     }
 
     reference syntax {
@@ -27,8 +26,8 @@ module sql.AndExpression {
 
     role(evaluation) {
         [AND] .{
-            Predicate<SQLType> filter = obj -> ((Predicate<SQLType>) $AND[1].relation).test(obj) && ((Predicate<SQLType>) $AND[2].relation).test(obj);
-            $AND[0].relation = (Predicate<SQLType>) filter;
+            Predicate<Tuple> filter = obj -> ((Predicate<Tuple>) $AND[1].relation).test(obj) && ((Predicate<Tuple>) $AND[2].relation).test(obj);
+            $AND[0].relation = (Predicate<Tuple>) filter;
         }.
     }
 }
@@ -36,7 +35,6 @@ module sql.AndExpression {
 module sql.OrExpression {
     imports {
         java.util.function.Predicate;
-        sql.types.SQLType;
     }
 
     reference syntax {
@@ -55,7 +53,7 @@ module sql.OrExpression {
 
     role(evaluation) {
         [OR] .{
-            Predicate<SQLType> filter = obj -> ((Predicate<SQLType>) $OR[1].relation).test(obj) || ((Predicate<SQLType>) $OR[2].relation).test(obj);
+            Predicate<Tuple> filter = obj -> ((Predicate<Tuple>) $OR[1].relation).test(obj) || ((Predicate<Tuple>) $OR[2].relation).test(obj);
             $OR[0].relation = filter;
         }.
     }
@@ -64,7 +62,6 @@ module sql.OrExpression {
 module sql.NotExpression {
     imports {
         java.util.function.Predicate;
-        sql.types.SQLType;
     }
     
     reference syntax {
@@ -83,7 +80,7 @@ module sql.NotExpression {
 
     role(evaluation) {
         [NOT] .{
-            Predicate<SQLType> filter = obj -> !((Predicate<SQLType>) $NOT[1].relation).test(obj);
+            Predicate<Tuple> filter = obj -> !((Predicate<Tuple>) $NOT[1].relation).test(obj);
             $NOT[0].relation = filter;
         }.
     }
