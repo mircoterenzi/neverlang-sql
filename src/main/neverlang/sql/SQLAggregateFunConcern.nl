@@ -22,7 +22,9 @@ module sql.GroupBy {
             IdList;
         }
 
-        [GROUP] SelectedData <-- "SELECT" AggregateList SelectedData "GROUP" "BY" IdList;
+        [GROUP]     SelectedData <-- "SELECT" AggregateList SelectedData "GROUP" "BY" IdList;
+        [FULL]      SelectedData <-- "SELECT" "*" SelectedData;
+        [NORMAL]    SelectedData <-- "SELECT" AggregateList SelectedData;
     }
 
     role(evaluation) {
@@ -82,7 +84,19 @@ module sql.GroupBy {
                 result.addTuple(toAdd);
             }
             $GROUP[0].table = result;
-            
+        }.
+        [FULL] @{
+            $FULL[0].table = $FULL[1].table;
+        }.
+        [NORMAL] @{
+            Table table = $NORMAL[2].table;
+            Table result = table.copy();
+            List<String> columns = AttributeList.collectFrom($NORMAL[1],"value");
+
+            table.getColumnNames().stream()
+                    .filter(column -> !columns.contains(column))
+                    .forEach(c -> result.removeColumn(c));
+            $NORMAL[0].table = result;
         }.
     }
 }
