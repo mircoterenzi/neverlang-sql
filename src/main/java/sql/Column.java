@@ -1,55 +1,37 @@
 package sql;
 
+import java.util.List;
+import java.util.ArrayList;
+import java.util.function.BiConsumer;
+import sql.types.SQLType;
+
 /**
  * Represents a column in a SQL table.
  */
 public class Column {
 
-    /**
-     * The data type of the column.
-     */
-    private Types type;
+    private final List<BiConsumer<List<SQLType>,SQLType>> constraints;
+    private String name;
 
-    /**
-     * Indicates whether the column allows null values.
-     */
-    private boolean isNotNull;
-
-    /**
-     * Indicates whether the column values must be unique.
-     */
-    private boolean isUnique;
-
-    /**
-     * Constructs a new column object with the specified data type, nullability, and uniqueness.
-     * @param type the data type of the column
-     * @param isNotNull indicates whether the column allows null values
-     * @param isUnique indicates whether the column values must be unique
-     */
-    public Column(Types type, boolean isNotNull, boolean isUnique) {
-        this.type = type;
-        this.isNotNull = isNotNull;
+    public Column(String name) {
+        this.name = name;
+        constraints = new ArrayList<>();
     }
 
-    /**
-     * @return the data type of the column
-     */
-    public Types getType() {
-        return type;
+    public Column(String name, BiConsumer<List<SQLType>,SQLType> constraint) {
+        this(name);
+        addConstraint(constraint);
     }
 
-    /**
-     * @return true if the column allows null values, false otherwise
-     */
-    public boolean isNotNull() {
-        return isNotNull;
+    public String getName() {
+        return name;
     }
 
-    /**
-     * @return true if the column values must be unique, false otherwise
-     */
-    public boolean isUnique() {
-        return isUnique;
+    public void addConstraint(BiConsumer<List<SQLType>,SQLType> constraint) {
+        constraints.add(constraint);
     }
 
+    public void checkConstraints(List<SQLType> list, SQLType elem) {
+        constraints.forEach(c -> c.accept(list, elem));
+    }
 }

@@ -28,15 +28,9 @@ module sql.CreateTable {
         declaration: .{
             eval $declaration[1];
             eval $declaration[2];
-            List<String> ids = AttributeList.collectFrom($declaration[2], "value");
-            List<Types> types = AttributeList.collectFrom($declaration[2], "type");
-            List<Boolean> not_nullity = AttributeList.collectFrom($declaration[2], "isNotNull");
-            List<Boolean> uniqueness = AttributeList.collectFrom($declaration[2], "isUnique");
+            List<Column> columns = AttributeList.collectFrom($declaration[2], "column");
             Table table = new Table();
-            for (int i=0; i<ids.size(); i++) {
-                Column column = new Column(types.get(i), not_nullity.get(i), uniqueness.get(i));
-                table.addColumn(ids.get(i), column);
-            }
+            columns.forEach(column -> table.addColumn(column));
             $$DatabaseMap.put($declaration[1].value, table);
         }.
     }
@@ -74,13 +68,13 @@ module sql.AlterTable {
         }
         requires {
             Id;
-            ColumnList;
+            Column;
         }
 
         alter:
             SelectedTable <-- "ALTER" "TABLE" Id;
         add:
-            Operation <-- SelectedTable "ADD" ColumnList;
+            Operation <-- SelectedTable "ADD" Column;
         drop:
             Operation <-- SelectedTable "DROP" Id;
     }
@@ -93,8 +87,7 @@ module sql.AlterTable {
 
     role(register) {
         add: @{
-            Column column = new Column($add[2].type, false, false);
-            $$DatabaseMap.get($add[1].value).addColumn($add[2].value, column);
+            $$DatabaseMap.get($add[1].value).addColumn($add[2].column);
         }.
         drop: @{
             $$DatabaseMap.get($drop[1].value).removeColumn($drop[2].value);

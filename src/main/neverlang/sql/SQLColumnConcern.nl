@@ -20,6 +20,10 @@ module sql.ColumnList {
 }
 
 module sql.ColumnDeclaration {
+    imports {
+        sql.Column;
+    }
+
     reference syntax {
         provides {
             Column;
@@ -36,21 +40,23 @@ module sql.ColumnDeclaration {
 
     role(evaluation) {
         [NORMAL] @{
-            $NORMAL[0].value = $NORMAL[1].value;
-            $NORMAL[0].type = $NORMAL[2].type;
-            $NORMAL[0].isNotNull = false;
-            $NORMAL[0].isUnique = false;
+            $NORMAL[0].column = new Column($NORMAL[1].value, $NORMAL[2].constraint);
         }.
         [WITH_CONSTRAINT] @{
-            $WITH_CONSTRAINT[0].value = $WITH_CONSTRAINT[1].value;
-            $WITH_CONSTRAINT[0].type = $WITH_CONSTRAINT[2].type;
-            $WITH_CONSTRAINT[0].isNotNull = $WITH_CONSTRAINT[3].isNotNull;
-            $WITH_CONSTRAINT[0].isUnique = $WITH_CONSTRAINT[3].isUnique;
+            Column column = new Column($WITH_CONSTRAINT[1].value, $WITH_CONSTRAINT[2].constraint);
+            column.addConstraint($WITH_CONSTRAINT[3].constraint);
+            $WITH_CONSTRAINT[0].column = column;
         }.
     }
 }
 
 module sql.ColumnType {
+    imports {
+        java.util.function.BiConsumer;
+        java.util.List;
+        sql.types.*;
+    }
+
     reference syntax {
         provides {
             ColumnType;
@@ -64,7 +70,7 @@ module sql.ColumnType {
         [FLOAT_TYPE]
             ColumnType <-- "FLOAT";
         [VARCHAR_TYPE]
-            ColumnType <-- "VARCHAR" "(" Integer ")";    //TODO: the number of char is fake atm
+            ColumnType <-- "VARCHAR" "(" Integer ")";
         [BOOLEAN_TYPE]
             ColumnType <-- "BOOLEAN";
 
@@ -74,43 +80,92 @@ module sql.ColumnType {
     
     role(evaluation) {
         [INT_TYPE] .{
-            $INT_TYPE[0].type = Types.INT;
+            BiConsumer<List<SQLType>,SQLType> constraint = (list, value) -> {
+                if (!(value instanceof SQLInteger)) {
+                    throw new RuntimeException("Integer column, but the value is " + value.getClass().getSimpleName());
+                }
+            };
+            $INT_TYPE[0].constraint = constraint;
         }.
         [FLOAT_TYPE] .{
-            $FLOAT_TYPE[0].type = Types.FLOAT;
+            BiConsumer<List<SQLType>,SQLType> constraint = (list, value) -> {
+                if (!(value instanceof SQLFloat)) {
+                    throw new RuntimeException("Float column, but the value is " + value.getClass().getSimpleName());
+                }
+            };
+            $FLOAT_TYPE[0].constraint = constraint;
         }.
         [VARCHAR_TYPE] .{
-            $VARCHAR_TYPE[0].type = Types.VARCHAR;
+            BiConsumer<List<SQLType>,SQLType> constraint = (list, value) -> {
+                if (!(value instanceof SQLString)) {
+                    throw new RuntimeException("Varchar column, but the value is " + value.getClass().getSimpleName());
+                }
+                if (value.toString().length() > ((SQLInteger) $VARCHAR_TYPE[1].value).toDouble()) {
+                    throw new RuntimeException("The value is " + value.toString().length() +
+                            " characters long, but the column only supports " +
+                            ((SQLInteger) $VARCHAR_TYPE[1].value).toDouble());
+                }
+            };
+            $VARCHAR_TYPE[0].constraint = constraint;
         }.
         [BOOLEAN_TYPE] .{
-            $BOOLEAN_TYPE[0].type = Types.BOOLEAN;
+            BiConsumer<List<SQLType>,SQLType> constraint = (list, value) -> {
+                if (!(value instanceof SQLBoolean)) {
+                    throw new RuntimeException("Boolean column, but the value is " + value.getClass().getSimpleName());
+                }
+            };
+            $BOOLEAN_TYPE[0].constraint = constraint;
         }.
     }
 }
 
 module sql.ColumnConstraints {
+    imports {
+        java.util.function.BiConsumer;
+        java.util.List;
+        sql.types.SQLType;
+    }
+
     reference syntax {
         provides {
             Constraint;
         }
 
         [NOT_NULL]  Constraint <-- "NOT" "NULL";
-        [KEY]       Constraint <-- "PRIMARY" "KEY";
         [UNIQUE]    Constraint <-- "UNIQUE";
+        [KEY]       Constraint <-- "PRIMARY" "KEY";
+
+        categories:
+            Constraint = {"NOT_NULL", "UNIQUE", "KEY"};
     }
 
     role(evaluation) {
         [NOT_NULL] .{
-            $NOT_NULL[0].isNotNull = true;
-            $NOT_NULL[0].isUnique = false;
-        }.
-        [KEY] .{
-            $KEY[0].isNotNull = true;
-            $KEY[0].isUnique = true;
+            BiConsumer<List<SQLType>,SQLType> constraint = (list, value) -> {
+                if (value == null) {
+                    throw new RuntimeException("Not-null column, but the value is null");
+                }
+            };
+            $NOT_NULL[0].constraint = constraint;
         }.
         [UNIQUE] .{
-            $UNIQUE[0].isNotNull = false;
-            $UNIQUE[0].isUnique = true;
+            BiConsumer<List<SQLType>,SQLType> constraint = (list, value) -> {
+                if (list.contains(value)) {
+                    throw new RuntimeException("Unique column, but the value " + value + " already exists");
+                }
+            };
+            $UNIQUE[0].constraint = constraint;
+        }.
+        [KEY] .{
+            BiConsumer<List<SQLType>,SQLType> constraint = (list, value) -> {
+                if (value == null) {
+                    throw new RuntimeException("Primary-key column, but the value is null");
+                }
+                if (list.contains(value)) {
+                    throw new RuntimeException("Primary-key column, but the value " + value + " already exists");
+                }
+            };
+            $KEY[0].constraint = constraint;
         }.
     }
 }

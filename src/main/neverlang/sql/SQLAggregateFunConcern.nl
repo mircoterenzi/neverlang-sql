@@ -49,8 +49,8 @@ module sql.GroupBy {
                     if (!functions.get(i).isPresent()) {
                         throw new RuntimeException("Column " + columns.get(i) + " must be used in an aggregate function");
                     } else {
-                        Column col = new Column(null, false, false);
-                        result.addColumn(columns.get(i), col);
+                        Column col = new Column(columns.get(i));
+                        result.addColumn(col);
                     }
                 }
             }

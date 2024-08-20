@@ -2,69 +2,64 @@ package sql;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.stream.Collectors;
 import java.util.function.Predicate;
+
+import sql.types.SQLType;
 
 /**
  * Represents a table in a SQL database.
  */
 public class Table {
-    private List<Tuple> tuples;
-    private LinkedHashMap<String, Column> columns;
+    private final List<Tuple> tuples;
+    private final List<Column> columns;
 
     public Table() {
         tuples = new ArrayList<>();
-        columns = new LinkedHashMap<>();
+        columns = new ArrayList<>();
     }
 
-    public void addColumn(String name, Column column) {
-        if (columns.containsKey(name)) {
-            throw new IllegalArgumentException("[TABLE] Column " + name + " already exists");
+    private void checkColumnExistence(String name, String message) {
+        if (!columns.stream().map(Column::getName).anyMatch(name::equals)) {
+            throw new IllegalArgumentException("[TABLE] " + message);
         }
-        columns.put(name, column);
-        
+    }
+
+    public void addColumn(Column column) {
+        String name = column.getName();
+        if (columns.stream().map(Column::getName).anyMatch(name::equals)) {
+            throw new IllegalArgumentException("[TABLE] " + name + " already exists");
+        }
+        columns.add(column);
     }
 
     public void removeColumn(String name) {
-        if (!columns.containsKey(name)) {
-            throw new IllegalArgumentException("[TABLE] Column does not exist");
+        checkColumnExistence(name, name + " does not exist");
+        for (Column column : columns.stream().filter(c -> c.getName().equals(name)).toList()) {
+            columns.remove(column);
         }
-        columns.remove(name);
-        for (Tuple tuple : tuples) {
-            tuple.remove(name);
-        }
+        tuples.stream().forEach(t -> t.remove(name));
     }
 
-    public void addTuple(Tuple tuple) {
-        if (tuple.size() != columns.size()) {
-            throw new IllegalArgumentException("[DATA] Tuple size does not match column size: found " +
-                    tuple.size() + ", expected " + columns.size());
+    public void addTuple(Tuple input) {
+        if (input.size() != columns.size()) {
+            throw new IllegalArgumentException(
+                "[TABLE] Tuple size does not match column size: found " +
+                input.size() + ", expected " + columns.size()
+            );
         }
-        for (String key : tuple.keySet()) {
-            if (!columns.containsKey(key)) {
-                throw new IllegalArgumentException("[DATA] Column " + key + " does not exist");
-            }
-            /* TODO: Uncomment this block
-            if (columns.get(key).getType().checkType(tuple.get(key))) {
-                throw new IllegalArgumentException("[DATA] Data type mismatch: found " +
-                        tuple.get(key).getClass().getSimpleName() + ", expected " +
-                        columns.get(key).getType());
-            }
-            */
-            if (columns.get(key).isNotNull() && tuple.get(key) == null) {
-                throw new IllegalArgumentException("[DATA] Column " + key + "does not allow null values");
-            }
-            if (columns.get(key).isUnique() && tuples.stream().anyMatch(t -> t.get(key).equals(tuple.get(key)))) {
-                throw new IllegalArgumentException("[DATA] Column " + key + " values must be unique");
-            }
+        for (String column : input.keySet()) {
+            List<SQLType> values = tuples.stream().map(t -> t.get(column)).toList();
+            checkColumnExistence(column, column + " does not exist");
+            columns.stream()
+                    .filter(c -> c.getName().equals(column))
+                    .forEach(c -> c.checkConstraints(values, input.get(column)));
         }
-        for (String key : columns.keySet()) {
-            if (!tuple.keySet().contains(key)) {
-                tuple.put(key, null);
+        columns.stream().map(Column::getName).forEach(c -> {
+            if (!input.keySet().contains(c)) {
+                input.put(c, null);
             }
-        }
-        tuples.add(tuple);
+        });
+        tuples.add(input);
     }
 
     public void removeTuple(Tuple tuple) {
@@ -76,19 +71,13 @@ public class Table {
 
     public Table filterTuple(Predicate<Tuple> condition) {
         Table result = new Table();
-        for (String key : columns.keySet()) {
-            result.addColumn(key, columns.get(key));
-        }
-        for (Tuple tuple : tuples) {
-            if (condition.test(tuple)) {
-                result.addTuple(tuple.copy());
-            }
-        }
+        columns.stream().forEach(c -> result.addColumn(c));
+        tuples.stream().filter(condition).map(Tuple::copy).forEach(result::addTuple);
         return result;
     }
 
     public List<String> getColumnNames() {
-        return columns.keySet().stream().collect(Collectors.toList());
+        return columns.stream().map(Column::getName).toList();
     }
 
     public List<Tuple> getTuples() {
@@ -97,12 +86,8 @@ public class Table {
 
     public Table copy() {
         Table copy = new Table();
-        for (String key : columns.keySet()) {
-            copy.addColumn(key, columns.get(key));
-        }
-        for (Tuple tuple : tuples) {
-            copy.addTuple(tuple.copy());
-        }
+        columns.stream().forEach(c -> copy.addColumn(c));
+        tuples.stream().forEach(t -> copy.addTuple(t.copy()));
         return copy;
     }
 
