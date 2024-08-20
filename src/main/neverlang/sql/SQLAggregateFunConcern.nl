@@ -32,7 +32,7 @@ module sql.GroupBy {
             eval $GROUP[1];
 
             List<String> columns = AttributeList.collectFrom($GROUP[1],"value");
-            List<Optional<Aggregates>> functions = AttributeList.collectFrom($GROUP[1],"function");
+            List<Optional<Aggregate>> functions = AttributeList.collectFrom($GROUP[1],"function");
             List<String> groupByColumns = AttributeList.collectFrom($GROUP[3],"value");
             Table table = $GROUP[2].table;
             List<Tuple> data = table.getTuples();
@@ -46,11 +46,10 @@ module sql.GroupBy {
             // Checks if all the columns are used in an aggregate function
             for (int i = 0; i < columns.size(); i++) {
                 if (!groupByColumns.contains(columns.get(i))) {
-                    result.removeColumn(columns.get(i));
                     if (!functions.get(i).isPresent()) {
                         throw new RuntimeException("Column " + columns.get(i) + " must be used in an aggregate function");
                     } else {
-                        Column col = new Column(null, false, false, null);
+                        Column col = new Column(null, false, false);
                         result.addColumn(columns.get(i), col);
                     }
                 }
@@ -76,7 +75,7 @@ module sql.GroupBy {
                 for (int j = 0; j < columns.size(); j++) {
                     String colName = columns.get(j);
                     if (functions.get(j).isPresent()) {
-                        toAdd.put(colName, functions.get(j).get().apply(temp.stream().map(t -> t.get(colName)).toList()));
+                        toAdd.put(colName, functions.get(j).get().apply(temp));
                     } else {
                         toAdd.put(columns.get(j), temp.get(0).get(columns.get(j)));
                     }
@@ -119,6 +118,7 @@ module sql.AggregateList {
 module sql.AggregateFunctions {
     imports {
         java.util.Optional;
+        sql.Aggregate;
     }
 
     reference syntax {
@@ -142,24 +142,29 @@ module sql.AggregateFunctions {
 
     role(evaluation) {
         [COUNT] .{
-            $COUNT[0].value = $COUNT[1].value;
-            $COUNT[0].function = Optional.of(Aggregates.COUNT);
+            $COUNT[0].value = "COUNT(" + $COUNT[1].value + ")";
+            Aggregate aggrFun = new Aggregate(Aggregate.COUNT, $COUNT[1].value);
+            $COUNT[0].function = Optional.of(aggrFun);
         }.
-         [SUM] .{
-            $SUM[0].value = $SUM[1].value;
-            $SUM[0].function = Optional.of(Aggregates.SUM);
+        [SUM] .{
+            $SUM[0].value = "SUM(" + $SUM[1].value + ")";
+            Aggregate aggrFun = new Aggregate(Aggregate.SUM, $SUM[1].value);
+            $SUM[0].function = Optional.of(aggrFun);
         }.
         [AVG] .{
-            $AVG[0].value = $AVG[1].value;
-            $AVG[0].function = Optional.of(Aggregates.AVG);
+            $AVG[0].value = "AVG(" + $AVG[1].value + ")";
+            Aggregate aggrFun = new Aggregate(Aggregate.AVG, $AVG[1].value);
+            $AVG[0].function = Optional.of(aggrFun);
         }.
         [MIN] .{
-            $MIN[0].value = $MIN[1].value;
-            $MIN[0].function = Optional.of(Aggregates.MIN);
+            $MIN[0].value = "MIN(" + $MIN[1].value + ")";
+            Aggregate aggrFun = new Aggregate(Aggregate.MIN, $MIN[1].value);
+            $MIN[0].function = Optional.of(aggrFun);
         }.
         [MAX] .{
-            $MAX[0].value = $MAX[1].value;
-            $MAX[0].function = Optional.of(Aggregates.MAX);
+            $MAX[0].value = "MAX(" + $MAX[1].value + ")";
+            Aggregate aggrFun = new Aggregate(Aggregate.MAX, $MAX[1].value);
+            $MAX[0].function = Optional.of(aggrFun);
         }.
         [ID] .{
             $ID[0].value = $ID[1].value;

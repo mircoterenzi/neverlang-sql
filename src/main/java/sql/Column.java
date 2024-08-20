@@ -1,7 +1,5 @@
 package sql;
 
-import java.util.Optional;
-
 /**
  * Represents a column in a SQL table.
  */
@@ -23,20 +21,14 @@ public class Column {
     private boolean isUnique;
 
     /**
-     * The aggregate function to be applied to the column.
-     */
-    private Optional<Aggregates> aggregate;
-
-    /**
      * Constructs a new column object with the specified data type, nullability, and uniqueness.
      * @param type the data type of the column
      * @param isNotNull indicates whether the column allows null values
      * @param isUnique indicates whether the column values must be unique
      */
-    public Column(Types type, boolean isNotNull, boolean isUnique, Optional<Aggregates> aggregate) {
+    public Column(Types type, boolean isNotNull, boolean isUnique) {
         this.type = type;
         this.isNotNull = isNotNull;
-        this.isUnique = isUnique;
     }
 
     /**
@@ -58,13 +50,6 @@ public class Column {
      */
     public boolean isUnique() {
         return isUnique;
-    }
-
-    /**
-     * @return the aggregate function to be applied to the column
-     */
-    public Optional<Aggregates> getAggregate() {
-        return aggregate;
     }
 
 }

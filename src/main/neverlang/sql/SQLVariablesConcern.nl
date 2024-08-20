@@ -60,7 +60,7 @@ module sql.Value {
             $INT[0].value = new SQLInteger(Integer.parseInt(#0.text));
         }.
         [FLOAT] .{
-            $FLOAT[0].value = new SQLFloat(Float.parseFloat(#0.text));
+            $FLOAT[0].value = new SQLFloat(Double.parseDouble(#0.text));
         }.
         [BOOL] .{
             $BOOL[0].value = new SQLBoolean(Boolean.parseBoolean(#0.text));

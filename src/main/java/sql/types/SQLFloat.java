@@ -5,13 +5,13 @@ package sql.types;
  */
 public class SQLFloat extends SQLType {
     
-    private final Float value;
+    private final Double value;
 
     /**
     * Constructor for SQLFloat.
     * @param value the value
     */
-    public SQLFloat(Float value) {
+    public SQLFloat(Double value) {
         this.value = value;
     }
 

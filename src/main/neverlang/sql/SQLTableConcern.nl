@@ -34,7 +34,7 @@ module sql.CreateTable {
             List<Boolean> uniqueness = AttributeList.collectFrom($declaration[2], "isUnique");
             Table table = new Table();
             for (int i=0; i<ids.size(); i++) {
-                Column column = new Column(types.get(i), not_nullity.get(i), uniqueness.get(i), Optional.empty());
+                Column column = new Column(types.get(i), not_nullity.get(i), uniqueness.get(i));
                 table.addColumn(ids.get(i), column);
             }
             $$DatabaseMap.put($declaration[1].value, table);
@@ -93,7 +93,7 @@ module sql.AlterTable {
 
     role(register) {
         add: @{
-            Column column = new Column($add[2].type, false, false, Optional.empty());
+            Column column = new Column($add[2].type, false, false);
             $$DatabaseMap.get($add[1].value).addColumn($add[2].value, column);
         }.
         drop: @{
