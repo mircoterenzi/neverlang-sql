@@ -5,7 +5,7 @@ import java.util.List;
 public class Algorithms {
     
     public static Table sortTable(Table table, List<String> columnNames) {
-        List<Tuple> tuple = table.copy().getTuples();
+        List<Tuple> tuple = table.getTuples();
         String column = columnNames.get(0);
         Table result = table.copy().filterTuple(t -> false);
 

@@ -48,22 +48,22 @@ module sql.RelationalExpression {
         }.
         [LT] .{
             $LT[0].scope = $LT[1].value;
-            Predicate<Tuple> relation = tuple -> ((Comparable) tuple.get($LT[1].value)).compareTo($LT[2].value) < 0;    //TODO: improve this part (cast)
+            Predicate<Tuple> relation = tuple -> tuple.get($LT[1].value).compareTo($LT[2].value) < 0;
             $LT[0].relation = relation;
         }.
         [LTE] .{
             $LTE[0].scope = $LTE[1].value;
-            Predicate<Tuple> relation = tuple -> ((Comparable) tuple.get($LTE[1].value)).compareTo($LTE[2].value) <= 0;
+            Predicate<Tuple> relation = tuple -> tuple.get($LTE[1].value).compareTo($LTE[2].value) <= 0;
             $LTE[0].relation = relation;
         }.
         [GT] .{
             $GT[0].scope = $GT[1].value;
-            Predicate<Tuple> relation = tuple -> ((Comparable) tuple.get($GT[1].value)).compareTo($GT[2].value) > 0;
+            Predicate<Tuple> relation = tuple -> tuple.get($GT[1].value).compareTo($GT[2].value) > 0;
             $GT[0].relation = relation;
         }.
         [GTE] .{
             $GTE[0].scope = $GTE[1].value;
-            Predicate<Tuple> relation = tuple -> ((Comparable) tuple.get($GTE[1].value)).compareTo($GTE[2].value) >= 0;
+            Predicate<Tuple> relation = tuple -> tuple.get($GTE[1].value).compareTo($GTE[2].value) >= 0;
             $GTE[0].relation = relation;
         }.
     }
@@ -100,8 +100,8 @@ module sql.ComplexExpression {
         [BTW] .{
             $BTW[0].scope = $BTW[1].value;
             Predicate<Tuple> relation = tuple -> {
-                Comparable value = (Comparable) tuple.get($BTW[1].value);
-                return value.compareTo($BTW[2].value) >= 0 && value.compareTo($BTW[3].value) <= 0;
+                return tuple.get($BTW[1].value).compareTo($BTW[2].value) >= 0 && 
+                        tuple.get($BTW[1].value).compareTo($BTW[3].value) <= 0;
             };
             $BTW[0].relation = relation;
         }.

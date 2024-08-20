@@ -31,6 +31,9 @@ public class Table {
             throw new IllegalArgumentException("[TABLE] Column does not exist");
         }
         columns.remove(name);
+        for (Tuple tuple : tuples) {
+            tuple.remove(name);
+        }
     }
 
     public void addTuple(Tuple tuple) {
