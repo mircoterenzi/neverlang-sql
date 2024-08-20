@@ -34,7 +34,7 @@ module sql.Insert {
             for (int i=0; i<headings.size(); i++) {
                 tuple.put(headings.get(i), values.get(i));
             }
-            $$DatabaseMap.get($insert[1].value).insertTuple(tuple);
+            $$DatabaseMap.get($insert[1].value).addTuple(tuple);
         }.
     }
 }

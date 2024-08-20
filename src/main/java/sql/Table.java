@@ -33,7 +33,7 @@ public class Table {
         columns.remove(name);
     }
 
-    public void insertTuple(Tuple tuple) {
+    public void addTuple(Tuple tuple) {
         if (tuple.size() != columns.size()) {
             throw new IllegalArgumentException("[DATA] Tuple size does not match column size: found " +
                     tuple.size() + ", expected " + columns.size());
@@ -64,21 +64,21 @@ public class Table {
         tuples.add(tuple);
     }
 
-    public void deleteTuple(Tuple tuple) {
+    public void removeTuple(Tuple tuple) {
         if (!tuples.contains(tuple)) {
             throw new IllegalArgumentException("[DATA] Tuple " + tuple + " does not exist");
         }
         tuples.remove(tuple);
     }
 
-    public Table select(Predicate<Tuple> condition) {
+    public Table filterTuple(Predicate<Tuple> condition) {
         Table result = new Table();
         for (String key : columns.keySet()) {
             result.addColumn(key, columns.get(key));
         }
         for (Tuple tuple : tuples) {
             if (condition.test(tuple)) {
-                result.insertTuple(tuple.copy());
+                result.addTuple(tuple.copy());
             }
         }
         return result;
@@ -98,7 +98,7 @@ public class Table {
             copy.addColumn(key, columns.get(key));
         }
         for (Tuple tuple : tuples) {
-            copy.insertTuple(tuple.copy());
+            copy.addTuple(tuple.copy());
         }
         return copy;
     }

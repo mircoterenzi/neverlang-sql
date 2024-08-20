@@ -43,7 +43,7 @@ module sql.TableSelector {
         }.
     }
 }
-/* TODO: fix this module (blend it with the select + group-by module)
+/* TODO: fix this module (blend it with the filterTuple + group-by module)
 module sql.Select {
     imports {
         neverlang.utils.AttributeList;
@@ -92,7 +92,7 @@ module sql.Where {
 
     role (evaluation) {
         [WHERE] .{
-            $WHERE[0].table = ((Table) $WHERE[1].table).copy().select((Predicate<Tuple>) $WHERE[2].relation);
+            $WHERE[0].table = ((Table) $WHERE[1].table).copy().filterTuple((Predicate<Tuple>) $WHERE[2].relation);
         }.
     }
 }

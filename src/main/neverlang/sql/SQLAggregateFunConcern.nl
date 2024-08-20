@@ -34,7 +34,7 @@ module sql.GroupBy {
             List<String> groupByColumns = AttributeList.collectFrom($GROUP[3],"value");
             Table table = $GROUP[2].table;
             List<Tuple> data = table.getTuples();
-            Table result = table.select(t -> false);
+            Table result = table.filterTuple(t -> false);
 
             // Remove unwanted columns
             result.getColumnNames().stream()
@@ -79,7 +79,7 @@ module sql.GroupBy {
                         toAdd.put(columns.get(j), temp.get(0).get(columns.get(j)));
                     }
                 }
-                result.insertTuple(toAdd);
+                result.addTuple(toAdd);
             }
             $GROUP[0].table = result;
             
