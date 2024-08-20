@@ -4,6 +4,8 @@ bundle sql.SQLDataManipulationConcern {
             //sql.Select
             sql.Where
             sql.OrderBy
+            sql.OrderList
+            sql.OrderOperator
 }
 
 module sql.PrintData {
@@ -105,13 +107,60 @@ module sql.OrderBy {
 
     reference syntax {
         [WHERE]
-            SelectedData <-- SelectedData "ORDER" "BY" IdList;      //TODO: implement the possibility to specify ASC or DESC
+            SelectedData <-- SelectedData "ORDER" "BY" OrderList;
     }
 
     role(evaluation) {
         [WHERE] .{
             List<String> columns = AttributeList.collectFrom($WHERE[2], "value");
-            $WHERE[0].table = $$Algorithms.sortTable($WHERE[1].table, columns);
+            List<Integer> order = AttributeList.collectFrom($WHERE[2], "order");
+            Table result = $$Algorithms.sortTable($WHERE[1].table, columns, order);
+            System.out.println("Result in nlg: " + result.toString());  //TODO: fix this (seems like the table is being sorted in a separate thread)
+            $WHERE[0].table = result;
+        }.
+    }
+}
+
+module sql.OrderList {
+    reference syntax {
+        provides {
+            OrderList;
+        }
+        requires {
+            OrderOperator;
+        }
+
+        OrderList <-- OrderOperator "," OrderList;
+        OrderList <-- OrderOperator;
+    }
+}
+
+module sql.OrderOperator {
+    reference syntax {
+        provides {
+            OrderOperator;
+        }
+        requires {
+            Id;
+        }
+
+        [ASC]   OrderOperator <-- Id "ASC";
+        [DESC]  OrderOperator <-- Id "DESC";
+        [NULL]  OrderOperator <-- Id;
+    }
+
+    role(evaluation) {
+        [ASC] .{
+            $ASC[0].order = $$Algorithms.ASC;
+            $ASC[0].value = $ASC[1].value;
+        }.
+        [DESC] .{
+            $DESC[0].order = $$Algorithms.DESC;
+            $DESC[0].value = $DESC[1].value;
+        }.
+        [NULL] .{
+            $NULL[0].order = $$Algorithms.ASC;
+            $NULL[0].value = $NULL[1].value;
         }.
     }
 }
