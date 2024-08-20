@@ -114,9 +114,7 @@ module sql.OrderBy {
         [WHERE] .{
             List<String> columns = AttributeList.collectFrom($WHERE[2], "value");
             List<Integer> order = AttributeList.collectFrom($WHERE[2], "order");
-            Table result = $$Algorithms.sortTable($WHERE[1].table, columns, order);
-            System.out.println("Result in nlg: " + result.toString());  //TODO: fix this (seems like the table is being sorted in a separate thread)
-            $WHERE[0].table = result;
+            $WHERE[0].table = $$Algorithms.sortTable($WHERE[1].table, columns, order);
         }.
     }
 }

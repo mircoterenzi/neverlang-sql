@@ -8,7 +8,7 @@ public class Algorithms {
     public final static Integer DESC = -1;
     
     public static Table sortTable(Table table, List<String> columnNames, List<Integer> order) {
-        List<Tuple> tuple = table.getTuples();
+        List<Tuple> tuple = table.copy().getTuples();
         String column = columnNames.get(0);
         Table result = table.copy().filterTuple(t -> false);
 
