@@ -80,6 +80,11 @@ public class Table {
         return columns.stream().map(Column::getName).toList();
     }
 
+    public Column getColumn(String name) {
+        checkColumnExistence(name, name + " does not exist");
+        return columns.stream().filter(c -> c.getName().equals(name)).findFirst().get();
+    }
+
     public List<Tuple> getTuples() {
         return tuples;
     }

@@ -31,17 +31,16 @@ module sql.GroupBy {
         [GROUP] .{
             eval $GROUP[1];
 
+            Table table = $GROUP[2].table;
+            Table result = new Table();
+            List<Tuple> data = table.getTuples();
             List<String> columns = AttributeList.collectFrom($GROUP[1],"value");
             List<Optional<Aggregate>> functions = AttributeList.collectFrom($GROUP[1],"function");
             List<String> groupByColumns = AttributeList.collectFrom($GROUP[3],"value");
-            Table table = $GROUP[2].table;
-            List<Tuple> data = table.getTuples();
-            Table result = table.filterTuple(t -> false);
 
-            // Remove unwanted columns
-            result.getColumnNames().stream()
-                    .filter(column -> !columns.contains(column))
-                    .forEach(result::removeColumn);
+            columns.stream()
+                    .filter(c -> groupByColumns.contains(c))
+                    .forEach(c -> result.addColumn(table.getColumn(c)));
 
             // Checks if all the columns are used in an aggregate function
             for (int i = 0; i < columns.size(); i++) {
@@ -89,12 +88,15 @@ module sql.GroupBy {
         }.
         [NORMAL] @{
             Table table = $NORMAL[2].table;
-            Table result = table.copy();
+            Table result = new Table();
             List<String> columns = AttributeList.collectFrom($NORMAL[1],"value");
 
-            table.getColumnNames().stream()
-                    .filter(column -> !columns.contains(column))
-                    .forEach(c -> result.removeColumn(c));
+            columns.forEach(c -> result.addColumn(table.getColumn(c)));
+            table.getTuples().forEach(t -> {
+                Tuple tuple = new Tuple();
+                columns.forEach(c -> tuple.put(c, t.get(c)));
+                result.addTuple(tuple);
+            });
             $NORMAL[0].table = result;
         }.
     }
