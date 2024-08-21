@@ -1,4 +1,4 @@
-bundle sql.SQLDataManipulationConcern {
+bundle sql.SQLDataOpConcern {
     slices  sql.PrintData
             sql.TableSelector
             //sql.Select

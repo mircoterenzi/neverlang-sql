@@ -1,10 +1,10 @@
 bundle sql.SQLTableConcern {
-    slices  sql.CreateTable
-            sql.DropTable
-            sql.AlterTable
+    slices  sql.TableOp
+            sql.ColumnList
+            sql.ColumnDeclaration
 }
 
-module sql.CreateTable {
+module sql.TableOp {
     imports {
         neverlang.utils.AttributeList;
         java.util.List;
@@ -22,6 +22,15 @@ module sql.CreateTable {
 
         declaration:
             Operation <-- "CREATE" "TABLE" Id "(" ColumnList ")";
+        drop:
+            Operation <-- "DROP" "TABLE" Id;
+        alter_add:
+            Operation <-- "ALTER" "TABLE" Id "ADD" Column;
+        alter_drop:
+            Operation <-- "ALTER" "TABLE" Id "DROP" Id;
+
+        categories:
+            TableOp = {"CREATE", "DROP", "ALTER"};
     }
 
     role(evaluation) {
@@ -33,64 +42,188 @@ module sql.CreateTable {
             columns.forEach(column -> table.addColumn(column));
             $$DatabaseMap.put($declaration[1].value, table);
         }.
-    }
-}
-
-module sql.DropTable {
-    reference syntax {
-        provides {
-            Operation;
-        }
-        requires {
-            Id;
-        }
-        
-        drop:
-            Operation <-- "DROP" "TABLE" Id;
-    }
-
-    role(evaluation) {
         drop: .{
             $$DatabaseMap.remove($drop[1]:value);
         }.
+        alter_add: @{
+            $$DatabaseMap.get($alter_add[1].value).addColumn($alter_add[2].column);
+        }.
+        alter_drop: @{
+            $$DatabaseMap.get($alter_drop[1].value).removeColumn($alter_drop[2].value);
+        }.
     }
 }
 
-module sql.AlterTable {
-    imports {
-        java.util.Optional;
-    }
-    
+bundle sql.SQLColumnConcern {
+    slices  sql.ColumnDeclaration
+            sql.ColumnType
+            sql.ColumnConstraints
+            sql.ColumnList
+}
+
+module sql.ColumnList {
     reference syntax {
         provides {
-            SelectedTable;
-            Operation;
+            ColumnList;
         }
         requires {
-            Id;
             Column;
         }
 
-        alter:
-            SelectedTable <-- "ALTER" "TABLE" Id;
-        add:
-            Operation <-- SelectedTable "ADD" Column;
-        drop:
-            Operation <-- SelectedTable "DROP" Id;
+        ColumnList <-- Column "," ColumnList;
+        ColumnList <-- Column;
+    }
+}
+
+module sql.ColumnDeclaration {
+    imports {
+        sql.Column;
+    }
+
+    reference syntax {
+        provides {
+            Column;
+        }
+        requires {
+            Id;
+            ColumnType;
+            Constraint;
+        }
+
+        [NORMAL]            Column <-- Id ColumnType;
+        [WITH_CONSTRAINT]   Column <-- Id ColumnType Constraint;
     }
 
     role(evaluation) {
-        alter: .{
-            $alter.value = $alter[1]:value;
+        [NORMAL] @{
+            $NORMAL[0].column = new Column($NORMAL[1].value, $NORMAL[2].constraint);
+        }.
+        [WITH_CONSTRAINT] @{
+            Column column = new Column($WITH_CONSTRAINT[1].value, $WITH_CONSTRAINT[2].constraint);
+            column.addConstraint($WITH_CONSTRAINT[3].constraint);
+            $WITH_CONSTRAINT[0].column = column;
         }.
     }
+}
 
-    role(register) {
-        add: @{
-            $$DatabaseMap.get($add[1].value).addColumn($add[2].column);
+module sql.ColumnType {
+    imports {
+        java.util.function.BiConsumer;
+        java.util.List;
+        sql.types.*;
+    }
+
+    reference syntax {
+        provides {
+            ColumnType;
+        }
+        requires {
+            Integer;
+        }
+
+        [INT_TYPE]
+            ColumnType <-- "INT";
+        [FLOAT_TYPE]
+            ColumnType <-- "FLOAT";
+        [VARCHAR_TYPE]
+            ColumnType <-- "VARCHAR" "(" Integer ")";
+        [BOOLEAN_TYPE]
+            ColumnType <-- "BOOLEAN";
+
+        categories:
+            ColumnType = {"INT", "FLOAT", "VARCHAR", "BOOLEAN"};
+    }
+    
+    role(evaluation) {
+        [INT_TYPE] .{
+            BiConsumer<List<SQLType>,SQLType> constraint = (list, value) -> {
+                if (value != null && !(value instanceof SQLInteger)) {
+                    throw new RuntimeException("Integer column, but the value is " + value.getClass().getSimpleName());
+                }
+            };
+            $INT_TYPE[0].constraint = constraint;
         }.
-        drop: @{
-            $$DatabaseMap.get($drop[1].value).removeColumn($drop[2].value);
+        [FLOAT_TYPE] .{
+            BiConsumer<List<SQLType>,SQLType> constraint = (list, value) -> {
+                if (value != null && !(value instanceof SQLFloat)) {
+                    throw new RuntimeException("Float column, but the value is " + value.getClass().getSimpleName());
+                }
+            };
+            $FLOAT_TYPE[0].constraint = constraint;
+        }.
+        [VARCHAR_TYPE] .{
+            BiConsumer<List<SQLType>,SQLType> constraint = (list, value) -> {
+                if (value != null) {
+                    if (!(value instanceof SQLString)) {
+                        throw new RuntimeException("Varchar column, but the value is " + value.getClass().getSimpleName());
+                    }
+                    if (value.toString().length() > ((SQLInteger) $VARCHAR_TYPE[1].value).toDouble()) {
+                        throw new RuntimeException("The value is " + value.toString().length() +
+                                " characters long, but the column only supports " +
+                                ((SQLInteger) $VARCHAR_TYPE[1].value).toDouble());
+                    }
+                }
+            };
+            $VARCHAR_TYPE[0].constraint = constraint;
+        }.
+        [BOOLEAN_TYPE] .{
+            BiConsumer<List<SQLType>,SQLType> constraint = (list, value) -> {
+                if (value != null && !(value instanceof SQLBoolean)) {
+                    throw new RuntimeException("Boolean column, but the value is " + value.getClass().getSimpleName());
+                }
+            };
+            $BOOLEAN_TYPE[0].constraint = constraint;
+        }.
+    }
+}
+
+module sql.ColumnConstraints {
+    imports {
+        java.util.function.BiConsumer;
+        java.util.List;
+        sql.types.SQLType;
+    }
+
+    reference syntax {
+        provides {
+            Constraint;
+        }
+
+        [NOT_NULL]  Constraint <-- "NOT" "NULL";
+        [UNIQUE]    Constraint <-- "UNIQUE";
+        [KEY]       Constraint <-- "PRIMARY" "KEY";
+
+        categories:
+            Constraint = {"NOT_NULL", "UNIQUE", "KEY"};
+    }
+
+    role(evaluation) {
+        [NOT_NULL] .{
+            BiConsumer<List<SQLType>,SQLType> constraint = (list, value) -> {
+                if (value == null) {
+                    throw new RuntimeException("Not-null column, but the value is null");
+                }
+            };
+            $NOT_NULL[0].constraint = constraint;
+        }.
+        [UNIQUE] .{
+            BiConsumer<List<SQLType>,SQLType> constraint = (list, value) -> {
+                if (list.contains(value)) {
+                    throw new RuntimeException("Unique column, but the value " + value + " already exists");
+                }
+            };
+            $UNIQUE[0].constraint = constraint;
+        }.
+        [KEY] .{
+            BiConsumer<List<SQLType>,SQLType> constraint = (list, value) -> {
+                if (value == null) {
+                    throw new RuntimeException("Primary-key column, but the value is null");
+                }
+                if (list.contains(value)) {
+                    throw new RuntimeException("Primary-key column, but the value " + value + " already exists");
+                }
+            };
+            $KEY[0].constraint = constraint;
         }.
     }
 }

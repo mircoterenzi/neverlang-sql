@@ -2,6 +2,8 @@ bundle sql.SQLDataIOConcern {
     slices  sql.Insert
             sql.Delete
             sql.Update
+            sql.SetList
+            sql.Set
 }
 
 module sql.Insert {
