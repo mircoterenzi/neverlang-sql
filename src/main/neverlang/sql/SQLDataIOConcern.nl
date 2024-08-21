@@ -87,11 +87,11 @@ module sql.Update {
         }
         requires {
             Id;
-            RelExpr;
+            BoolExpr;
         }
 
         update:
-            Operation <-- "UPDATE" Id "SET" SetList "WHERE" RelExpr;
+            Operation <-- "UPDATE" Id "SET" SetList "WHERE" BoolExpr;
     }
 
     role(evaluation) {

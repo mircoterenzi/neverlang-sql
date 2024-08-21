@@ -87,10 +87,10 @@ module sql.Where {
         }
         requires {
             SelectedData;
-            RelExpr;
+            BoolExpr;
         }
 
-        [WHERE] SelectedData <-- SelectedData "WHERE" RelExpr;
+        [WHERE] SelectedData <-- SelectedData "WHERE" BoolExpr;
     }
 
     role (evaluation) {
