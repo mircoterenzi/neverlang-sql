@@ -7,6 +7,7 @@ module sql.RelationalExpression {
     imports {
         java.util.function.Predicate;
         sql.Tuple;
+        sql.types.SQLType;
     }
 
     reference syntax {
@@ -33,37 +34,58 @@ module sql.RelationalExpression {
     role(evaluation) {
         [EQ] .{
             $EQ[0].scope = $EQ[1].value;
-            Predicate<Tuple> relation = tuple -> tuple.get($EQ[1].value).equals($EQ[2].value);
+            Predicate<Tuple> relation = tuple -> {
+                SQLType value = tuple.get($EQ[1].value);
+                return value != null && value.equals($EQ[2].value);
+            };
             $EQ[0].relation = relation;
         }.
         [NEQ] .{
             $NEQ[0].scope = $NEQ[1].value;
-            Predicate<Tuple> relation = tuple -> !tuple.get($NEQ[1].value).equals($NEQ[2].value);
+            Predicate<Tuple> relation = tuple -> {
+                SQLType value = tuple.get($NEQ[1].value);
+                return value != null && !value.equals($NEQ[2].value);
+            };
             $NEQ[0].relation = relation;
         }.
         [NEQ_ALT] .{
             $NEQ_ALT[0].scope = $NEQ_ALT[1].value;
-            Predicate<Tuple> relation = tuple -> !tuple.get($NEQ_ALT[1].value).equals($NEQ_ALT[2].value);
+            Predicate<Tuple> relation = tuple -> {
+                SQLType value = tuple.get($NEQ_ALT[1].value);
+                return value != null && !value.equals($NEQ_ALT[2].value);
+            };
             $NEQ_ALT[0].relation = relation;
         }.
         [LT] .{
             $LT[0].scope = $LT[1].value;
-            Predicate<Tuple> relation = tuple -> tuple.get($LT[1].value).compareTo($LT[2].value) < 0;
+            Predicate<Tuple> relation = tuple -> {
+                SQLType value = tuple.get($LT[1].value);
+                return value != null && value.compareTo($LT[2].value) < 0;
+            };
             $LT[0].relation = relation;
         }.
         [LTE] .{
             $LTE[0].scope = $LTE[1].value;
-            Predicate<Tuple> relation = tuple -> tuple.get($LTE[1].value).compareTo($LTE[2].value) <= 0;
+            Predicate<Tuple> relation = tuple -> {
+                SQLType value = tuple.get($LTE[1].value);
+                return value != null && value.compareTo($LTE[2].value) <= 0;
+            };
             $LTE[0].relation = relation;
         }.
         [GT] .{
             $GT[0].scope = $GT[1].value;
-            Predicate<Tuple> relation = tuple -> tuple.get($GT[1].value).compareTo($GT[2].value) > 0;
+            Predicate<Tuple> relation = tuple -> {
+                SQLType value = tuple.get($GT[1].value);
+                return value != null && value.compareTo($GT[2].value) > 0;
+            };
             $GT[0].relation = relation;
         }.
         [GTE] .{
             $GTE[0].scope = $GTE[1].value;
-            Predicate<Tuple> relation = tuple -> tuple.get($GTE[1].value).compareTo($GTE[2].value) >= 0;
+            Predicate<Tuple> relation = tuple -> {
+                SQLType value = tuple.get($GTE[1].value);
+                return value != null && value.compareTo($GTE[2].value) >= 0;
+            };
             $GTE[0].relation = relation;
         }.
     }
@@ -91,9 +113,10 @@ module sql.ComplexExpression {
 
         [BTW]   RelExpr <-- Id "BETWEEN" Value "AND" Value;
         [IN]    RelExpr <-- Id "IN" "(" ValueList ")";
+        [NULL]  RelExpr <-- Id "IS" "NULL";
 
         categories:
-            Operator = {"BETWEEN", "IN"};
+            Operator = {"BETWEEN", "IN", "IS NULL"};
     }
 
     role(evaluation) {
@@ -113,6 +136,11 @@ module sql.ComplexExpression {
                 return values.contains(value);
             };
             $IN[0].relation = relation;
+        }.
+        [NULL] .{
+            $NULL[0].scope = $NULL[1].value;
+            Predicate<Tuple> relation = tuple -> tuple.get($NULL[1].value) == null;
+            $NULL[0].relation = relation;
         }.
     }
 }
