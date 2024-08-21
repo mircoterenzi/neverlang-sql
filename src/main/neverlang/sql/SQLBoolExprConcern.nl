@@ -1,6 +1,5 @@
 bundle sql.SQLBoolExprConcern {
-    slices sql.Where
-            sql.AndExpression
+    slices  sql.AndExpression
             sql.OrExpression
             sql.NotExpression
 }
@@ -85,4 +84,5 @@ module sql.NotExpression {
         }.
     }
 }
+
 

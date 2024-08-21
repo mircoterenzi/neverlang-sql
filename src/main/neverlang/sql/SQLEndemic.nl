@@ -6,6 +6,6 @@ endemic slice sql.SQLDatabaseMapEndemic {
 
 endemic slice sql.SQLAlgorithmsEndemic {
     declare {
-        static Algorithms: sql.Algorithms;
+        static Algorithms: sql.utils.Algorithms;
     }
 }

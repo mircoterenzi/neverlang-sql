@@ -1,6 +1,9 @@
-package sql;
+package sql.utils;
 
 import java.util.List;
+
+import sql.Table;
+import sql.Tuple;
 
 public class Algorithms {
 

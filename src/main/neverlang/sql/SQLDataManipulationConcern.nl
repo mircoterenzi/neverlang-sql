@@ -103,18 +103,19 @@ module sql.OrderBy {
     imports {
         java.util.List;
         neverlang.utils.AttributeList;
+        sql.utils.Algorithms;
     }
 
     reference syntax {
-        [WHERE]
+        [ORDER]
             SelectedData <-- SelectedData "ORDER" "BY" OrderList;
     }
 
     role(evaluation) {
-        [WHERE] .{
-            List<String> columns = AttributeList.collectFrom($WHERE[2], "value");
-            List<Integer> order = AttributeList.collectFrom($WHERE[2], "order");
-            $WHERE[0].table = $$Algorithms.sortTable($WHERE[1].table, columns, order);
+        [ORDER] .{
+            List<String> columns = AttributeList.collectFrom($ORDER[2], "value");
+            List<Integer> order = AttributeList.collectFrom($ORDER[2], "order");
+            $ORDER[0].table = $$Algorithms.sortTable($ORDER[1].table, columns, order);
         }.
     }
 }
@@ -134,6 +135,10 @@ module sql.OrderList {
 }
 
 module sql.OrderOperator {
+    imports {
+        sql.utils.Algorithms;
+    }
+    
     reference syntax {
         provides {
             OrderOperator;
@@ -142,9 +147,9 @@ module sql.OrderOperator {
             Id;
         }
 
-        [ASC]   OrderOperator <-- Id "ASC";
-        [DESC]  OrderOperator <-- Id "DESC";
-        [NULL]  OrderOperator <-- Id;
+        [ASC]       OrderOperator <-- Id "ASC";
+        [DESC]      OrderOperator <-- Id "DESC";
+        [DEFAULT]   OrderOperator <-- Id;
     }
 
     role(evaluation) {
@@ -156,9 +161,10 @@ module sql.OrderOperator {
             $DESC[0].order = $$Algorithms.DESC;
             $DESC[0].value = $DESC[1].value;
         }.
-        [NULL] .{
-            $NULL[0].order = $$Algorithms.ASC;
-            $NULL[0].value = $NULL[1].value;
+        [DEFAULT] .{
+            $DEFAULT[0].order = $$Algorithms.ASC;
+            $DEFAULT[0].value = $DEFAULT[1].value;
         }.
     }
 }
+
