@@ -81,20 +81,16 @@ module sql.ColumnType {
     role(evaluation) {
         [INT_TYPE] .{
             BiConsumer<List<SQLType>,SQLType> constraint = (list, value) -> {
-                if (value != null) {
-                    if (!(value instanceof SQLInteger)) {
-                        throw new RuntimeException("Integer column, but the value is " + value.getClass().getSimpleName());
-                    }
+                if (value != null && !(value instanceof SQLInteger)) {
+                    throw new RuntimeException("Integer column, but the value is " + value.getClass().getSimpleName());
                 }
             };
             $INT_TYPE[0].constraint = constraint;
         }.
         [FLOAT_TYPE] .{
             BiConsumer<List<SQLType>,SQLType> constraint = (list, value) -> {
-                if (value != null) {
-                    if (!(value instanceof SQLFloat)) {
-                        throw new RuntimeException("Float column, but the value is " + value.getClass().getSimpleName());
-                    }
+                if (value != null && !(value instanceof SQLFloat)) {
+                    throw new RuntimeException("Float column, but the value is " + value.getClass().getSimpleName());
                 }
             };
             $FLOAT_TYPE[0].constraint = constraint;
@@ -116,10 +112,8 @@ module sql.ColumnType {
         }.
         [BOOLEAN_TYPE] .{
             BiConsumer<List<SQLType>,SQLType> constraint = (list, value) -> {
-                if (value != null) {
-                    if (!(value instanceof SQLBoolean)) {
-                        throw new RuntimeException("Boolean column, but the value is " + value.getClass().getSimpleName());
-                    }
+                if (value != null && !(value instanceof SQLBoolean)) {
+                    throw new RuntimeException("Boolean column, but the value is " + value.getClass().getSimpleName());
                 }
             };
             $BOOLEAN_TYPE[0].constraint = constraint;
