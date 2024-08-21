@@ -42,6 +42,7 @@ module sql.TableSelector {
                 );
             }
             $TABLE[0].table = $$DatabaseMap.get($TABLE[1].value).copy();
+            $TABLE[0].ref = $TABLE[1].value;
         }.
     }
 }
@@ -95,6 +96,7 @@ module sql.Where {
     role (evaluation) {
         [WHERE] .{
             $WHERE[0].table = ((Table) $WHERE[1].table).copy().filterTuple((Predicate<Tuple>) $WHERE[2].relation);
+            $WHERE[0].ref = $WHERE[1].ref;
         }.
     }
 }
@@ -116,6 +118,7 @@ module sql.OrderBy {
             List<String> columns = AttributeList.collectFrom($ORDER[2], "value");
             List<Integer> order = AttributeList.collectFrom($ORDER[2], "order");
             $ORDER[0].table = $$Algorithms.sortTable($ORDER[1].table, columns, order);
+            $ORDER[0].ref = $ORDER[1].ref;
         }.
     }
 }

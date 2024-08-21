@@ -37,6 +37,7 @@ module sql.GroupBy {
             List<String> columns = AttributeList.collectFrom($GROUP[1],"value");
             List<Optional<Aggregate>> functions = AttributeList.collectFrom($GROUP[1],"function");
             List<String> groupByColumns = AttributeList.collectFrom($GROUP[3],"value");
+            $GROUP[0].ref = $GROUP[2].ref;
 
             columns.stream()
                     .filter(c -> groupByColumns.contains(c))
@@ -85,11 +86,13 @@ module sql.GroupBy {
         }.
         [FULL] @{
             $FULL[0].table = $FULL[1].table;
+            $FULL[0].ref = $FULL[1].ref;
         }.
         [NORMAL] @{
             Table table = $NORMAL[2].table;
             Table result = new Table();
             List<String> columns = AttributeList.collectFrom($NORMAL[1],"value");
+            $NORMAL[0].ref = $NORMAL[2].ref;
 
             columns.forEach(c -> result.addColumn(table.getColumn(c)));
             table.getTuples().forEach(t -> {

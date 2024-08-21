@@ -60,8 +60,12 @@ module sql.Delete {
     }
 
     role(evaluation) {
-        delete: @{
-            //TODO: Implement
+        delete: .{
+            String tableName = $delete[1].ref;
+            Table table = $$DatabaseMap.get(tableName);
+            Table toRemove = $delete[1].table;
+            toRemove.getTuples().forEach(t -> table.removeTuple(t));
+            $$DatabaseMap.put(tableName, table);
         }.
     }
 }
@@ -70,6 +74,11 @@ module sql.Update {
     imports {
         neverlang.utils.AttributeList;
         java.util.List;
+        java.util.function.Predicate;
+        java.util.Map;
+        java.util.HashMap;
+        sql.Tuple;
+        sql.types.SQLType;
     }
 
     reference syntax {
@@ -78,16 +87,38 @@ module sql.Update {
         }
         requires {
             Id;
-            BoolExpr;
+            RelExpr;
         }
 
         update:
-            Operation <-- "UPDATE" Id "SET" SetList "WHERE" BoolExpr;
+            Operation <-- "UPDATE" Id "SET" SetList "WHERE" RelExpr;
     }
 
     role(evaluation) {
-        update: @{
-            //TODO: Implement
+        update: .{
+            String tableName = $update[1].value;
+            Table table = $$DatabaseMap.get(tableName);
+            Table result = table.copy().filterTuple(t -> false);
+            Predicate<Tuple> predicate = $update[3].relation;
+            Map<String, SQLType> toAdd = new HashMap<>();
+            List<String> headings = AttributeList.collectFrom($update[2], "scope");
+            List<SQLType> values = AttributeList.collectFrom($update[2], "value");
+            for (int i=0; i<headings.size(); i++) {
+                toAdd.put(headings.get(i), values.get(i));
+            }
+
+            table.getTuples().forEach(t -> {
+                if (predicate.test(t)) {
+                    Tuple newTuple = new Tuple();
+                    t.keySet().forEach(key -> {
+                        newTuple.put(key, toAdd.containsKey(key)? toAdd.get(key) :  t.get(key));
+                    });
+                    result.addTuple(newTuple);
+                } else {
+                    result.addTuple(t);
+                }
+            });
+            $$DatabaseMap.put(tableName, result);
         }.
     }
 }
