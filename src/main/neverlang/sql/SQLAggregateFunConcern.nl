@@ -132,6 +132,7 @@ module sql.AggregateFunctions {
         }
 
         [COUNT] AggregateFunction <-- "COUNT" "(" Id ")";
+        [STAR]  AggregateFunction <-- "COUNT" "(" "*" ")";
         [SUM]   AggregateFunction <-- "SUM" "(" Id ")";
         [AVG]   AggregateFunction <-- "AVG" "(" Id ")";
         [MIN]   AggregateFunction <-- "MIN" "(" Id ")";
@@ -147,6 +148,11 @@ module sql.AggregateFunctions {
             $COUNT[0].value = "COUNT(" + $COUNT[1].value + ")";
             Aggregate aggrFun = new Aggregate(Aggregate.COUNT, $COUNT[1].value);
             $COUNT[0].function = Optional.of(aggrFun);
+        }.
+        [STAR] .{
+            $STAR[0].value = "COUNT(*)";
+            Aggregate aggrFun = new Aggregate(Aggregate.COUNT_STAR, null);
+            $STAR[0].function = Optional.of(aggrFun);
         }.
         [SUM] .{
             $SUM[0].value = "SUM(" + $SUM[1].value + ")";
