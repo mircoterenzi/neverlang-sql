@@ -81,37 +81,45 @@ module sql.ColumnType {
     role(evaluation) {
         [INT_TYPE] .{
             BiConsumer<List<SQLType>,SQLType> constraint = (list, value) -> {
-                if (!(value instanceof SQLInteger)) {
-                    throw new RuntimeException("Integer column, but the value is " + value.getClass().getSimpleName());
+                if (value != null) {
+                    if (!(value instanceof SQLInteger)) {
+                        throw new RuntimeException("Integer column, but the value is " + value.getClass().getSimpleName());
+                    }
                 }
             };
             $INT_TYPE[0].constraint = constraint;
         }.
         [FLOAT_TYPE] .{
             BiConsumer<List<SQLType>,SQLType> constraint = (list, value) -> {
-                if (!(value instanceof SQLFloat)) {
-                    throw new RuntimeException("Float column, but the value is " + value.getClass().getSimpleName());
+                if (value != null) {
+                    if (!(value instanceof SQLFloat)) {
+                        throw new RuntimeException("Float column, but the value is " + value.getClass().getSimpleName());
+                    }
                 }
             };
             $FLOAT_TYPE[0].constraint = constraint;
         }.
         [VARCHAR_TYPE] .{
             BiConsumer<List<SQLType>,SQLType> constraint = (list, value) -> {
-                if (!(value instanceof SQLString)) {
-                    throw new RuntimeException("Varchar column, but the value is " + value.getClass().getSimpleName());
-                }
-                if (value.toString().length() > ((SQLInteger) $VARCHAR_TYPE[1].value).toDouble()) {
-                    throw new RuntimeException("The value is " + value.toString().length() +
-                            " characters long, but the column only supports " +
-                            ((SQLInteger) $VARCHAR_TYPE[1].value).toDouble());
+                if (value != null) {
+                    if (!(value instanceof SQLString)) {
+                        throw new RuntimeException("Varchar column, but the value is " + value.getClass().getSimpleName());
+                    }
+                    if (value.toString().length() > ((SQLInteger) $VARCHAR_TYPE[1].value).toDouble()) {
+                        throw new RuntimeException("The value is " + value.toString().length() +
+                                " characters long, but the column only supports " +
+                                ((SQLInteger) $VARCHAR_TYPE[1].value).toDouble());
+                    }
                 }
             };
             $VARCHAR_TYPE[0].constraint = constraint;
         }.
         [BOOLEAN_TYPE] .{
             BiConsumer<List<SQLType>,SQLType> constraint = (list, value) -> {
-                if (!(value instanceof SQLBoolean)) {
-                    throw new RuntimeException("Boolean column, but the value is " + value.getClass().getSimpleName());
+                if (value != null) {
+                    if (!(value instanceof SQLBoolean)) {
+                        throw new RuntimeException("Boolean column, but the value is " + value.getClass().getSimpleName());
+                    }
                 }
             };
             $BOOLEAN_TYPE[0].constraint = constraint;
