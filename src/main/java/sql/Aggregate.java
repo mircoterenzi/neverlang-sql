@@ -1,7 +1,9 @@
 package sql;
 
 import java.util.List;
+import sql.types.SQLType;
 import sql.types.SQLFloat;
+import sql.types.SQLInteger;
 
 public class Aggregate {
     
@@ -20,13 +22,13 @@ public class Aggregate {
         this.refColumn = refColumn;
     }
 
-    public SQLFloat apply(List<Tuple> tuples) {
+    public SQLType apply(List<Tuple> tuples) {
         switch(funID) {
             case 0:
-                return new SQLFloat(tuples.stream()
+                return new SQLInteger(tuples.stream()
                         .map(t -> t.get(refColumn))
                         .filter(elem -> elem != null)
-                        .mapToDouble(elem -> 1)
+                        .mapToInt(elem -> 1)
                         .sum());
             case 1:
                 return new SQLFloat(tuples.stream()
@@ -52,8 +54,8 @@ public class Aggregate {
                         .max()
                         .orElse(0));
             case 5:
-                return new SQLFloat(tuples.stream()
-                        .mapToDouble(elem -> 1)
+                return new SQLInteger(tuples.stream()
+                        .mapToInt(elem -> 1)
                         .sum());
             default:
                 throw new IllegalArgumentException("Invalid aggregate function");

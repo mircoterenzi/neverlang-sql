@@ -20,11 +20,12 @@ module sql.GroupBy {
         requires {
             SelectedData;
             IdList;
+            AggregateList;
         }
 
         [GROUP]     SelectedData <-- "SELECT" AggregateList SelectedData "GROUP" "BY" IdList;
         [FULL]      SelectedData <-- "SELECT" "*" SelectedData;
-        [NORMAL]    SelectedData <-- "SELECT" AggregateList SelectedData;
+        [NORMAL]    SelectedData <-- "SELECT" IdList SelectedData;
     }
 
     role(evaluation) {

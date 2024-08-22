@@ -27,15 +27,20 @@ module sql.BoolConcatenation {
 
     role(evaluation) {
         [AND] .{
-            Predicate<Tuple> filter = obj -> ((Predicate<Tuple>) $AND[1].relation).test(obj) && ((Predicate<Tuple>) $AND[2].relation).test(obj);
-            $AND[0].relation = (Predicate<Tuple>) filter;
+            Predicate<Tuple> expr1 = $AND[1].relation;
+            Predicate<Tuple> expr2 = $AND[2].relation;
+            Predicate<Tuple> filter = obj -> expr1.test(obj) && expr2.test(obj);
+            $AND[0].relation = filter;
         }.
         [OR] .{
-            Predicate<Tuple> filter = obj -> ((Predicate<Tuple>) $OR[1].relation).test(obj) || ((Predicate<Tuple>) $OR[2].relation).test(obj);
+            Predicate<Tuple> expr1 = $OR[1].relation;
+            Predicate<Tuple> expr2 = $OR[2].relation;
+            Predicate<Tuple> filter = obj -> expr1.test(obj) || expr2.test(obj);
             $OR[0].relation = filter;
         }.
         [NOT] .{
-            Predicate<Tuple> filter = obj -> !((Predicate<Tuple>) $NOT[1].relation).test(obj);
+            Predicate<Tuple> expr = $NOT[1].relation;
+            Predicate<Tuple> filter = obj -> !expr.test(obj);
             $NOT[0].relation = filter;
         }.
     }

@@ -1,4 +1,4 @@
-bundle sql.SQLDataIOConcern {
+bundle sql.SQLDataConcern {
     slices  sql.Insert
             sql.Delete
             sql.Update

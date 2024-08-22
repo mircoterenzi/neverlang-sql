@@ -6,7 +6,7 @@ language sql.SQLang {
         bundle (sql.SQLCoreConcern)
         bundle (sql.SQLTableConcern)
         bundle (sql.SQLDataOpConcern)
-        bundle (sql.SQLDataIOConcern)
+        bundle (sql.SQLDataConcern)
         bundle (sql.SQLBoolExprConcern)
         bundle (sql.SQLAggregateFunConcern)
 
