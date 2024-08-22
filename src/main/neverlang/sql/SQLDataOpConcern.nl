@@ -1,7 +1,7 @@
 bundle sql.SQLDataOpConcern {
     slices  sql.PrintData
             sql.TableSelector
-            //sql.Select
+            sql.Select
             sql.Where
             sql.OrderBy
             sql.OrderList
@@ -46,7 +46,7 @@ module sql.TableSelector {
         }.
     }
 }
-/* TODO: fix this module (blend it with the filterTuple + group-by module)
+
 module sql.Select {
     imports {
         neverlang.utils.AttributeList;
@@ -63,18 +63,25 @@ module sql.Select {
     role(evaluation) {
         [TABLE] @{
             $TABLE[0].table = $TABLE[1].table;
+            $TABLE[0].ref = $TABLE[1].ref;
         }.
         [COLUMN_LIST] @{
             Table table = $COLUMN_LIST[2].table;
+            Table result = new Table();
             List<String> columns = AttributeList.collectFrom($COLUMN_LIST[1],"value");
-            table.getColumnNames().stream()
-                    .filter(column -> !columns.contains(column))
-                    .forEach(table::removeColumn);
-            $COLUMN_LIST[0].table = table;
+            $COLUMN_LIST[0].ref = $COLUMN_LIST[2].ref;
+
+            columns.forEach(c -> result.addColumn(table.getColumn(c)));
+            table.getTuples().forEach(t -> {
+                Tuple tuple = new Tuple();
+                columns.forEach(c -> tuple.put(c, t.get(c)));
+                result.addTuple(tuple);
+            });
+            $COLUMN_LIST[0].table = result;
         }.
     }
 }
-*/
+
 module sql.Where {
     imports {
         java.util.function.Predicate;
