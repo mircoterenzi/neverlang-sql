@@ -105,6 +105,7 @@ module sql.AggregateFunctions {
     imports {
         java.util.Optional;
         sql.Aggregate;
+        sql.Aggregate.AggregateFun;
     }
 
     reference syntax {
@@ -130,32 +131,32 @@ module sql.AggregateFunctions {
     role(evaluation) {
         [COUNT] .{
             $COUNT[0].value = "COUNT(" + $COUNT[1].value + ")";
-            Aggregate aggrFun = new Aggregate(Aggregate.COUNT, $COUNT[1].value);
+            Aggregate aggrFun = new Aggregate(AggregateFun.COUNT, $COUNT[1].value);
             $COUNT[0].function = Optional.of(aggrFun);
         }.
         [STAR] .{
             $STAR[0].value = "COUNT(*)";
-            Aggregate aggrFun = new Aggregate(Aggregate.COUNT_STAR, null);
+            Aggregate aggrFun = new Aggregate(AggregateFun.COUNT_STAR, null);
             $STAR[0].function = Optional.of(aggrFun);
         }.
         [SUM] .{
             $SUM[0].value = "SUM(" + $SUM[1].value + ")";
-            Aggregate aggrFun = new Aggregate(Aggregate.SUM, $SUM[1].value);
+            Aggregate aggrFun = new Aggregate(AggregateFun.SUM, $SUM[1].value);
             $SUM[0].function = Optional.of(aggrFun);
         }.
         [AVG] .{
             $AVG[0].value = "AVG(" + $AVG[1].value + ")";
-            Aggregate aggrFun = new Aggregate(Aggregate.AVG, $AVG[1].value);
+            Aggregate aggrFun = new Aggregate(AggregateFun.AVG, $AVG[1].value);
             $AVG[0].function = Optional.of(aggrFun);
         }.
         [MIN] .{
             $MIN[0].value = "MIN(" + $MIN[1].value + ")";
-            Aggregate aggrFun = new Aggregate(Aggregate.MIN, $MIN[1].value);
+            Aggregate aggrFun = new Aggregate(AggregateFun.MIN, $MIN[1].value);
             $MIN[0].function = Optional.of(aggrFun);
         }.
         [MAX] .{
             $MAX[0].value = "MAX(" + $MAX[1].value + ")";
-            Aggregate aggrFun = new Aggregate(Aggregate.MAX, $MAX[1].value);
+            Aggregate aggrFun = new Aggregate(AggregateFun.MAX, $MAX[1].value);
             $MAX[0].function = Optional.of(aggrFun);
         }.
         [ID] .{

@@ -4,22 +4,30 @@ package sql.types;
  * Class that models a SQL String.
  */
 public class SQLString extends SQLType {
-
+    /**
+     * The value of the SQLBoolean.
+     */
     private final String value;
 
     /**
      * Constructor for SQLString.
-     * @param value the value
+     * @param givenValue the value
      */
-    public SQLString(String value) {
-        this.value = value;
+    public SQLString(final String givenValue) {
+        value = givenValue;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Boolean toBool() {
         return value != null && !value.isEmpty();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Double toDouble() {
         try {
@@ -29,6 +37,9 @@ public class SQLString extends SQLType {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return value;
