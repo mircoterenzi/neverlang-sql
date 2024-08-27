@@ -1,6 +1,7 @@
 package sql;
 
 import java.util.LinkedHashMap;
+
 import sql.types.SQLType;
 
 /**
@@ -13,9 +14,7 @@ public class Tuple extends LinkedHashMap<String, SQLType> {
      */
     public Tuple copy() {
         Tuple copy = new Tuple();
-        for (String key : keySet()) {
-            copy.put(key, get(key));
-        }
+        copy.putAll(this);
         return copy;
     }
 }

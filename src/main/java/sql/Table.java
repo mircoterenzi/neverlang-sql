@@ -151,7 +151,7 @@ public class Table {
      * @return the list of tuples
      */
     public List<Tuple> getTuples() {
-        return tuples;
+        return new ArrayList<>(tuples);
     }
 
     /**
