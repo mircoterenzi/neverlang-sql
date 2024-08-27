@@ -82,6 +82,11 @@ module sql.GroupBy {
             $GROUP[0].table = result;
         }.
     }
+    role (output) {
+        [GROUP] .{
+            System.out.println($GROUP[0].table.toString());
+        }.
+    }
 }
 
 module sql.AggregateList {

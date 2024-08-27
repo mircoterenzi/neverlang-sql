@@ -22,7 +22,7 @@ module sql.PrintData {
     role(evaluation) {
         [PRINT] .{
             eval $PRINT[1];
-            System.out.println($PRINT[1].table.toString());
+            //System.out.println($PRINT[1].table.toString());
             $$DatabaseMap.put("OUTPUT", $PRINT[1].table);
         }.
     }
@@ -80,6 +80,14 @@ module sql.Select {
                 result.addTuple(tuple);
             });
             $COLUMN_LIST[0].table = result;
+        }.
+    }
+    role (output) {
+        [TABLE] .{
+            System.out.println($TABLE[0].table.toString());
+        }.
+        [COLUMN_LIST] .{
+            System.out.println($COLUMN_LIST[0].table.toString());
         }.
     }
 }

@@ -1,8 +1,28 @@
 bundle sql.SQLCoreConcern {
-    slices  sql.OperationList
+    slices  sql.Main
+            sql.OperationList
             sql.EmptyOperation
             sql.IdList
             sql.ElementId
+}
+
+module sql.Main {
+    reference syntax {
+        provides {
+            Program;
+        }
+        requires {
+            OperationList;
+        }
+
+        [PROG]  Program <-- OperationList;
+    }
+    role (evaluation) {
+        [PROG] @{
+            $PROG.db = $$DatabaseMap;
+            $PROG.output = $$DatabaseMap.containsKey("OUTPUT") ? $$DatabaseMap.get("OUTPUT").toString() : ""; //TODO: improve the output testing
+        }.
+    }
 }
 
 module sql.OperationList {
@@ -18,17 +38,6 @@ module sql.OperationList {
             OperationList <-- Operation;
         list:
             OperationList <-- OperationList ";" Operation;
-    }
-
-    role(register) {
-        single: @{
-            $single.db = $$DatabaseMap;
-            $single.output = $$DatabaseMap.containsKey("OUTPUT") ? $$DatabaseMap.get("OUTPUT").toString() : ""; //TODO: improve the output check
-        }.
-        list: @{
-            $list.db = $$DatabaseMap;
-            $single.output = $$DatabaseMap.containsKey("OUTPUT") ? $$DatabaseMap.get("OUTPUT").toString() : "";
-        }.
     }
 }
 
