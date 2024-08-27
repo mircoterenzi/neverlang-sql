@@ -27,18 +27,19 @@ module sql.BoolConcatenation {
 
     role(evaluation) {
         [AND] .{
-            Predicate<Tuple> expr1 = $AND[1].relation;
-            Predicate<Tuple> expr2 = $AND[2].relation;
+            Predicate<Tuple> expr1 = $AND[1]:relation;
+            Predicate<Tuple> expr2 = $AND[2]:relation;
             Predicate<Tuple> filter = obj -> expr1.test(obj) && expr2.test(obj);
             $AND[0].relation = filter;
         }.
         [OR] .{
-            Predicate<Tuple> expr1 = $OR[1].relation;
-            Predicate<Tuple> expr2 = $OR[2].relation;
+            Predicate<Tuple> expr1 = $OR[1]:relation;
+            Predicate<Tuple> expr2 = $OR[2]:relation;
             Predicate<Tuple> filter = obj -> expr1.test(obj) || expr2.test(obj);
             $OR[0].relation = filter;
         }.
         [NOT] .{
+            eval $NOT[1];
             Predicate<Tuple> expr = $NOT[1].relation;
             Predicate<Tuple> filter = obj -> !expr.test(obj);
             $NOT[0].relation = filter;
@@ -75,7 +76,7 @@ module sql.RelationalExpression {
     }
 
     role(evaluation) {
-        [EQ] .{
+        [EQ] @{
             $EQ[0].scope = $EQ[1].value;
             Predicate<Tuple> relation = tuple -> {
                 SQLType value = tuple.get($EQ[1].value);
@@ -83,7 +84,7 @@ module sql.RelationalExpression {
             };
             $EQ[0].relation = relation;
         }.
-        [NEQ] .{
+        [NEQ] @{
             $NEQ[0].scope = $NEQ[1].value;
             Predicate<Tuple> relation = tuple -> {
                 SQLType value = tuple.get($NEQ[1].value);
@@ -91,7 +92,7 @@ module sql.RelationalExpression {
             };
             $NEQ[0].relation = relation;
         }.
-        [NEQ_ALT] .{
+        [NEQ_ALT] @{
             $NEQ_ALT[0].scope = $NEQ_ALT[1].value;
             Predicate<Tuple> relation = tuple -> {
                 SQLType value = tuple.get($NEQ_ALT[1].value);
@@ -99,7 +100,7 @@ module sql.RelationalExpression {
             };
             $NEQ_ALT[0].relation = relation;
         }.
-        [LT] .{
+        [LT] @{
             $LT[0].scope = $LT[1].value;
             Predicate<Tuple> relation = tuple -> {
                 SQLType value = tuple.get($LT[1].value);
@@ -107,7 +108,7 @@ module sql.RelationalExpression {
             };
             $LT[0].relation = relation;
         }.
-        [LTE] .{
+        [LTE] @{
             $LTE[0].scope = $LTE[1].value;
             Predicate<Tuple> relation = tuple -> {
                 SQLType value = tuple.get($LTE[1].value);
@@ -115,7 +116,7 @@ module sql.RelationalExpression {
             };
             $LTE[0].relation = relation;
         }.
-        [GT] .{
+        [GT] @{
             $GT[0].scope = $GT[1].value;
             Predicate<Tuple> relation = tuple -> {
                 SQLType value = tuple.get($GT[1].value);
@@ -123,7 +124,7 @@ module sql.RelationalExpression {
             };
             $GT[0].relation = relation;
         }.
-        [GTE] .{
+        [GTE] @{
             $GTE[0].scope = $GTE[1].value;
             Predicate<Tuple> relation = tuple -> {
                 SQLType value = tuple.get($GTE[1].value);
@@ -164,7 +165,10 @@ module sql.ComplexExpression {
 
     role(evaluation) {
         [BTW] .{
+            eval $BTW[1];
             $BTW[0].scope = $BTW[1].value;
+            eval $BTW[2];
+            eval $BTW[3];
             Predicate<Tuple> relation = tuple -> {
                 return tuple.get($BTW[1].value).compareTo($BTW[2].value) >= 0 && 
                         tuple.get($BTW[1].value).compareTo($BTW[3].value) <= 0;
@@ -172,7 +176,9 @@ module sql.ComplexExpression {
             $BTW[0].relation = relation;
         }.
         [IN] .{
+            eval $IN[1];
             $IN[0].scope = $IN[1].value;
+            eval $IN[2];
             List<SQLType> values = AttributeList.collectFrom($IN[2], "value");
             Predicate<Tuple> relation = tuple -> {
                 SQLType value = tuple.get($IN[1].value);
@@ -181,6 +187,7 @@ module sql.ComplexExpression {
             $IN[0].relation = relation;
         }.
         [NULL] .{
+            eval $NULL[1];
             $NULL[0].scope = $NULL[1].value;
             Predicate<Tuple> relation = tuple -> tuple.get($NULL[1].value) == null;
             $NULL[0].relation = relation;

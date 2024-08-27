@@ -152,6 +152,7 @@ module sql.ColumnType {
             $FLOAT_TYPE[0].constraint = constraint;
         }.
         [VARCHAR_TYPE] .{
+            eval $VARCHAR_TYPE[1];
             BiConsumer<List<SQLType>,SQLType> constraint = (list, value) -> {
                 if (value != null) {
                     if (!(value instanceof SQLString)) {

@@ -21,6 +21,7 @@ module sql.PrintData {
 
     role(evaluation) {
         [PRINT] .{
+            eval $PRINT[1];
             System.out.println($PRINT[1].table.toString());
             $$DatabaseMap.put("OUTPUT", $PRINT[1].table);
         }.
@@ -61,7 +62,8 @@ module sql.Select {
     }
 
     role(evaluation) {
-        [TABLE] @{
+        [TABLE] .{
+            eval $TABLE[1];
             $TABLE[0].table = $TABLE[1].table;
             $TABLE[0].ref = $TABLE[1].ref;
         }.
@@ -101,7 +103,7 @@ module sql.Where {
     }
 
     role (evaluation) {
-        [WHERE] .{
+        [WHERE] @{
             $WHERE[0].table = ((Table) $WHERE[1].table).copy().filterTuple((Predicate<Tuple>) $WHERE[2].relation);
             $WHERE[0].ref = $WHERE[1].ref;
         }.
@@ -122,10 +124,11 @@ module sql.OrderBy {
 
     role(evaluation) {
         [ORDER] .{
+            eval $ORDER[2];
             List<String> columns = AttributeList.collectFrom($ORDER[2], "value");
             List<Integer> order = AttributeList.collectFrom($ORDER[2], "order");
             $ORDER[0].table = $$Algorithms.sortTable($ORDER[1].table, columns, order);
-            $ORDER[0].ref = $ORDER[1].ref;
+            $ORDER[0].ref = $ORDER[1]:ref;
         }.
     }
 }
@@ -165,14 +168,17 @@ module sql.OrderOperator {
     role(evaluation) {
         [ASC] .{
             $ASC[0].order = $$Algorithms.ASC;
+            eval $ASC[1];
             $ASC[0].value = $ASC[1].value;
         }.
         [DESC] .{
             $DESC[0].order = $$Algorithms.DESC;
+            eval $DESC[1];
             $DESC[0].value = $DESC[1].value;
         }.
         [DEFAULT] .{
             $DEFAULT[0].order = $$Algorithms.ASC;
+            eval $DEFAULT[1];
             $DEFAULT[0].value = $DEFAULT[1].value;
         }.
     }

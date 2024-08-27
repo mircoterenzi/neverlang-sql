@@ -14,7 +14,7 @@ language sql.SQLang {
         sql.SQLDatabaseMapEndemic
         sql.SQLAlgorithmsEndemic
 
-    roles syntax < evaluation <+ register
+    roles syntax <+ evaluation <+ register
 
     rename {
         OperationList --> Program;

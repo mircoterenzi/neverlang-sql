@@ -27,9 +27,7 @@ module sql.GroupBy {
     }
 
     role(evaluation) {
-        [GROUP] .{
-            eval $GROUP[1];
-
+        [GROUP] @{
             Table table = $GROUP[2].table;
             Table result = new Table();
             List<Tuple> data = table.getTuples();
@@ -130,6 +128,7 @@ module sql.AggregateFunctions {
 
     role(evaluation) {
         [COUNT] .{
+            eval $COUNT[1];
             $COUNT[0].value = "COUNT(" + $COUNT[1].value + ")";
             Aggregate aggrFun = new Aggregate(AggregateFun.COUNT, $COUNT[1].value);
             $COUNT[0].function = Optional.of(aggrFun);
@@ -140,26 +139,31 @@ module sql.AggregateFunctions {
             $STAR[0].function = Optional.of(aggrFun);
         }.
         [SUM] .{
+            eval $SUM[1];
             $SUM[0].value = "SUM(" + $SUM[1].value + ")";
             Aggregate aggrFun = new Aggregate(AggregateFun.SUM, $SUM[1].value);
             $SUM[0].function = Optional.of(aggrFun);
         }.
         [AVG] .{
+            eval $AVG[1];
             $AVG[0].value = "AVG(" + $AVG[1].value + ")";
             Aggregate aggrFun = new Aggregate(AggregateFun.AVG, $AVG[1].value);
             $AVG[0].function = Optional.of(aggrFun);
         }.
         [MIN] .{
+            eval $MIN[1];
             $MIN[0].value = "MIN(" + $MIN[1].value + ")";
             Aggregate aggrFun = new Aggregate(AggregateFun.MIN, $MIN[1].value);
             $MIN[0].function = Optional.of(aggrFun);
         }.
         [MAX] .{
+            eval $MAX[1];
             $MAX[0].value = "MAX(" + $MAX[1].value + ")";
             Aggregate aggrFun = new Aggregate(AggregateFun.MAX, $MAX[1].value);
             $MAX[0].function = Optional.of(aggrFun);
         }.
         [ID] .{
+            eval $ID[1];
             $ID[0].value = $ID[1].value;
             $ID[0].function = Optional.empty();
         }.

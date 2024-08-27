@@ -29,7 +29,7 @@ module sql.Insert {
     }
 
     role(evaluation) {
-        insert: .{
+        insert: @{
             List<String> headings = AttributeList.collectFrom($insert[2], "value");
             List<SQLType> values = AttributeList.collectFrom($insert[3], "value");
             Tuple tuple = new Tuple();
@@ -61,6 +61,7 @@ module sql.Delete {
 
     role(evaluation) {
         delete: .{
+            eval $delete[1];
             String tableName = $delete[1].ref;
             Table table = $$DatabaseMap.get(tableName);
             Table toRemove = $delete[1].table;
@@ -95,7 +96,7 @@ module sql.Update {
     }
 
     role(evaluation) {
-        update: .{
+        update: @{
             String tableName = $update[1].value;
             Table table = $$DatabaseMap.get(tableName);
             Table result = table.copy().filterTuple(t -> false);
@@ -152,8 +153,8 @@ module sql.Set {
 
     role(evaluation) {
         [SET] .{
-            $SET[0].scope = $SET[1].value;
-            $SET[0].value = $SET[2].value;
+            $SET[0].scope = $SET[1]:value;
+            $SET[0].value = $SET[2]:value;
         }.
     }
 }
