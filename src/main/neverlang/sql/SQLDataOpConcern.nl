@@ -126,9 +126,10 @@ module sql.OrderBy {
         [ORDER] .{
             eval $ORDER[2];
             List<String> columns = AttributeList.collectFrom($ORDER[2], "value");
-            List<Integer> order = AttributeList.collectFrom($ORDER[2], "order");
+            List<Algorithms.Order> order = AttributeList.collectFrom($ORDER[2], "order");
+            eval $ORDER[1];
             $ORDER[0].table = $$Algorithms.sortTable($ORDER[1].table, columns, order);
-            $ORDER[0].ref = $ORDER[1]:ref;
+            $ORDER[0].ref = $ORDER[1].ref;
         }.
     }
 }
@@ -167,17 +168,17 @@ module sql.OrderOperator {
 
     role(evaluation) {
         [ASC] .{
-            $ASC[0].order = $$Algorithms.ASC;
+            $ASC[0].order = Algorithms.Order.ASC;
             eval $ASC[1];
             $ASC[0].value = $ASC[1].value;
         }.
         [DESC] .{
-            $DESC[0].order = $$Algorithms.DESC;
+            $DESC[0].order = Algorithms.Order.DESC;
             eval $DESC[1];
             $DESC[0].value = $DESC[1].value;
         }.
         [DEFAULT] .{
-            $DEFAULT[0].order = $$Algorithms.ASC;
+            $DEFAULT[0].order = Algorithms.Order.ASC;
             eval $DEFAULT[1];
             $DEFAULT[0].value = $DEFAULT[1].value;
         }.

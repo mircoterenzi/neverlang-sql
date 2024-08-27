@@ -31,4 +31,19 @@ public abstract class SQLType {
         return this.toDouble().compareTo(other.toDouble());
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return this.toString().hashCode();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(final Object other) {
+        return this.toString().equals(other.toString());
+    }
 }

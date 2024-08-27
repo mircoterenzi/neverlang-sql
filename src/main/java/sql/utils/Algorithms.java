@@ -20,6 +20,20 @@ public class Algorithms {
     public static final Integer DESC = -1;
 
     /**
+     * Enum that represents the order of the sorting.
+     */
+    public enum Order {
+        /**
+         * Constant that represents the ascending order.
+         */
+        ASC,
+        /**
+         * Constant that represents the descending order.
+         */
+        DESC
+    }
+
+    /**
      * Method that sorts a table based on the given column names and order.
      * @param table the table to be sorted
      * @param columnNames the list of column names to be sorted by
@@ -29,7 +43,7 @@ public class Algorithms {
     public static Table sortTable(
         final Table table,
         final List<String> columnNames,
-        final List<Integer> order
+        final List<Order> order
     ) {
         List<Tuple> tuple = table.copy().getTuples();
         String column = columnNames.get(0);
@@ -44,9 +58,9 @@ public class Algorithms {
                     temp.addTuple(current);
                 }
                 if ((current.get(column).compareTo(ref.get(column)) < 0
-                        && order.get(0).equals(ASC))
+                        && order.get(0).equals(Order.ASC))
                     || (current.get(column).compareTo(ref.get(column)) > 0
-                        && order.get(0).equals(DESC))) {
+                        && order.get(0).equals(Order.DESC))) {
                     temp = temp.filterTuple(t -> false);
                     ref = current;
                     temp.addTuple(current);
