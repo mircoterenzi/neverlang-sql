@@ -24,8 +24,15 @@ FROM EventDetails
 WHERE EventID > 1 OR IsCancelled = FALSE
 GROUP BY MaxAttendees;
 
-DELETE FROM EventDetails WHERE EventID = 4;
+DELETE
+FROM EventDetails
+WHERE EventID = 4;
 
-UPDATE EventDetails SET IsCancelled = FALSE WHERE EventID = 3;
+UPDATE EventDetails
+SET IsCancelled = FALSE
+WHERE EventID = 3;
 
-SELECT * FROM EventDetails WHERE IsCancelled = FALSE ORDER BY MaxAttendees DESC;
+SELECT *
+FROM EventDetails
+WHERE IsCancelled = FALSE
+ORDER BY MaxAttendees DESC;
