@@ -9,15 +9,6 @@ import sql.Tuple;
  * Class that contains the algorithms used by SQL semantics.
  */
 public class Algorithms {
-    /**
-     * Constant that represents the ASC order.
-     */
-    public static final Integer ASC = 1;
-
-    /**
-     * Constant that represents the DESC order.
-     */
-    public static final Integer DESC = -1;
 
     /**
      * Enum that represents the order of the sorting.
