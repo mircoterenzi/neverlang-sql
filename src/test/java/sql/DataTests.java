@@ -22,7 +22,7 @@ public class DataTests {
     @Test
     void testSelectAll(@NeverlangUnitParam(files = "sql/select-all.sql") ASTNode node) {
         var db = (DatabaseMap) node.getAttributes().get("db");
-        assertEquals( 
+        assertEquals(
             "{BookID=1, Title=Il Nome della Rosa, Author=Umberto Eco, Year=1980, Price=19.99, Available=true}\n" + //
             "{BookID=2, Title=Cento Anni di Solitudine, Author=Gabriel Garcia Marquez, Year=1967, Price=12.5, Available=true}\n" + //
             "{BookID=3, Title=Il Signore degli Anelli, Author=JRR Tolkien, Year=1954, Price=25.0, Available=false}\n" + //
@@ -50,4 +50,7 @@ public class DataTests {
             db.get("OUTPUT").toString()
         );
     }
+
+    @Test
+    void testJolly(@NeverlangUnitParam(files = "sql/complex-query.sql") ASTNode node) {} //TODO
 }
