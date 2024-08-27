@@ -1,5 +1,5 @@
 bundle sql.SQLDataOpConcern {
-    slices  sql.PrintData
+    slices  sql.DataOperation
             sql.TableSelector
             sql.Select
             sql.Where
@@ -8,22 +8,20 @@ bundle sql.SQLDataOpConcern {
             sql.OrderOperator
 }
 
-module sql.PrintData {
+module sql.DataOperation {
     imports {
         neverlang.utils.AttributeList;
         java.util.List;
     }
 
     reference syntax {
-        [PRINT]
+        [OP]
             Operation <-- SelectedData;
     }
 
     role(evaluation) {
-        [PRINT] .{
-            eval $PRINT[1];
-            //System.out.println($PRINT[1].table.toString());
-            $$DatabaseMap.put("OUTPUT", $PRINT[1].table);
+        [OP] .{
+            $$DatabaseMap.put("OUTPUT", $OP[1]:table); //TODO
         }.
     }
 }
