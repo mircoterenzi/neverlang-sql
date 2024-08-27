@@ -4,9 +4,7 @@ plugins {
     id 'nlgcheck' version '0.1'
 }
 
-def baseUrl = "https://maven.adapt-lab.di.unimi.it"
 def neverlangVersion = "2.5.4"
-def lplVersion = "2.1.0-SNAPSHOT"
 def junitVersion = "5.9.0"
 
 repositories {
