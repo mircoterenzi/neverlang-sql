@@ -1,3 +1,7 @@
+/**
+ * Defines all the exceptions that can occur during the execution of
+ * an SQL query.
+ */
 package sql.errors;
 
 /**

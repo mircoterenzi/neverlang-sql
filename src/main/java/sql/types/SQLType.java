@@ -44,6 +44,7 @@ public abstract class SQLType {
      */
     @Override
     public boolean equals(final Object other) {
-        return this.toString().equals(other.toString());
+        return other instanceof SQLType
+                && this.toString().equals(other.toString());
     }
 }
