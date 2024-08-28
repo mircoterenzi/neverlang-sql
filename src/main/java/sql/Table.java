@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.function.Predicate;
 
+import sql.errors.DataInconsistency;
+import sql.errors.EntityNotFound;
 import sql.types.SQLType;
 
 /**
@@ -30,11 +32,14 @@ public class Table {
     /**
      * Checks if a column exists in the table.
      * @param name the name of the column
-     * @param message the error message
      */
-    private void checkColumnExistence(final String name, final String message) {
+    private void checkColumnExistence(final String name) {
         if (columns.stream().map(Column::getName).noneMatch(name::equals)) {
-            throw new IllegalArgumentException("[TABLE] " + message);
+            throw new EntityNotFound(
+                "An attempt to retrieve or use a column that does not exist: "
+                + name + ". Make sure it exists and that its name is spelled"
+                + "correctly."
+            );
         }
     }
 
@@ -45,8 +50,9 @@ public class Table {
     public void addColumn(final Column column) {
         String name = column.getName();
         if (columns.stream().map(Column::getName).anyMatch(name::equals)) {
-            throw new IllegalArgumentException(
-                    "[TABLE] " + name + " already exists"
+            throw new DataInconsistency(
+                    "Trying to add a column named \"" + name + "\", "
+                    + "but a column with this name already exists"
             );
         }
         columns.add(column);
@@ -57,7 +63,7 @@ public class Table {
      * @param name the name of the column to be removed
      */
     public void removeColumn(final String name) {
-        checkColumnExistence(name, name + " does not exist");
+        checkColumnExistence(name);
         List<Column> columnNames = columns.stream()
                 .filter(c -> c.getName().equals(name))
                 .toList();
@@ -73,16 +79,17 @@ public class Table {
      */
     public void addTuple(final Tuple input) {
         if (input.size() != columns.size()) {
-            throw new IllegalArgumentException(
-                    "[TABLE] Tuple size does not match column size: found "
-                    + input.size() + ", expected " + columns.size()
+            throw new DataInconsistency(
+                "The length of the input tuple does not match the "
+                + "table definition: found " + input.size()
+                + ", expected " + columns.size()
             );
         }
         for (String column : input.keySet()) {
             List<SQLType> values = tuples.stream()
                     .map(t -> t.get(column))
                     .toList();
-            checkColumnExistence(column, column + " does not exist");
+            checkColumnExistence(column);
             columns.stream()
                     .filter(c -> c.getName().equals(column))
                     .forEach(c ->
@@ -103,8 +110,9 @@ public class Table {
      */
     public void removeTuple(final Tuple tuple) {
         if (!tuples.contains(tuple)) {
-            throw new IllegalArgumentException(
-                    "[DATA] Tuple " + tuple + " does not exist"
+            throw new EntityNotFound(
+                "The tuple you are trying to delete does not"
+                + "exist in the selected table:  " + tuple
             );
         }
         tuples.remove(tuple);
@@ -139,7 +147,7 @@ public class Table {
      * @return the column
      */
     public Column getColumn(final String name) {
-        checkColumnExistence(name, name + " does not exist");
+        checkColumnExistence(name);
         return columns.stream()
                 .filter(c -> c.getName().equals(name))
                 .findFirst()

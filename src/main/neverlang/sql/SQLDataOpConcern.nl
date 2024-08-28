@@ -12,6 +12,7 @@ module sql.DataOperation {
     imports {
         neverlang.utils.AttributeList;
         java.util.List;
+        sql.errors.SyntaxError;
     }
 
     reference syntax {
@@ -27,13 +28,16 @@ module sql.DataOperation {
     role(struct-checking) {
         [OP] .{
             if (!(Boolean) $OP[1]:isTerminal) {
-                throw new RuntimeException("Invalid SQL statement; expected DELETE, INSERT, SELECT or UPDATE");
+                throw new SyntaxError("Invalid SQL statement; expected DELETE, INSERT, SELECT or UPDATE");
             }
         }.
     }
 }
 
 module sql.TableSelector {
+    imports {
+        sql.errors.EntityNotFound;
+    }
     reference syntax {
         [TABLE]
             SelectedData <-- "FROM" Id;
@@ -43,8 +47,9 @@ module sql.TableSelector {
         [TABLE] .{
             eval $TABLE[1];
             if (!$$DatabaseMap.containsKey($TABLE[1].value)) {
-                throw new IllegalArgumentException(
-                    "Unexpected value: \"" + $TABLE[1].value + "\" is not an existing table"
+                throw new EntityNotFound(
+                    "Cannot find the table \"" + $TABLE[1].value + "\". "
+                    + "Make sure it exists and that its name is spelled correctly."
                 );
             }
             $TABLE[0].table = $$DatabaseMap.get($TABLE[1].value).copy();

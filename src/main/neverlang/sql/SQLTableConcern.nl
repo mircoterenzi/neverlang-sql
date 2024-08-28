@@ -111,6 +111,8 @@ module sql.ColumnType {
         java.util.function.BiConsumer;
         java.util.List;
         sql.types.*;
+        sql.errors.DataInconsistency;
+        sql.errors.ConstraintViolation;
     }
 
     reference syntax {
@@ -138,7 +140,10 @@ module sql.ColumnType {
         [INT_TYPE] .{
             BiConsumer<List<SQLType>,SQLType> constraint = (list, value) -> {
                 if (value != null && !(value instanceof SQLInteger)) {
-                    throw new RuntimeException("Integer column, but the value is " + value.getClass().getSimpleName());
+                    throw new DataInconsistency(
+                            "The type of data entered does not match what is defined in the table: " 
+                            + "expected SQLInteger, but got " + value.getClass().getSimpleName()
+                    );
                 }
             };
             $INT_TYPE[0].constraint = constraint;
@@ -146,7 +151,10 @@ module sql.ColumnType {
         [FLOAT_TYPE] .{
             BiConsumer<List<SQLType>,SQLType> constraint = (list, value) -> {
                 if (value != null && !(value instanceof SQLFloat)) {
-                    throw new RuntimeException("Float column, but the value is " + value.getClass().getSimpleName());
+                    throw new DataInconsistency(
+                            "The type of data entered does not match what is defined in the table: " 
+                            + "expected SQLFloat, but got " + value.getClass().getSimpleName()
+                    );
                 }
             };
             $FLOAT_TYPE[0].constraint = constraint;
@@ -156,12 +164,17 @@ module sql.ColumnType {
             BiConsumer<List<SQLType>,SQLType> constraint = (list, value) -> {
                 if (value != null) {
                     if (!(value instanceof SQLString)) {
-                        throw new RuntimeException("Varchar column, but the value is " + value.getClass().getSimpleName());
+                        throw new DataInconsistency(
+                                "The type of data entered does not match what is defined in the table: " 
+                                + "expected SQLString, but got " + value.getClass().getSimpleName()
+                        );
                     }
                     if (value.toString().length() > ((SQLInteger) $VARCHAR_TYPE[1].value).toDouble()) {
-                        throw new RuntimeException("The value is " + value.toString().length() +
+                        throw new ConstraintViolation(
+                                "The value is " + value.toString().length() +
                                 " characters long, but the column only supports " +
-                                ((SQLInteger) $VARCHAR_TYPE[1].value).toDouble());
+                                ((SQLInteger) $VARCHAR_TYPE[1].value).toDouble()
+                        );
                     }
                 }
             };
@@ -170,7 +183,10 @@ module sql.ColumnType {
         [BOOLEAN_TYPE] .{
             BiConsumer<List<SQLType>,SQLType> constraint = (list, value) -> {
                 if (value != null && !(value instanceof SQLBoolean)) {
-                    throw new RuntimeException("Boolean column, but the value is " + value.getClass().getSimpleName());
+                    throw new DataInconsistency(
+                            "The type of data entered does not match what is defined in the table: " 
+                            + "expected SQLBoolean, but got " + value.getClass().getSimpleName()
+                    );
                 }
             };
             $BOOLEAN_TYPE[0].constraint = constraint;
@@ -183,6 +199,7 @@ module sql.ColumnConstraints {
         java.util.function.BiConsumer;
         java.util.List;
         sql.types.SQLType;
+        sql.errors.ConstraintViolation;
     }
 
     reference syntax {
@@ -202,7 +219,7 @@ module sql.ColumnConstraints {
         [NOT_NULL] .{
             BiConsumer<List<SQLType>,SQLType> constraint = (list, value) -> {
                 if (value == null) {
-                    throw new RuntimeException("Not-null column, but the value is null");
+                    throw new ConstraintViolation("Not-null column, but the value is null");
                 }
             };
             $NOT_NULL[0].constraint = constraint;
@@ -210,7 +227,7 @@ module sql.ColumnConstraints {
         [UNIQUE] .{
             BiConsumer<List<SQLType>,SQLType> constraint = (list, value) -> {
                 if (list.contains(value)) {
-                    throw new RuntimeException("Unique column, but the value " + value + " already exists");
+                    throw new ConstraintViolation("Unique column, but the value " + value + " already exists");
                 }
             };
             $UNIQUE[0].constraint = constraint;
@@ -218,10 +235,10 @@ module sql.ColumnConstraints {
         [KEY] .{
             BiConsumer<List<SQLType>,SQLType> constraint = (list, value) -> {
                 if (value == null) {
-                    throw new RuntimeException("Primary-key column, but the value is null");
+                    throw new ConstraintViolation("Primary-key column, but the value is null");
                 }
                 if (list.contains(value)) {
-                    throw new RuntimeException("Primary-key column, but the value " + value + " already exists");
+                    throw new ConstraintViolation("Primary-key column, but the value " + value + " already exists");
                 }
             };
             $KEY[0].constraint = constraint;

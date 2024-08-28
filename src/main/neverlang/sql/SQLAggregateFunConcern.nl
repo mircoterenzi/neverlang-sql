@@ -11,6 +11,7 @@ module sql.GroupBy {
         java.util.Optional;
         neverlang.utils.AttributeList;
         sql.types.SQLType;
+        sql.errors.SyntaxError;
     }
     reference syntax {
         provides {
@@ -44,7 +45,7 @@ module sql.GroupBy {
             for (int i = 0; i < columns.size(); i++) {
                 if (!groupByColumns.contains(columns.get(i))) {
                     if (!functions.get(i).isPresent()) {
-                        throw new RuntimeException("Column " + columns.get(i) + " must be used in an aggregate function");
+                        throw new SyntaxError("All columns must be used in an aggregate function. Make sure this is the case: " + columns.get(i));
                     } else {
                         Column col = new Column(columns.get(i));
                         result.addColumn(col);
