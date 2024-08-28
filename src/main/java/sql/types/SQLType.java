@@ -28,7 +28,7 @@ public abstract class SQLType {
      * and a negative number if this SQLType is less
      */
     public Integer compareTo(final SQLType other) {
-        return this.toDouble().compareTo(other.toDouble());
+        return other != null ? this.toString().compareTo(other.toString()) : 1;
     }
 
     /**

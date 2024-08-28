@@ -45,13 +45,18 @@ public class Algorithms {
             Tuple ref = tuple.get(0);
 
             for (Tuple current : tuple) {
-                if (current.get(column).compareTo(ref.get(column)) == 0) {
+                if (current.get(column) != null
+                        && current.get(column).compareTo(ref.get(column)) == 0
+                ) {
                     temp.addTuple(current);
                 }
-                if ((current.get(column).compareTo(ref.get(column)) < 0
-                        && order.get(0).equals(Order.ASC))
+                if (
+                    current.get(column) == null
+                    || (current.get(column).compareTo(ref.get(column)) < 0
+                            && order.get(0).equals(Order.ASC))
                     || (current.get(column).compareTo(ref.get(column)) > 0
-                        && order.get(0).equals(Order.DESC))) {
+                            && order.get(0).equals(Order.DESC))
+                ) {
                     temp = temp.filterTuple(t -> false);
                     ref = current;
                     temp.addTuple(current);
