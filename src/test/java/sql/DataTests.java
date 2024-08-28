@@ -14,7 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @NeverlangUnit(language = SQLang.class)
 public class DataTests {
     @Test
-    void testInsertInto(@NeverlangUnitParam(files = "sql/insert-values.sql") ASTNode node) {
+    void testInsertInto(@NeverlangUnitParam(files = "sql/values.sql") ASTNode node) {
         var db = node.getAttributes().get("db");
         assertInstanceOf(DatabaseMap.class, db);
     }
@@ -33,7 +33,7 @@ public class DataTests {
     }
 
     @Test
-    void testSelectColumn(@NeverlangUnitParam(files = "sql/select-column.sql") ASTNode node) {
+    void testSelectColumn(@NeverlangUnitParam(files = "sql/select.sql") ASTNode node) {
         var db = (DatabaseMap) node.getAttributes().get("db");
         assertEquals(
             "{EventID=1, EventName=Summer Picnic, Location=Central Park, Organizer=Company Events Team, MaxAttendees=100, IsCancelled=false}\n" + //

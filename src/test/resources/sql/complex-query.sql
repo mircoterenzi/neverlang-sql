@@ -19,7 +19,7 @@ VALUES (3, "Charity Gala", "Grand Hotel Ball room", "Local Charity Foundation", 
 INSERT INTO EventDetails (EventID, EventName, Location, Organizer, MaxAttendees, IsCancelled)
 VALUES (4, "Holiday Party", "Office Headquarters", NULL, 150, FALSE);
 
-SELECT COUNT(*), MaxAttendees, COUNT(Organizer), AVG(EventID), SUM(EventID), MIN(EventID), MAX(EventID)
+SELECT MaxAttendees, COUNT(Organizer), AVG(EventID), SUM(EventID), MIN(EventID), MAX(EventID)
 FROM EventDetails
 WHERE EventID > 1 OR IsCancelled = FALSE
 GROUP BY MaxAttendees;

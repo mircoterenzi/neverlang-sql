@@ -109,7 +109,7 @@ public class TableTests {
      * @param node the root of the AST
      */
     @Test
-    void testMultiple(@NeverlangUnitParam(files = "sql/multiple-operations.sql") ASTNode node) {
+    void testMultiple(@NeverlangUnitParam(files = "sql/table.sql") ASTNode node) {
         DatabaseMap db = (DatabaseMap) node.getAttributes().get("db");
         assertFalse(db.containsKey("Customer"));
         assertTrue(db.containsKey("Orders"));
