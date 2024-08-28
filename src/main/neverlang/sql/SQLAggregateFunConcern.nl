@@ -25,6 +25,9 @@ module sql.GroupBy {
         }
 
         [GROUP] SelectedData <-- "SELECT" IdList SelectedData "GROUP" "BY" IdList;
+
+        categories:
+            Clause = { "SELECT", "GROUP BY" };
     }
 
     role(evaluation) {
@@ -51,7 +54,7 @@ module sql.GroupBy {
                 if (aggregates.containsKey(column)) {
                     Column newColumn = new Column(column);
                     result.addColumn(newColumn);
-                    } else {
+                } else {
                     result.addColumn(table.getColumn(column));
                 }
             }
@@ -127,7 +130,10 @@ module sql.AggregateFunctions {
         [MAX]   Id <-- "MAX" "(" Id ")";
 
         categories:
-            AggregateFunction = {"COUNT", "SUM", "AVG", "MIN", "MAX"};
+            AggregateFunction = { "COUNT", "SUM", "AVG", "MIN", "MAX" },
+            Operator = { "*" },
+            Brackets = { "(", ")" };
+
     }
 
     role(evaluation) {

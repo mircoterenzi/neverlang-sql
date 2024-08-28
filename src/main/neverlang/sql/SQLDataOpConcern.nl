@@ -49,6 +49,9 @@ module sql.TableSelector {
         }
 
         [TABLE] SelectedData <-- "FROM" Id;
+
+        categories:
+            Clause = { "FROM" };
     }
 
     role(evaluation) {
@@ -91,6 +94,11 @@ module sql.Select {
             SelectedData <-- "SELECT" "*" SelectedData;
         [COLUMN_LIST]
             SelectedData <-- "SELECT" IdList SelectedData;
+        
+        categories:
+            Clause = { "SELECT" },
+            Operator = { "*" };
+
     }
 
     role(evaluation) {
@@ -150,6 +158,9 @@ module sql.Where {
         }
 
         [WHERE] SelectedData <-- SelectedData "WHERE" BoolExpr;
+
+        categories:
+            Clause = { "WHERE" };
     }
 
     role (evaluation) {
@@ -185,6 +196,9 @@ module sql.OrderBy {
 
         [ORDER]
             SelectedData <-- SelectedData "ORDER" "BY" OrderList;
+
+        categories:
+            Clause = { "ORDER BY" };
     }
 
     role(evaluation) {
@@ -235,6 +249,9 @@ module sql.OrderOperator {
         [ASC]       OrderOperator <-- Id "ASC";
         [DESC]      OrderOperator <-- Id "DESC";
         [DEFAULT]   OrderOperator <-- Id;
+
+        categories:
+            OrderOperator = { "ASC", "DESC" };
     }
 
     role(evaluation) {

@@ -34,7 +34,9 @@ module sql.TableOp {
             Operation <-- "ALTER" "TABLE" Id "DROP" Id;
 
         categories:
-            TableOp = {"CREATE TABLE", "DROP TABLE", "ALTER TABLE"};
+            TableOp = { "CREATE TABLE", "DROP TABLE", "ALTER TABLE" },
+            Operator = { "ADD", "DROP" },
+            Brackets = { "(", ")" };
     }
 
     role(evaluation) {
@@ -69,6 +71,9 @@ module sql.ColumnList {
 
         ColumnList <-- Column "," ColumnList;
         ColumnList <-- Column;
+
+        categories:
+            Operator = { "," };
     }
 }
 
@@ -130,7 +135,8 @@ module sql.ColumnType {
             ColumnType <-- "BOOLEAN";
 
         categories:
-            ColumnType = {"INT", "FLOAT", "VARCHAR", "BOOLEAN"};
+            ColumnType = { "INT", "FLOAT", "VARCHAR", "BOOLEAN" },
+            Brackets = { "(", ")" };
     }
     
     role(evaluation) {

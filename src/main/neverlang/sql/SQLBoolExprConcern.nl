@@ -22,7 +22,7 @@ module sql.BoolConcatenation {
         [NOT]   BoolExpr <-- "NOT" BoolExpr;
 
         categories:
-            BoolOperator = {"AND", "OR", "NOT"};
+            BoolOperator = { "AND", "OR", "NOT" };
     }
 
     role(evaluation) {
@@ -159,7 +159,7 @@ module sql.ComplexExpression {
         [NULL]  BoolExpr <-- Id "IS" "NULL";
 
         categories:
-            Operator = {"BETWEEN", "IN", "IS NULL"};
+            Operator = { "BETWEEN", "IN", "IS NULL" };
     }
 
     role(evaluation) {

@@ -26,6 +26,9 @@ module sql.Insert {
         [INSERT]
             Operation <-- "INSERT" "INTO" Id "(" IdList ")" "VALUES" "(" ValueList ")";
 
+        categories:
+            Clause = { "INSERT INTO", "VALUES" },
+            Brackets = { "(", ")" };
     }
 
     role(evaluation) {
@@ -57,6 +60,9 @@ module sql.Delete {
 
         [DELETE]
             Operation <-- "DELETE" SelectedData;
+
+        categories:
+            Clause = { "DELETE" };
     }
 
     role(evaluation) {
@@ -99,6 +105,9 @@ module sql.Update {
 
         [UPDATE]
             Operation <-- "UPDATE" Id "SET" SetList "WHERE" BoolExpr;
+
+        categories:
+            Clause = { "UPDATE", "SET", "WHERE" };
     }
 
     role(evaluation) {
@@ -141,6 +150,9 @@ module sql.SetList {
 
         SetList <-- Set;
         SetList <-- SetList "," Set;
+
+        categories:
+            Operator = { "," };
     }
 }
 
@@ -155,6 +167,9 @@ module sql.Set {
         }
 
         [SET] Set <-- Id "=" Value;
+
+        categories:
+            Operator = { "=" };
     }
 
     role(evaluation) {

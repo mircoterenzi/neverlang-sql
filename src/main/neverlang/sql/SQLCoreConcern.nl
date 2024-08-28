@@ -37,6 +37,9 @@ module sql.OperationList {
 
         OperationList <-- Operation;
         OperationList <-- OperationList ";" Operation;
+
+        categories:
+            Operator = { ";" };
     }
 }
 
@@ -63,6 +66,9 @@ module sql.IdList {
 
         IdList <-- Id "," IdList;
         IdList <-- Id;
+
+        categories:
+            Operator = { "," };
     }
 }
 
@@ -75,6 +81,9 @@ module sql.ElementId {
         }
 
         [ID]    Id <-- /\b[a-zA-Z_][a-zA-Z0-9_]*\b/[id];
+
+        categories:
+            Identifier = { id };
     }
 
     role(evaluation) {

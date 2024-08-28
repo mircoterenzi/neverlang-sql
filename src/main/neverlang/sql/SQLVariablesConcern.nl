@@ -14,6 +14,9 @@ module sql.ValueList {
 
         ValueList <-- Value "," ValueList;
         ValueList <-- Value;
+
+        categories:
+            Operator = { "," };
     }
 }
 
@@ -51,6 +54,12 @@ module sql.Value {
 
         [NULL]      Null <-- "NULL";
                     Value <-- Null;
+
+        categories:
+            String = { string },
+            Number = { integer, floating },
+            Boolean = { boolean },
+            Null = { "NULL" };
     }
 
     role (evaluation) {
