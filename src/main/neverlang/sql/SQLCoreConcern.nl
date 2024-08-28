@@ -19,9 +19,9 @@ module sql.Main {
     }
 
     role (evaluation) {
-        [PROG] @{
+        [PROG] .{
+            eval $PROG[1];
             $PROG.db = $$DatabaseMap;
-            $PROG.output = $$DatabaseMap.containsKey("OUTPUT") ? $$DatabaseMap.get("OUTPUT").toString() : ""; //TODO: improve the output testing
         }.
     }
 }

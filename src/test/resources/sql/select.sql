@@ -21,3 +21,6 @@ VALUES (4, "Holiday Party", "Office Headquarters", "HR Department", 150, FALSE);
 
 SELECT EventName, MaxAttendees
 FROM EventDetails;
+
+SELECT *
+FROM EventDetails;

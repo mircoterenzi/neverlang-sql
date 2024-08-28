@@ -11,7 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Test class for the Table class.
+ * Test class for the creation and manipulation of tables.
  */
 @ExtendWith(NeverlangExt.class)
 @NeverlangUnit(language = SQLang.class)

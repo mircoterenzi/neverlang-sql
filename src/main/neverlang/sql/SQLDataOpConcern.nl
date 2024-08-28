@@ -26,11 +26,6 @@ module sql.DataOperation {
         [OP]    Operation <-- SelectedData;
     }
 
-    role(evaluation) {
-        [OP] .{
-            $$DatabaseMap.put("OUTPUT", $OP[1]:table); //TODO
-        }.
-    }
     role(struct-checking) {
         [OP] .{
             if (!(Boolean) $OP[1]:isTerminal) {
