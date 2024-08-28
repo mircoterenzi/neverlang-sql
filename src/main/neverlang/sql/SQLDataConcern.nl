@@ -69,6 +69,11 @@ module sql.Delete {
             $$DatabaseMap.put(tableName, table);
         }.
     }
+    role(struct-checking) {
+        delete: .{
+            $delete.isTerminal = true;
+        }.
+    }
 }
 
 module sql.Update {

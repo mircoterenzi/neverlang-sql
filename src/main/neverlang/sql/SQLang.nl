@@ -14,5 +14,5 @@ language sql.SQLang {
         sql.SQLDatabaseMapEndemic
         sql.SQLAlgorithmsEndemic
 
-    roles syntax <+ evaluation <+ output
+    roles syntax <+ struct-checking <+ evaluation <+ output
 }

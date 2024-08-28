@@ -24,6 +24,13 @@ module sql.DataOperation {
             $$DatabaseMap.put("OUTPUT", $OP[1]:table); //TODO
         }.
     }
+    role(struct-checking) {
+        [OP] .{
+            if (!(Boolean) $OP[1]:isTerminal) {
+                throw new RuntimeException("Invalid SQL statement; expected DELETE, INSERT, SELECT or UPDATE");
+            }
+        }.
+    }
 }
 
 module sql.TableSelector {
@@ -42,6 +49,11 @@ module sql.TableSelector {
             }
             $TABLE[0].table = $$DatabaseMap.get($TABLE[1].value).copy();
             $TABLE[0].ref = $TABLE[1].value;
+        }.
+    }
+    role(struct-checking) {
+        [TABLE] .{
+            $TABLE.isTerminal = false;
         }.
     }
 }
@@ -88,6 +100,14 @@ module sql.Select {
             System.out.println($COLUMN_LIST[0].table.toString());
         }.
     }
+    role(struct-checking) {
+        [TABLE] .{
+            $TABLE.isTerminal = true;
+        }.
+        [COLUMN_LIST] .{
+            $COLUMN_LIST.isTerminal = true;
+        }.
+    }
 }
 
 module sql.Where {
@@ -114,6 +134,11 @@ module sql.Where {
             $WHERE[0].ref = $WHERE[1].ref;
         }.
     }
+    role(struct-checking) {
+        [WHERE] .{
+            $WHERE.isTerminal = $WHERE[1]:isTerminal;
+        }.
+    }
 }
 
 module sql.OrderBy {
@@ -136,6 +161,11 @@ module sql.OrderBy {
             eval $ORDER[1];
             $ORDER[0].table = $$Algorithms.sortTable($ORDER[1].table, columns, order);
             $ORDER[0].ref = $ORDER[1].ref;
+        }.
+    }
+    role(struct-checking) {
+        [ORDER] .{
+            $ORDER.isTerminal = $ORDER[1]:isTerminal;
         }.
     }
 }
