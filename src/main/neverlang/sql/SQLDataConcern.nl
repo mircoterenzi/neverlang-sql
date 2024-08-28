@@ -8,8 +8,8 @@ bundle sql.SQLDataConcern {
 
 module sql.Insert {
     imports {
-        neverlang.utils.AttributeList;
         java.util.List;
+        neverlang.utils.AttributeList;
         sql.types.SQLType;
     }
 
@@ -23,28 +23,28 @@ module sql.Insert {
             ValueList;
         }
 
-        insert:
+        [INSERT]
             Operation <-- "INSERT" "INTO" Id "(" IdList ")" "VALUES" "(" ValueList ")";
 
     }
 
     role(evaluation) {
-        insert: @{
-            List<String> headings = AttributeList.collectFrom($insert[2], "value");
-            List<SQLType> values = AttributeList.collectFrom($insert[3], "value");
+        [INSERT] @{
+            List<String> headings = AttributeList.collectFrom($INSERT[2], "value");
+            List<SQLType> values = AttributeList.collectFrom($INSERT[3], "value");
             Tuple tuple = new Tuple();
             for (int i=0; i<headings.size(); i++) {
                 tuple.put(headings.get(i), values.get(i));
             }
-            $$DatabaseMap.get($insert[1].value).addTuple(tuple);
+            $$DatabaseMap.get($INSERT[1].value).addTuple(tuple);
         }.
     }
 }
 
 module sql.Delete {
     imports {
-        neverlang.utils.AttributeList;
         java.util.List;
+        neverlang.utils.AttributeList;
     }
 
     reference syntax {
@@ -55,34 +55,35 @@ module sql.Delete {
             SelectedData;
         }
 
-        delete:
+        [DELETE]
             Operation <-- "DELETE" SelectedData;
     }
 
     role(evaluation) {
-        delete: .{
-            eval $delete[1];
-            String tableName = $delete[1].ref;
+        [DELETE] .{
+            eval $DELETE[1];
+            String tableName = $DELETE[1].ref;
             Table table = $$DatabaseMap.get(tableName);
-            Table toRemove = $delete[1].table;
+            Table toRemove = $DELETE[1].table;
             toRemove.getTuples().forEach(t -> table.removeTuple(t));
             $$DatabaseMap.put(tableName, table);
         }.
     }
+
     role(struct-checking) {
-        delete: .{
-            $delete.isTerminal = true;
+        [DELETE] .{
+            $DELETE.isTerminal = true;
         }.
     }
 }
 
 module sql.Update {
     imports {
-        neverlang.utils.AttributeList;
         java.util.List;
         java.util.function.Predicate;
         java.util.Map;
         java.util.HashMap;
+        neverlang.utils.AttributeList;
         sql.Tuple;
         sql.types.SQLType;
     }
@@ -96,19 +97,19 @@ module sql.Update {
             BoolExpr;
         }
 
-        update:
+        [UPDATE]
             Operation <-- "UPDATE" Id "SET" SetList "WHERE" BoolExpr;
     }
 
     role(evaluation) {
-        update: @{
-            String tableName = $update[1].value;
+        [UPDATE] @{
+            String tableName = $UPDATE[1].value;
             Table table = $$DatabaseMap.get(tableName);
             Table result = table.copy().filterTuple(t -> false);
-            Predicate<Tuple> predicate = $update[3].relation;
+            Predicate<Tuple> predicate = $UPDATE[3].relation;
             Map<String, SQLType> toAdd = new HashMap<>();
-            List<String> headings = AttributeList.collectFrom($update[2], "scope");
-            List<SQLType> values = AttributeList.collectFrom($update[2], "value");
+            List<String> headings = AttributeList.collectFrom($UPDATE[2], "scope");
+            List<SQLType> values = AttributeList.collectFrom($UPDATE[2], "value");
             for (int i=0; i<headings.size(); i++) {
                 toAdd.put(headings.get(i), values.get(i));
             }
@@ -138,8 +139,8 @@ module sql.SetList {
             Set;
         }
 
-        [SET]       SetList <-- Set;
-        [CONCAT]    SetList <-- SetList "," Set;
+        SetList <-- Set;
+        SetList <-- SetList "," Set;
     }
 }
 

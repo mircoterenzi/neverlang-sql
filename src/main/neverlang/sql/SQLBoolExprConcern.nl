@@ -148,7 +148,6 @@ module sql.ComplexExpression {
         provides {
             BoolExpr;
         }
-
         requires {
             Id;
             Value;

@@ -13,6 +13,7 @@ module sql.GroupBy {
         sql.types.SQLType;
         sql.errors.SyntaxError;
     }
+
     reference syntax {
         provides {
             SelectedData;
@@ -24,7 +25,7 @@ module sql.GroupBy {
             AggregateList;
         }
 
-        [GROUP]     SelectedData <-- "SELECT" AggregateList SelectedData "GROUP" "BY" IdList;
+        [GROUP] SelectedData <-- "SELECT" AggregateList SelectedData "GROUP" "BY" IdList;
     }
 
     role(evaluation) {
@@ -37,22 +38,23 @@ module sql.GroupBy {
             List<String> groupByColumns = AttributeList.collectFrom($GROUP[3],"value");
             $GROUP[0].ref = $GROUP[2].ref;
 
+            // Initialize the resulting table by adding columns
             columns.stream()
                     .filter(c -> groupByColumns.contains(c))
                     .forEach(c -> result.addColumn(table.getColumn(c)));
-
             // Checks if all the columns are used in an aggregate function
             for (int i = 0; i < columns.size(); i++) {
                 if (!groupByColumns.contains(columns.get(i))) {
                     if (!functions.get(i).isPresent()) {
-                        throw new SyntaxError("All columns must be used in an aggregate function. Make sure this is the case: " + columns.get(i));
+                        throw new SyntaxError(
+                                "All columns must be used in an aggregate function. "
+                                + "Make sure this is the case: " + columns.get(i));
                     } else {
                         Column col = new Column(columns.get(i));
                         result.addColumn(col);
                     }
                 }
             }
-
             // Group the data
             while (data.size() > 0) {
                 // Get all data with the same value on group-by columns
@@ -62,7 +64,10 @@ module sql.GroupBy {
                 for (int i = 0; i < data.size(); i++) {
                     Tuple current = data.get(i);
                     Tuple reference = temp.get(0);
-                    if (groupByColumns.stream().allMatch(c -> current.get(c).equals(reference.get(c)))) {
+                    if (groupByColumns.stream()
+                            .allMatch(c -> current.get(c)
+                            .equals(reference.get(c)))
+                    ) {
                         temp.add(current);
                         data.remove(i);
                         i--;
@@ -83,11 +88,13 @@ module sql.GroupBy {
             $GROUP[0].table = result;
         }.
     }
-    role (output) {
+
+    role(output) {
         [GROUP] .{
             System.out.println($GROUP[0].table.toString());
         }.
     }
+
     role(struct-checking) {
         [GROUP] .{
             $GROUP[0].isTerminal = true;
@@ -103,6 +110,8 @@ module sql.AggregateList {
     reference syntax {
         provides {
             AggregateList;
+        }
+        requires {
         }
 
         [LIST]  AggregateList <-- AggregateFunction "," AggregateList;

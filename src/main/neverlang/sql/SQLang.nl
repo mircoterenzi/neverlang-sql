@@ -1,8 +1,7 @@
 language sql.SQLang {
 
     slices
-        bundle (sql.SQLVariablesConcern)
-        bundle (sql.SQLColumnConcern)
+        bundle (sql.SQLVariablesConcern)    
         bundle (sql.SQLCoreConcern)
         bundle (sql.SQLTableConcern)
         bundle (sql.SQLDataOpConcern)

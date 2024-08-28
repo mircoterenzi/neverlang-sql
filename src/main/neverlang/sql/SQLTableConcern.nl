@@ -2,13 +2,17 @@ bundle sql.SQLTableConcern {
     slices  sql.TableOp
             sql.ColumnList
             sql.ColumnDeclaration
+            sql.ColumnDeclaration
+            sql.ColumnType
+            sql.ColumnConstraints
+            sql.ColumnList
 }
 
 module sql.TableOp {
     imports {
-        neverlang.utils.AttributeList;
         java.util.List;
         java.util.Optional;
+        neverlang.utils.AttributeList;
     }
     
     reference syntax {
@@ -20,45 +24,38 @@ module sql.TableOp {
             ColumnList;
         }
 
-        declaration:
+        [DECLARE]
             Operation <-- "CREATE" "TABLE" Id "(" ColumnList ")";
-        drop:
+        [DROP]
             Operation <-- "DROP" "TABLE" Id;
-        alter_add:
+        [ALT_ADD]
             Operation <-- "ALTER" "TABLE" Id "ADD" Column;
-        alter_drop:
+        [ALT_DROP]
             Operation <-- "ALTER" "TABLE" Id "DROP" Id;
 
         categories:
-            TableOp = {"CREATE", "DROP", "ALTER"};
+            TableOp = {"CREATE TABLE", "DROP TABLE", "ALTER TABLE"};
     }
 
     role(evaluation) {
-        declaration: .{
-            eval $declaration[1];
-            eval $declaration[2];
-            List<Column> columns = AttributeList.collectFrom($declaration[2], "column");
+        [DECLARE] .{
+            eval $DECLARE[1];
+            eval $DECLARE[2];
+            List<Column> columns = AttributeList.collectFrom($DECLARE[2], "column");
             Table table = new Table();
             columns.forEach(column -> table.addColumn(column));
-            $$DatabaseMap.put($declaration[1].value, table);
+            $$DatabaseMap.put($DECLARE[1].value, table);
         }.
-        drop: .{
-            $$DatabaseMap.remove($drop[1]:value);
+        [DROP] .{
+            $$DatabaseMap.remove($DROP[1]:value);
         }.
-        alter_add: @{
-            $$DatabaseMap.get($alter_add[1].value).addColumn($alter_add[2].column);
+        [ALT_ADD] @{
+            $$DatabaseMap.get($ALT_ADD[1].value).addColumn($ALT_ADD[2].column);
         }.
-        alter_drop: @{
-            $$DatabaseMap.get($alter_drop[1].value).removeColumn($alter_drop[2].value);
+        [ALT_DROP] @{
+            $$DatabaseMap.get($ALT_DROP[1].value).removeColumn($ALT_DROP[2].value);
         }.
     }
-}
-
-bundle sql.SQLColumnConcern {
-    slices  sql.ColumnDeclaration
-            sql.ColumnType
-            sql.ColumnConstraints
-            sql.ColumnList
 }
 
 module sql.ColumnList {
@@ -206,6 +203,8 @@ module sql.ColumnConstraints {
         provides {
             Constraint;
         }
+        requires {
+        }
 
         [NOT_NULL]  Constraint <-- "NOT" "NULL";
         [UNIQUE]    Constraint <-- "UNIQUE";
@@ -219,7 +218,9 @@ module sql.ColumnConstraints {
         [NOT_NULL] .{
             BiConsumer<List<SQLType>,SQLType> constraint = (list, value) -> {
                 if (value == null) {
-                    throw new ConstraintViolation("Not-null column, but the value is null");
+                    throw new ConstraintViolation(
+                            "Not-null column, but the value is null"
+                    );
                 }
             };
             $NOT_NULL[0].constraint = constraint;
@@ -227,7 +228,9 @@ module sql.ColumnConstraints {
         [UNIQUE] .{
             BiConsumer<List<SQLType>,SQLType> constraint = (list, value) -> {
                 if (list.contains(value)) {
-                    throw new ConstraintViolation("Unique column, but the value " + value + " already exists");
+                    throw new ConstraintViolation(
+                            "Unique column, but the value " + value + " already exists"
+                    );
                 }
             };
             $UNIQUE[0].constraint = constraint;
@@ -235,10 +238,14 @@ module sql.ColumnConstraints {
         [KEY] .{
             BiConsumer<List<SQLType>,SQLType> constraint = (list, value) -> {
                 if (value == null) {
-                    throw new ConstraintViolation("Primary-key column, but the value is null");
+                    throw new ConstraintViolation(
+                            "Primary-key column, but the value is null"
+                    );
                 }
                 if (list.contains(value)) {
-                    throw new ConstraintViolation("Primary-key column, but the value " + value + " already exists");
+                    throw new ConstraintViolation(
+                            "Primary-key column, but the value " + value + " already exists"
+                    );
                 }
             };
             $KEY[0].constraint = constraint;

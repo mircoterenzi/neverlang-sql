@@ -8,7 +8,6 @@ module sql.ValueList {
         provides {
             ValueList;
         }
-        
         requires {
             Value;
         }
@@ -34,6 +33,8 @@ module sql.Value {
             Float;
             Bool;
             Null;
+        }
+        requires {
         }
         
         [STRING]    String <-- /([\"'])((?:\\\1|.)*?)\1/[string];

@@ -17,6 +17,7 @@ module sql.Main {
 
         [PROG]  Program <-- OperationList;
     }
+
     role (evaluation) {
         [PROG] @{
             $PROG.db = $$DatabaseMap;
@@ -34,10 +35,8 @@ module sql.OperationList {
             Operation;
         }
 
-        single:
-            OperationList <-- Operation;
-        list:
-            OperationList <-- OperationList ";" Operation;
+        OperationList <-- Operation;
+        OperationList <-- OperationList ";" Operation;
     }
 }
 
@@ -45,6 +44,8 @@ module sql.EmptyOperation {
     reference syntax {
         provides {
             Operation;
+        }
+        requires {
         }
 
         Operation <-- "";
@@ -70,14 +71,15 @@ module sql.ElementId {
         provides {
             Id;
         }
+        requires {
+        }
 
-        id:
-            Id <-- /\b[a-zA-Z_][a-zA-Z0-9_]*\b/[id];
+        [ID]    Id <-- /\b[a-zA-Z_][a-zA-Z0-9_]*\b/[id];
     }
 
     role(evaluation) {
-        id: .{
-            $id.value = #0.text;
+        [ID] .{
+            $ID.value = #0.text;
         }.
     }
 }

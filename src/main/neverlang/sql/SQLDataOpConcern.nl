@@ -10,14 +10,20 @@ bundle sql.SQLDataOpConcern {
 
 module sql.DataOperation {
     imports {
-        neverlang.utils.AttributeList;
         java.util.List;
+        neverlang.utils.AttributeList;
         sql.errors.SyntaxError;
     }
 
     reference syntax {
-        [OP]
-            Operation <-- SelectedData;
+        provides {
+            Operation;
+        }
+        requires {
+            SelectedData;
+        }
+
+        [OP]    Operation <-- SelectedData;
     }
 
     role(evaluation) {
@@ -38,9 +44,16 @@ module sql.TableSelector {
     imports {
         sql.errors.EntityNotFound;
     }
+
     reference syntax {
-        [TABLE]
-            SelectedData <-- "FROM" Id;
+        provides {
+            SelectedData;
+        }
+        requires {
+            Id;
+        }
+
+        [TABLE] SelectedData <-- "FROM" Id;
     }
 
     role(evaluation) {
@@ -56,6 +69,7 @@ module sql.TableSelector {
             $TABLE[0].ref = $TABLE[1].value;
         }.
     }
+
     role(struct-checking) {
         [TABLE] .{
             $TABLE.isTerminal = false;
@@ -65,11 +79,19 @@ module sql.TableSelector {
 
 module sql.Select {
     imports {
-        neverlang.utils.AttributeList;
         java.util.List;
+        neverlang.utils.AttributeList;
     }
 
     reference syntax {
+        provides {
+            SelectedData;
+        }
+        requires {
+            SelectedData;
+            IdList;
+        }
+
         [TABLE]
             SelectedData <-- "SELECT" "*" SelectedData;
         [COLUMN_LIST]
@@ -97,6 +119,7 @@ module sql.Select {
             $COLUMN_LIST[0].table = result;
         }.
     }
+
     role (output) {
         [TABLE] .{
             System.out.println($TABLE[0].table.toString());
@@ -105,6 +128,7 @@ module sql.Select {
             System.out.println($COLUMN_LIST[0].table.toString());
         }.
     }
+
     role(struct-checking) {
         [TABLE] .{
             $TABLE.isTerminal = true;
@@ -135,10 +159,12 @@ module sql.Where {
 
     role (evaluation) {
         [WHERE] @{
-            $WHERE[0].table = ((Table) $WHERE[1].table).copy().filterTuple((Predicate<Tuple>) $WHERE[2].relation);
+            $WHERE[0].table = ((Table) $WHERE[1].table).copy()
+                    .filterTuple((Predicate<Tuple>) $WHERE[2].relation);
             $WHERE[0].ref = $WHERE[1].ref;
         }.
     }
+
     role(struct-checking) {
         [WHERE] .{
             $WHERE.isTerminal = $WHERE[1]:isTerminal;
@@ -154,6 +180,14 @@ module sql.OrderBy {
     }
 
     reference syntax {
+        provides {
+            SelectedData;
+        }
+        requires {
+            SelectedData;
+            OrderList;
+        }
+
         [ORDER]
             SelectedData <-- SelectedData "ORDER" "BY" OrderList;
     }
@@ -168,6 +202,7 @@ module sql.OrderBy {
             $ORDER[0].ref = $ORDER[1].ref;
         }.
     }
+
     role(struct-checking) {
         [ORDER] .{
             $ORDER.isTerminal = $ORDER[1]:isTerminal;
@@ -225,4 +260,3 @@ module sql.OrderOperator {
         }.
     }
 }
-
