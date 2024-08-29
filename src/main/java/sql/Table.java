@@ -63,14 +63,29 @@ public class Table {
      * @param name the name of the column to be removed
      */
     public void removeColumn(final String name) {
-        checkColumnExistence(name);
-        List<Column> columnNames = columns.stream()
-                .filter(c -> c.getName().equals(name))
-                .toList();
-        for (Column column : columnNames) {
-            columns.remove(column);
-        }
+        columns.remove(getColumn(name));
         tuples.forEach(t -> t.remove(name));
+    }
+
+    /**
+     * Gets the names of the columns in the table.
+     * @return the list of column names
+     */
+    public List<String> getColumnNames() {
+        return columns.stream().map(Column::getName).toList();
+    }
+
+    /**
+     * Gets a column from the table.
+     * @param name the name of the column
+     * @return the column with the given name
+     */
+    public Column getColumn(final String name) {
+        checkColumnExistence(name);
+        return columns.stream()
+                .filter(c -> c.getName().equals(name))
+                .findFirst()
+                .orElse(null);
     }
 
     /**
@@ -127,27 +142,6 @@ public class Table {
                 .filter(elem -> !condition.test(elem))
                 .toList();
         toRemove.forEach(this::removeTuple);
-    }
-
-    /**
-     * Gets the names of the columns in the table.
-     * @return the list of column names
-     */
-    public List<String> getColumnNames() {
-        return columns.stream().map(Column::getName).toList();
-    }
-
-    /**
-     * Gets the columns in the table.
-     * @param name the name of the column
-     * @return the column
-     */
-    public Column getColumn(final String name) {
-        checkColumnExistence(name);
-        return columns.stream()
-                .filter(c -> c.getName().equals(name))
-                .findFirst()
-                .orElse(null);
     }
 
     /**

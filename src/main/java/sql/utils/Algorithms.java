@@ -64,8 +64,9 @@ public class Algorithms {
                     temp.addTuple(current);
                 }
             }
-            // If there are more than one tuple in the table and more than one column to sort by
-            // then sort the subtable by the remaining columns
+            // If the subset of tuples has more than one element and there are
+            // more columns to sort by, sort the subset of tuples by the
+            // remaining columns.
             if (temp.getTuples().size() > 1 && columnNames.size() > 1) {
                 temp = sortTable(
                         temp,
