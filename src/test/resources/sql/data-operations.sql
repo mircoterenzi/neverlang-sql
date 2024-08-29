@@ -26,7 +26,7 @@ SELECT * FROM Book
 ORDER BY Title ASC;
 
 SELECT * FROM Book
-WHERE Price > 15 AND Available = TRUE;
+WHERE Price > 12 AND Available = TRUE;
 
 SELECT * FROM Book
 WHERE Year > 1950 OR Price IS NULL;
