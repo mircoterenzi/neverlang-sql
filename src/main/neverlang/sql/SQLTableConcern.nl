@@ -55,7 +55,8 @@ module sql.TableOp {
             $$DatabaseMap.get($ALT_ADD[1].value).addColumn($ALT_ADD[2].column);
         }.
         [ALT_DROP] @{
-            $$DatabaseMap.get($ALT_DROP[1].value).removeColumn($ALT_DROP[2].value);
+            Table table = $$DatabaseMap.get($ALT_DROP[1].value);
+            table.removeColumn(table.getColumn($ALT_DROP[2].value));
         }.
     }
 }

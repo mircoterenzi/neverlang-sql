@@ -60,19 +60,19 @@ public class Table {
 
     /**
      * Removes a column from the table.
-     * @param name the name of the column to be removed
+     * @param column the column to be removed
      */
-    public void removeColumn(final String name) {
-        columns.remove(getColumn(name));
-        tuples.forEach(t -> t.remove(name));
+    public void removeColumn(final Column column) {
+        columns.remove(column);
+        tuples.forEach(t -> t.remove(column.getName()));
     }
 
     /**
-     * Gets the names of the columns in the table.
+     * Gets the columns in the table.
      * @return the list of column names
      */
-    public List<String> getColumnNames() {
-        return columns.stream().map(Column::getName).toList();
+    public List<Column> getColumns() {
+        return new ArrayList<>(columns);
     }
 
     /**
