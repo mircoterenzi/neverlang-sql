@@ -47,7 +47,7 @@ public class TableTests {
         DatabaseMap db = (DatabaseMap) node.getAttributes().get("db");
         assertEquals(
             List.of("ProductID","ProductName","Price","InStock"), 
-            db.get("Product").getColumnNames()
+            db.get("Product").getColumns().stream().map(Column::getName).toList()
         );
     }
 
@@ -67,7 +67,7 @@ public class TableTests {
         DatabaseMap db = (DatabaseMap) node.getAttributes().get("db");
         assertEquals(
             List.of("DepartmentID","DepartmentName","ManagerName","Budget"), 
-            db.get("Department").getColumnNames()
+            db.get("Department").getColumns().stream().map(Column::getName).toList()
         );
     }
 
@@ -85,7 +85,10 @@ public class TableTests {
                 "ALTER TABLE Employee " +
                 "DROP Salary;") ASTNode node) {
         DatabaseMap db = (DatabaseMap) node.getAttributes().get("db");
-        assertEquals(List.of("EmployeeID","FirstName","LastName"), db.get("Employee").getColumnNames());
+        assertEquals(
+            List.of("EmployeeID","FirstName","LastName"),
+            db.get("Employee").getColumns().stream().map(Column::getName).toList()
+        );
     }
 
     /**
@@ -113,6 +116,9 @@ public class TableTests {
         DatabaseMap db = (DatabaseMap) node.getAttributes().get("db");
         assertFalse(db.containsKey("Customer"));
         assertTrue(db.containsKey("Orders"));
-        assertEquals(List.of("OrderID","CustomerID","ShippingAddress","OrderStatus"), db.get("Orders").getColumnNames());
+        assertEquals(
+            List.of("OrderID","CustomerID","ShippingAddress","OrderStatus"),
+            db.get("Orders").getColumns().stream().map(Column::getName).toList()
+        );
     }
 }
