@@ -145,6 +145,7 @@ module sql.Select {
 module sql.Where {
     imports {
         java.util.function.Predicate;
+        sql.Table;
         sql.Tuple;
     }
 
@@ -165,8 +166,9 @@ module sql.Where {
 
     role (evaluation) {
         [WHERE] @{
-            $WHERE[0].table = ((Table) $WHERE[1].table).copy()
-                    .filterTuple((Predicate<Tuple>) $WHERE[2].relation);
+            Table table = ((Table) $WHERE[1].table).copy();
+            table.filterTuple((Predicate<Tuple>) $WHERE[2].relation);
+            $WHERE[0].table = table;
             $WHERE[0].ref = $WHERE[1].ref;
         }.
     }

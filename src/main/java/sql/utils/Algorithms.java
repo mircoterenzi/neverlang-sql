@@ -38,10 +38,12 @@ public class Algorithms {
     ) {
         List<Tuple> tuple = table.copy().getTuples();
         String column = columnNames.get(0);
-        Table result = table.copy().filterTuple(t -> false);
+        Table result = table.copy();
+        result.filterTuple(t -> false);
 
         while (!tuple.isEmpty()) {
-            Table temp = table.copy().filterTuple(t -> false);
+            Table temp = table.copy();
+            temp.filterTuple(t -> false);
             Tuple ref = tuple.get(0);
 
             for (Tuple current : tuple) {
@@ -57,11 +59,13 @@ public class Algorithms {
                     || (current.get(column).compareTo(ref.get(column)) > 0
                             && order.get(0).equals(Order.DESC))
                 ) {
-                    temp = temp.filterTuple(t -> false);
+                    temp.filterTuple(t -> false);
                     ref = current;
                     temp.addTuple(current);
                 }
             }
+            // If there are more than one tuple in the table and more than one column to sort by
+            // then sort the subtable by the remaining columns
             if (temp.getTuples().size() > 1 && columnNames.size() > 1) {
                 temp = sortTable(
                         temp,

@@ -114,7 +114,8 @@ module sql.Update {
         [UPDATE] @{
             String tableName = $UPDATE[1].value;
             Table table = $$DatabaseMap.get(tableName);
-            Table result = table.copy().filterTuple(t -> false);
+            Table result = table.copy();
+            result.filterTuple(t -> false);
             Predicate<Tuple> predicate = $UPDATE[3].relation;
             Map<String, SQLType> toAdd = new HashMap<>();
             List<String> headings = AttributeList.collectFrom($UPDATE[2], "scope");

@@ -121,16 +121,12 @@ public class Table {
     /**
      * Filters the table based on a condition.
      * @param condition the condition to filter the table
-     * @return the filtered table
      */
-    public Table filterTuple(final Predicate<Tuple> condition) {
-        Table result = new Table();
-        columns.forEach(result::addColumn);
-        tuples.stream()
-                .filter(condition)
-                .map(Tuple::copy)
-                .forEach(result::addTuple);
-        return result;
+    public void filterTuple(final Predicate<Tuple> condition) {
+        List<Tuple> toRemove = tuples.stream()
+                .filter(elem -> !condition.test(elem))
+                .toList();
+        toRemove.forEach(this::removeTuple);
     }
 
     /**
