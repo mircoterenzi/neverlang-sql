@@ -2,10 +2,8 @@ bundle sql.SQLTableConcern {
     slices  sql.TableOp
             sql.ColumnList
             sql.ColumnDeclaration
-            sql.ColumnDeclaration
             sql.ColumnType
             sql.ColumnConstraints
-            sql.ColumnList
 }
 
 module sql.TableOp {

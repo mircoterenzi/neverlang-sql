@@ -2,7 +2,7 @@ language sql.SQLang {
 
     slices
         bundle (sql.SQLVariablesConcern)    // Defines all variables
-        bundle (sql.SQLCoreConcern)     // Describes the core of the language: element identificator, operations, etc.
+        bundle (sql.SQLCoreConcern)     // Describes the core of the language: element ID, operations, etc.
         bundle (sql.SQLTableConcern)    // Implements table operations: create, drop, alter.
                                         // Also defines columns and constraints needed in those operations.
         bundle (sql.SQLDataConcern)     // Implements data operations: insert, update, delete.
