@@ -1,5 +1,5 @@
 CREATE TABLE Bakery (
-    BakeryID INT,
+    BakeryID INT PRIMARY KEY,
     Name VARCHAR(100),
     City VARCHAR(100),
     FoundedYear INT,

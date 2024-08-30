@@ -1,8 +1,8 @@
 CREATE TABLE Customer (
-    CustomerID INT,
+    CustomerID INT PRIMARY KEY,
     FirstName VARCHAR(50),
     LastName VARCHAR(50),
-    Email VARCHAR(100)
+    Email VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE Orders (

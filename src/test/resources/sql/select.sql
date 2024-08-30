@@ -1,5 +1,5 @@
 CREATE TABLE EventDetails (
-    EventID INT,
+    EventID INT PRIMARY KEY,
     EventName VARCHAR(100),
     Location VARCHAR(100),
     Organizer VARCHAR(100),

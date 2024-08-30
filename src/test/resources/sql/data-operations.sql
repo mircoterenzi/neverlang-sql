@@ -1,5 +1,5 @@
 CREATE TABLE Book (
-    BookID INT,
+    BookID INT PRIMARY KEY,
     Title VARCHAR(100),
     Author VARCHAR(50),
     Year INT,
