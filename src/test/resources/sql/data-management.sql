@@ -26,9 +26,9 @@ DELETE
 FROM EventDetails
 WHERE EventID = 4;
 
-SELECT *
-FROM EventDetails;
-
 UPDATE EventDetails
 SET IsCancelled = FALSE
 WHERE EventID = 3;
+
+SELECT *
+FROM EventDetails;
