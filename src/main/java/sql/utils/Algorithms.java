@@ -8,7 +8,7 @@ import sql.Tuple;
 /**
  * Class that contains the algorithms used by SQL semantics.
  */
-public class Algorithms {
+public final class Algorithms {
 
     /**
      * Enum that represents the order of the sorting.
@@ -22,6 +22,13 @@ public class Algorithms {
          * Constant that represents the descending order.
          */
         DESC
+    }
+
+    /**
+     * Private constructor to prevent instantiation.
+     */
+    private Algorithms() {
+        throw new UnsupportedOperationException("Utility class");
     }
 
     /**

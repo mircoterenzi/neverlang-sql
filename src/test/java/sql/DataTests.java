@@ -4,10 +4,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintStream;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Objects;
 
 import neverlang.junit.NeverlangExt;
 import neverlang.junit.NeverlangUnit;
@@ -33,31 +33,31 @@ public class DataTests {
 
     /**
      * Get the AST node from a resource file.
-     * @param language the language
+     *
      * @param file the file path
      * @return the AST node
      */
-    private ASTNode getASTNodeFromResourceFile(Language language, String file) {
+    private ASTNode getASTNodeFromResourceFile(String file) {
         try {
             File resourceFile = this.getResourceFile(file);
             String testFile = resourceFile.getAbsolutePath();
             String source = FileUtils.fileToString(testFile);
-            return language.exec(source, resourceFile);
-        } catch (IOException | URISyntaxException e) {
+            return DataTests.lang.exec(source, resourceFile);
+        } catch (Exception e) {
             Assertions.fail("Loading resource raised Exception " + e);
             return null;
         }
     }
 
     /**
-     * Get the file from the resources folder.
+     * Get the file from the resources' folder.
      * @param file the file path
      * @return the file
      * @throws URISyntaxException if the URI is invalid
      */
     private File getResourceFile(String file) throws URISyntaxException {
         URL url = Thread.currentThread().getContextClassLoader().getResource(file);
-        return new File(url.toURI());
+        return new File(Objects.requireNonNull(url).toURI());
     }
 
     /**
@@ -71,7 +71,7 @@ public class DataTests {
         System.setOut(new PrintStream(outContent));
 
         try {
-            ASTNode node = getASTNodeFromResourceFile(lang, file);
+            ASTNode node = getASTNodeFromResourceFile(file);
             assertNotNull(node);
             assertEquals(
                 expectedOutput + "\n",
