@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.PrintStream;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 import neverlang.junit.NeverlangExt;
@@ -68,14 +69,15 @@ public class DataTests {
     private void testOutput(String file, String expectedOutput) {
         PrintStream originalOut = System.out;
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(outContent));
+        PrintStream printStream = new PrintStream(outContent, true, StandardCharsets.UTF_8);
+        System.setOut(printStream);
 
         try {
             ASTNode node = getASTNodeFromResourceFile(file);
             assertNotNull(node);
             assertEquals(
-                expectedOutput + "\n",
-                outContent.toString()
+                    expectedOutput + "\n",
+                    outContent.toString(StandardCharsets.UTF_8)
             );
         } finally {
             System.setOut(originalOut);

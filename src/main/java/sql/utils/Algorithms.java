@@ -8,6 +8,8 @@ import sql.Tuple;
 /**
  * Class that contains the algorithms used by SQL semantics.
  */
+@SuppressWarnings("checkstyle:HideUtilityClassConstructor")
+        // Neverlang's endemic module must create an instance of the class.
 public final class Algorithms {
 
     /**
@@ -22,13 +24,6 @@ public final class Algorithms {
          * Constant that represents the descending order.
          */
         DESC
-    }
-
-    /**
-     * Private constructor to prevent instantiation.
-     */
-    private Algorithms() {
-        throw new UnsupportedOperationException("Utility class");
     }
 
     /**
