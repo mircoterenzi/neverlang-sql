@@ -33,6 +33,12 @@ module sql.DataOperation {
             }
         }.
     }
+
+    role(evaluation) {
+        [OP] .{
+            System.out.println($OP[1]:table.toString());
+        }.
+    }
 }
 
 module sql.TableSelector {
@@ -120,15 +126,6 @@ module sql.Select {
                 result.addTuple(tuple);
             });
             $COLUMN_LIST[0].table = result;
-        }.
-    }
-
-    role (output) {
-        [TABLE] .{
-            System.out.println($TABLE[0].table.toString());
-        }.
-        [COLUMN_LIST] .{
-            System.out.println($COLUMN_LIST[0].table.toString());
         }.
     }
 

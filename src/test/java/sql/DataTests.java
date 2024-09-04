@@ -199,10 +199,10 @@ public class DataTests {
             "{artist=Elvis Presley, SUM(price)=16.99}\n" + //
             "\n" + //
             "{artist=The Beatles, COUNT(*)=1}\n" + //
-            "{artist=Pink Floyd, COUNT(*)=2}\n" + //
             "{artist=Led Zeppelin, COUNT(*)=1}\n" + //
             "{artist=Bob Marley, COUNT(*)=1}\n" + //
             "{artist=Elvis Presley, COUNT(*)=1}\n" + //
-            "{artist=Michael Jackson, COUNT(*)=1}\n");
+            "{artist=Michael Jackson, COUNT(*)=1}\n" + //
+            "{artist=Pink Floyd, COUNT(*)=2}\n");
     }
 }

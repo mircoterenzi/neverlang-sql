@@ -57,4 +57,4 @@ SELECT artist, COUNT(*)
 FROM VinylStore
 WHERE price > 15
 GROUP BY artist
-ORDER BY artist ASC;
+ORDER BY COUNT(*) ASC;

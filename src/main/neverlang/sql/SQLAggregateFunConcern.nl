@@ -95,12 +95,6 @@ module sql.GroupBy {
         }.
     }
 
-    role(output) {
-        [GROUP] .{
-            System.out.println($GROUP[0].table.toString());
-        }.
-    }
-
     role(struct-checking) {
         [GROUP] .{
             $GROUP[0].isTerminal = true;
