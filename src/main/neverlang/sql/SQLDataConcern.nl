@@ -48,6 +48,7 @@ module sql.Delete {
     imports {
         java.util.List;
         neverlang.utils.AttributeList;
+        sql.errors.SyntaxError;
     }
 
     reference syntax {
@@ -78,7 +79,9 @@ module sql.Delete {
 
     role(struct-checking) {
         [DELETE] .{
-            $DELETE.isTerminal = true;
+            if ((Boolean) $DELETE[1]:isTerminal) {
+                throw new SyntaxError("Invalid SQL statement; DELETE cannot be used with operators such as SELECT.");
+            }
         }.
     }
 }
