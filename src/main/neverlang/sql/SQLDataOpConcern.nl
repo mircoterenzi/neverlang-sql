@@ -163,7 +163,7 @@ module sql.Where {
 
     role (evaluation) {
         [WHERE] @{
-            Table table = ((Table) $WHERE[1].table).copy();
+            Table table = $WHERE[1].table;
             table.filterTuple((Predicate<Tuple>) $WHERE[2].relation);
             $WHERE[0].table = table;
             $WHERE[0].ref = $WHERE[1].ref;
